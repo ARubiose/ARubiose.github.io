@@ -22,3 +22,15 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# LLM Wiki: contenido personal (solo se versiona el esqueleto)
+raw/*
+!raw/README.md
+!raw/assets/
+raw/assets/*
+!raw/assets/.gitkeep
+wiki/private/**
+!wiki/private/
+!wiki/private/README.md
+!wiki/private/*/
+!wiki/private/*/.gitkeep
