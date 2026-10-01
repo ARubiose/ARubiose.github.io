@@ -1,48 +1,97 @@
-# Astro Starter Kit: Basics
+# Portfolio + LLM Wiki
+
+Portfolio personal hecho con **Astro** cuyo contenido sale de una **base de conocimiento
+mantenida por un agente LLM**, siguiendo el patrón *LLM Wiki* de Andrej Karpathy.
+
+## Qué hace el agente
+
+Tú dejas material en bruto (CV, exportación de LinkedIn, notas de proyectos) en `raw/`.
+El agente (Claude Code) lo convierte en una wiki
+estructurada en `wiki/`: una página por puesto, proyecto, habilidad y formación, enlazadas
+entre sí, con un índice y un registro de cambios. Tiene tres operaciones:
+
+| Comando | Qué hace |
+| --- | --- |
+| `/ingest raw/<archivo>` | Lee una fuente nueva y crea o actualiza las páginas afectadas |
+| `/query <pregunta>` | Responde a partir de la wiki y puede guardar la respuesta como síntesis |
+| `/lint` | Busca enlaces rotos, páginas huérfanas, contradicciones y huecos |
+
+El portfolio (`src/`) presenta ese contenido como sitio web en español e inglés.
+
+## Requisitos previos
+
+- **Node.js** 20 o superior
+- **pnpm** (`npm i -g pnpm` o `corepack enable`)
+- **Claude Code** para las operaciones de la wiki (`npm i -g @anthropic-ai/claude-code`)
+- Opcional: **Obsidian** para navegar `wiki/` como un grafo
+
+## Puesta en marcha
 
 ```sh
-npm create astro@latest -- --template basics
+pnpm install
+pnpm dev          # http://localhost:4321
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+Para alimentar la wiki:
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+```sh
+cp ~/Descargas/cv.pdf raw/cv-2026.pdf
+claude
+> /ingest raw/cv-2026.pdf
+```
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+Revisa los cambios con `git diff wiki/` y haz commit.
 
-## 🚀 Project Structure
+### Público y privado
 
-Inside of your Astro project, you'll see the following folders and files:
+El repo es público (se despliega en GitHub Pages y sirve como plantilla), así que la wiki
+está dividida:
+
+- **Se versiona:** el código y la configuración del agente (`src/`, `docs/`, `CLAUDE.md`,
+  `.claude/`) y `wiki/public/`, que contiene lo mismo que muestra la web.
+- **🔒 Solo en local (`.gitignore`):** `raw/` y `wiki/private/`, con datos de contacto,
+  notas personales, síntesis y el log. **Haz tú la copia de seguridad** (carpeta
+  sincronizada, disco externo…), porque git no la guarda.
+
+El agente decide qué va a cada lado según la regla de privacidad de [.claude/rules/wiki.md](.claude/rules/wiki.md); ante la
+duda, a privado. Antes de cada commit conviene pasar `/lint`, que busca fugas.
+
+### Usarlo como plantilla
+
+Haz un fork o pulsa *Use this template*, borra el contenido de `wiki/public/`, deja tus
+fuentes en `raw/` y ejecuta `/ingest`.
+
+## Estructura
 
 ```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
+.
+├── CLAUDE.md               # Instrucciones generales para el agente
+├── raw/                    # 🔒 Fuentes inmutables (las escribes tú)
+├── wiki/                   # Base de conocimiento (la escribe el agente)
+│   ├── index.md            #   catálogo de páginas públicas
+│   ├── public/             #   publicable: profile.md, experience/, projects/, skills/, education/
+│   └── private/            #   🔒 index.md, log.md, notes/, synthesis/
+├── .claude/
+│   ├── rules/wiki.md       # convenciones de la wiki (se cargan al tocar wiki/ o raw/)
+│   ├── skills/             # /ingest, /query, /lint
+│   └── settings.json       # permisos: raw/ es de solo lectura
+├── docs/
+│   ├── system-design.md    # Flujo, patrones de diseño y módulos
+│   └── decisions/          # Decisiones de arquitectura
+└── src/                    # Portfolio Astro
+    ├── layouts/  components/  sections/  pages/  styles/
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Scripts
 
-## 🧞 Commands
+| Comando | Acción |
+| --- | --- |
+| `pnpm dev` | Servidor de desarrollo en `localhost:4321` |
+| `pnpm build` | Genera el sitio en `dist/` |
+| `pnpm preview` | Sirve la build localmente |
 
-All commands are run from the root of the project, from a terminal:
+## Más información
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- [docs/system-design.md](docs/system-design.md): arquitectura y patrones
+- [.claude/rules/wiki.md](.claude/rules/wiki.md): convenciones de la wiki
+- [CLAUDE.md](CLAUDE.md): instrucciones generales para el agente
