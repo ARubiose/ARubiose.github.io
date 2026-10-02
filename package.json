@@ -9,8 +9,9 @@
     "astro": "astro",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test && vitest run tests/privacy",
-    "check": "astro check"
+    "test:e2e": "playwright test && vitest run tests/privacy tests/perf",
+    "check": "astro check",
+    "test:visual:update": "playwright test tests/e2e/visual.spec.ts --update-snapshots"
   },
   "dependencies": {
     "@phosphor-icons/core": "^2.1.1",

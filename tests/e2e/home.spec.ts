@@ -16,9 +16,10 @@ for (const p of pages) {
             await expect(page.locator("h1")).not.toBeEmpty();
         });
 
-        test("todas las secciones del menú existen y tienen contenido", async ({ page }) => {
+        test("todas las secciones del menú existen y tienen contenido", async ({ page }, info) => {
             await page.goto(p.path);
-            const anchors = await page.locator('header a[href^="#"]').evaluateAll((els) =>
+            const navSel = info.project.name === "mobile" ? '#site-menu a[href^="#"]' : '.site-nav a[href^="#"]';
+            const anchors = await page.locator(navSel).evaluateAll((els) =>
                 els.map((e) => e.getAttribute("href")!),
             );
             expect(anchors.length).toBeGreaterThan(0);
@@ -57,6 +58,33 @@ for (const p of pages) {
             await page.getByRole("link", { name: p.otherLabel }).click();
             await expect(page).toHaveURL(new URL(p.other, baseURL).href);
             await expect(page.locator("html")).toHaveAttribute("lang", p.lang === "es" ? "en" : "es");
+        });
+
+        test("axe sin violaciones graves con el visor y el menú abiertos", async ({ page }, info) => {
+            await page.emulateMedia({ reducedMotion: "reduce" });
+            await page.goto(p.path);
+            await page.locator("#photo-open").click();
+            let results = await new AxeBuilder({ page }).analyze();
+            expect(results.violations.filter((v) => ["serious", "critical"].includes(v.impact ?? "")).map((v) => v.id)).toEqual([]);
+            await page.keyboard.press("Escape");
+            if (info.project.name === "mobile") {
+                await page.locator('[popovertarget="site-menu"]').click();
+                results = await new AxeBuilder({ page }).analyze();
+                expect(results.violations.filter((v) => ["serious", "critical"].includes(v.impact ?? "")).map((v) => v.id)).toEqual([]);
+            }
+        });
+
+        test("sin saltos de maquetación al cargar", async ({ page }) => {
+            await page.emulateMedia({ reducedMotion: "reduce" });
+            await page.goto(p.path);
+            const cls = await page.evaluate(() => new Promise<number>((resolve) => {
+                let total = 0;
+                new PerformanceObserver((list) => {
+                    for (const e of list.getEntries() as (PerformanceEntry & { value: number; hadRecentInput: boolean })[]) if (!e.hadRecentInput) total += e.value;
+                }).observe({ type: "layout-shift", buffered: true });
+                setTimeout(() => resolve(total), 1500);
+            }));
+            expect(cls).toBeLessThan(0.1);
         });
 
         test("sin violaciones de accesibilidad graves", async ({ page }) => {

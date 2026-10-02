@@ -1,4 +1,4 @@
-import { isBrokenBuild, rankCombination } from "../lib/skills";
+import { isBrokenBuild, rankCombination } from "../lib/build";
 import { initTabEdges } from "./tab-edges";
 
 type Data = { usage: Record<string, string[]>; entryNames: Record<string, string> };
