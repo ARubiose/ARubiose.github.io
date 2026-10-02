@@ -68,20 +68,48 @@ pública solo lleva la parte publicable. Lo privado sí puede enlazar a lo públ
 ## Páginas
 
 - **Nombre:** `kebab-case.md` en inglés (`acme-corp.md`, `typescript.md`). Contenido en español.
-- **Frontmatter obligatorio:**
+- **Frontmatter obligatorio** (comunes): `title`, `type` (`profile` | `experience` |
+  `project` | `skill` | `education` | `note` | `synthesis`), `summary`, `tags`, `sources`,
+  `updated`. El portfolio usa **solo el frontmatter**; el cuerpo es prosa de wiki y no se
+  publica.
+- **Campos por tipo** (los esquemas Zod de `src/lib/schemas.ts` son la referencia exacta;
+  si una página pública no los cumple, la build falla):
+
+  | `type` | Campos propios | Traducibles en `en:` |
+  | --- | --- | --- |
+  | `profile` | `name`, `headline`, `location`, `links: {email, linkedin, github}` | `headline`, `summary` |
+  | `experience` | `company`, `role`, `start`, `end`, `highlights` | `role`, `summary`, `highlights` |
+  | `project` | `repo`, `url?`, `status` (`active`·`paused`·`done`), `start`, `highlights` | `title`, `summary`, `highlights` |
+  | `skill` | `category` (`backend`·`ai`·`frontend`·`devops`·`security`) | `summary` |
+  | `education` | `institution`, `degree`, `start`, `end`, `grade?` | `degree`, `summary` |
+
+- **Fechas:** `start`/`end` como `AAAA-MM` o `AAAA`; `end: null` es «actualidad».
+- **Traducción:** cada campo traducible lleva su versión inglesa en el bloque `en:`.
+  `highlights` y `en.highlights` tienen la misma longitud. Los nombres propios no se
+  traducen. Las páginas privadas (`note`, `synthesis`) no llevan `en:`.
 
   ```yaml
   ---
   title: Acme Corp
-  type: experience     # profile | experience | project | skill | education | note | synthesis
+  type: experience
+  company: Acme Corp
+  role: Ingeniero de software
+  start: 2023-03
+  end: null
   summary: Una frase; se usa en el índice y en el portfolio.
+  highlights:
+    - Un logro concreto.
   tags: [backend, typescript]
+  en:
+    role: Software engineer
+    summary: One sentence; used in the index and the portfolio.
+    highlights:
+      - A concrete achievement.
   sources: [raw/cv-2026.pdf, "https://github.com/usuario (2026-10-02)", "humano (2026-10-02)"]
   updated: 2026-10-01
   ---
   ```
 
-  Opcionales: `period` (`2023-03 – actualidad`), `role`, `company`, `url`, `repo`, `status`.
   Una fuente web se cita con su URL y la fecha de consulta entre paréntesis.
 - **Enlaces:** Markdown relativos (`[TypeScript](../skills/typescript.md)`), no `[[wikilinks]]`.
 - **Respaldo:** todo dato concreto (fechas, cifras, cargos) sale de una fuente (ver
