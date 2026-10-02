@@ -8,14 +8,15 @@ interface Props {
     locale: Locale;
     sections: { id: SectionId; label: string }[];
     urls: Record<Locale, string>;
+    handle?: string;
 }
-const { locale, sections, urls } = Astro.props;
+const { locale, sections, urls, handle = "" } = Astro.props;
 const t = useTranslations(locale);
 ---
 
 <header class="sticky top-0 z-50 h-[var(--header-h)] border-b border-line bg-bg/90 backdrop-blur-md">
     <div class="mx-auto flex h-full max-w-6xl items-center gap-7 px-4 md:px-10">
-        <span class="whitespace-nowrap text-[13px] text-accent" aria-hidden="true">{t("nav.prompt")}</span>
+        <span class="whitespace-nowrap text-[13px] text-accent" aria-hidden="true">{handle}{t("nav.prompt")}</span>
         <nav aria-label={t("nav.label")} class="site-nav mr-auto hidden md:block">
             <ul class="flex gap-5 text-[13px] text-muted">
                 {sections.map((s) => <li><a class="nav-link hover:text-text" href={`#${s.id}`}>{s.label.toLowerCase()}</a></li>)}

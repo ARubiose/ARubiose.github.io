@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { buildHomeView, displayUrl, type HomeData } from "@lib/home";
+import { buildHomeView, displayUrl, handleFromName, type HomeData } from "@lib/home";
 
 const meta = { tags: [], sources: ["x"], updated: new Date("2026-10-02") };
 const NOW = "2026-10";
@@ -84,4 +84,10 @@ test("el pie enlaza el repo del sitio (links.source) o, si no hay, el GitHub del
     expect(buildHomeView(data, "es", NOW).siteRepo).toBe("https://github.com/ada");
     const withSource: HomeData = { ...data, profile: { ...data.profile, links: { ...data.profile.links, source: "https://github.com/ada/this-site" } } };
     expect(buildHomeView(withSource, "es", NOW).siteRepo).toBe("https://github.com/ada/this-site");
+});
+
+test("handle del prompt: primer nombre en minúsculas y sin tildes", () => {
+    expect(handleFromName("Álvaro Rubio Segovia")).toBe("alvaro");
+    expect(handleFromName("Ada Lovelace")).toBe("ada");
+    expect(handleFromName("  Zoë  ")).toBe("zoe");
 });

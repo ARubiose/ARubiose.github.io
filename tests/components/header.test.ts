@@ -24,3 +24,10 @@ test("el selector marca el idioma actual y enlaza al otro", async () => {
     expect(html).toMatch(/<a[^>]*href="\/"[^>]*hreflang="es"/);
     expect(html).toMatch(/<span aria-current="true"[^>]*>EN<\/span>/);
 });
+
+test("el prompt usa el handle recibido, no un nombre fijo", async () => {
+    const container = await AstroContainer.create();
+    const html = clean(await container.renderToString(Header, { props: { locale: "es", urls, sections: [], handle: "ada" } }));
+    expect(html).toContain("ada@portfolio:~$");
+    expect(html).not.toContain("alvaro@");
+});

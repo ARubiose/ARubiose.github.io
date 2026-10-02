@@ -38,6 +38,11 @@ export type HomeView = {
     sections: { id: SectionId; label: string }[];
 };
 
+/** Usuario del prompt de terminal: primer nombre, en minúsculas y sin tildes. */
+export function handleFromName(name: string): string {
+    return (name.trim().split(/\s+/)[0] ?? "").normalize("NFD").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+}
+
 export function displayUrl(url: string): string {
     return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
 }
