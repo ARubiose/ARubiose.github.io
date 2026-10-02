@@ -56,6 +56,34 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 - [ ] Recomendación: que cada fixture inválido compruebe la ruta del error (`["en",
   "summary"]`, `["end"]`) y no solo que falle (`tests/content/schemas.test.ts`).
 
+### Mejoras menores (revisión final de la fase 5)
+
+- [ ] El CSS de la skin no está en ninguna capa: `border-b-0` no gana en la barra del visor de
+  la foto y deja una línea doble (`src/styles/global.css:3`, `src/components/ProfilePhoto.astro`).
+  Pasar la decoración a `@layer components`.
+- [ ] «Combinación usada en» queda vacío, sin mensaje, si la build solo tiene habilidades sin
+  uso (`src/scripts/skill-builder.ts`).
+- [ ] El botón de equipar cambia su `aria-label` además de `aria-pressed`; el lector anuncia
+  dos veces el estado (`src/scripts/skill-builder.ts`).
+- [ ] `TimelineItem` repite `" - "` en vez de importar `PERIOD_SEPARATOR`
+  (`src/components/TimelineItem.astro`).
+- [ ] El JSON del creador no escapa `<`: un nombre con `</script>` rompería la página
+  (`src/components/SkillBuilder.astro`).
+- [ ] El test de presupuesto solo sigue un nivel de imports estáticos
+  (`tests/perf/budget.test.ts`).
+- [ ] El test de movimiento reducido no detecta animaciones cortas: comprobar que no queda
+  `style` en línea (`tests/e2e/motion.spec.ts`).
+- [ ] La intro del hero se repite y puede cortar el prompt al cruzar 768 px
+  (`src/scripts/motion.ts`).
+- [ ] Un `end` solo con año (`start: 2020-06`, `end: 2020`) da 0 meses de XP; tratarlo como
+  diciembre (`src/lib/skills.ts`).
+- [ ] Sin Popover API, el menú móvil quedaría siempre visible; añadir `@supports` de respaldo
+  (`src/components/Header.astro`).
+- [ ] Claves sin uso: `nav.close` y `skills.brokenTitle` (`src/i18n/ui.ts`).
+- [ ] Doble conversión de tipos en `byStart` (`src/lib/home.ts`).
+- [ ] Un repo terminado en `.git` daría `name.git/README.md` (`src/lib/home.ts`).
+- [ ] El script en línea de `Layout.astro` duplica `resolveSkin`.
+
 ### Cuestiones abiertas
 
 - [ ] **Imágenes del contenido** (logos de empresas, capturas de proyectos): ¿van en
