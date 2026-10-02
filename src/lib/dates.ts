@@ -2,6 +2,8 @@ import { z } from "astro/zod";
 import type { Locale } from "@i18n/ui";
 import { useTranslations } from "@i18n/utils";
 
+export const PERIOD_SEPARATOR = " - ";
+
 const YEAR_MONTH = /^\d{4}(-(0[1-9]|1[0-2]))?$/;
 
 export const yearMonth = z
@@ -36,5 +38,14 @@ export function formatPeriod(start: string, end: string | null, locale: Locale):
     const from = formatOne(start, locale);
     if (end === start) return from;
     const to = end === null ? useTranslations(locale)("period.present") : formatOne(end, locale);
-    return `${from} – ${to}`;
+    return `${from}${PERIOD_SEPARATOR}${to}`;
+}
+
+export function toDatetime(value: string): string {
+    return value;
+}
+
+export function monthIndex(value: string): number {
+    const { year, month } = parts(value);
+    return year * 12 + ((month ?? 1) - 1);
 }

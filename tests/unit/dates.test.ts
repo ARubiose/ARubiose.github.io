@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { compareYearMonth, formatPeriod, yearMonth } from "@lib/dates";
+import { compareYearMonth, formatPeriod, monthIndex, toDatetime, yearMonth } from "@lib/dates";
 
 describe("yearMonth", () => {
     test("acepta AAAA-MM y AAAA como string", () => {
@@ -33,17 +33,17 @@ describe("compareYearMonth", () => {
 
 describe("formatPeriod", () => {
     test("meses abreviados según el idioma", () => {
-        expect(formatPeriod("2022-08", "2026-06", "es")).toBe("ago 2022 – jun 2026");
-        expect(formatPeriod("2022-08", "2026-06", "en")).toBe("Aug 2022 – Jun 2026");
+        expect(formatPeriod("2022-08", "2026-06", "es")).toBe("ago 2022 - jun 2026");
+        expect(formatPeriod("2022-08", "2026-06", "en")).toBe("Aug 2022 - Jun 2026");
     });
 
     test("end null es actualidad", () => {
-        expect(formatPeriod("2026-06", null, "es")).toBe("jun 2026 – actualidad");
-        expect(formatPeriod("2026-06", null, "en")).toBe("Jun 2026 – present");
+        expect(formatPeriod("2026-06", null, "es")).toBe("jun 2026 - actualidad");
+        expect(formatPeriod("2026-06", null, "en")).toBe("Jun 2026 - present");
     });
 
     test("solo años", () => {
-        expect(formatPeriod("2015", "2020", "es")).toBe("2015 – 2020");
+        expect(formatPeriod("2015", "2020", "es")).toBe("2015 - 2020");
     });
 
     test("mismo inicio y fin se muestra una vez", () => {
@@ -51,6 +51,20 @@ describe("formatPeriod", () => {
     });
 
     test("mezcla de año y año-mes", () => {
-        expect(formatPeriod("2022-06", "2022", "es")).toBe("jun 2022 – 2022");
+        expect(formatPeriod("2022-06", "2022", "es")).toBe("jun 2022 - 2022");
+    });
+});
+
+describe("toDatetime", () => {
+    test("devuelve un valor válido para el atributo datetime", () => {
+        expect(toDatetime("2026-06")).toBe("2026-06");
+        expect(toDatetime("2015")).toBe("2015");
+    });
+});
+
+describe("monthIndex", () => {
+    test("cuenta meses desde el año 0; sin mes es enero", () => {
+        expect(monthIndex("2026-06") - monthIndex("2026-01")).toBe(5);
+        expect(monthIndex("2015")).toBe(monthIndex("2015-01"));
     });
 });

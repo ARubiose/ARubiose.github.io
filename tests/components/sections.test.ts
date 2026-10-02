@@ -19,7 +19,7 @@ const job = {
     role: "Engineer",
     start: "2026-06",
     end: null,
-    period: "Jun 2026 – present",
+    period: "Jun 2026 - present",
     summary: "Python backend.",
     highlights: ["API design."],
     tags: [],
@@ -32,7 +32,7 @@ describe("Experience", () => {
         const html = await container.renderToString(Experience, { props: { items: [job], locale: "en" } });
         expect(html).toContain('id="experience"');
         expect(html).toContain("Experience");
-        for (const text of ["Engineer", "Acme", "Jun 2026 – present", "API design."]) {
+        for (const text of ["Engineer", "Acme", "Jun 2026 - present", "API design."]) {
             expect(html).toContain(text);
         }
     });
@@ -92,7 +92,7 @@ test("Education muestra la nota con su etiqueta", async () => {
         degree: "Double degree",
         start: "2015",
         end: "2020",
-        period: "2015 – 2020",
+        period: "2015 - 2020",
         grade: "8.55",
         summary: "Five years.",
         tags: [],

@@ -52,7 +52,7 @@ test("localiza, ordena y formatea periodos", () => {
     const view = buildHomeView(data, "en");
     expect(view.profile.headline).toBe("Engineer");
     expect(view.experience.map((e) => e.role)).toEqual(["Engineer", "Intern"]);
-    expect(view.experience[0].period).toBe("Jun 2026 – present");
+    expect(view.experience[0].period).toBe("Jun 2026 - present");
 });
 
 test("las categorías de skills llevan su etiqueta traducida", () => {
