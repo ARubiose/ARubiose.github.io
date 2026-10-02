@@ -53,12 +53,23 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 
 ### 3.1 Stack
 
-- **Astro 5.8** con salida estática (`output: "static"`, el valor por defecto). Sin framework
-  de UI ni JavaScript de cliente por ahora: todo se renderiza en build.
-- **Tailwind CSS 4.1** como plugin de Vite (`@tailwindcss/vite`), configurado desde CSS
+- **Astro 7.3** (Vite 8, compilador en Rust) con salida estática (`output: "static"`, el
+  valor por defecto). Sin framework de UI ni JavaScript de cliente por ahora: todo se
+  renderiza en build.
+- **Tailwind CSS 4.3** como plugin de Vite (`@tailwindcss/vite`), configurado desde CSS
   (`@import "tailwindcss"` + `@theme`), sin `tailwind.config.js`.
 - **TypeScript estricto** (`astro/tsconfigs/strict`).
-- **pnpm** como gestor de paquetes.
+- **Node 24** (`.nvmrc`; Astro 7 exige ≥ 22.12) y **pnpm 11**, que solo ejecuta scripts de
+  instalación de los paquetes aprobados en `pnpm-workspace.yaml`.
+
+Comportamientos de Astro 7 que hay que tener en cuenta al desarrollar:
+
+- **HTML estricto:** el compilador en Rust rechaza etiquetas sin cerrar o mal anidadas.
+- **Espacios en blanco:** `compressHTML: 'jsx'` elimina los espacios entre elementos en
+  línea. Si un texto necesita uno, hay que ponerlo explícito (`{" "}`).
+- **Markdown con Sätteri:** el pipeline nativo sustituye a remark/rehype. Si se renderiza el
+  cuerpo de las páginas de la wiki y hace falta un plugin de remark, habrá que instalar
+  `@astrojs/markdown-remark`.
 
 ### 3.2 Composición
 
@@ -124,8 +135,9 @@ que escribe el agente, y si una página no cumple el esquema, la build falla:
 
 ```ts
 // src/content.config.ts (propuesta)
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
+import { z } from "astro/zod"; // Zod 4
 
 const base = z.object({
   title: z.string(),
@@ -217,7 +229,8 @@ carga solo cuando hace falta o que la hace cumplir sin depender del modelo:
 | Área | Estado |
 | --- | --- |
 | Configuración Astro + Tailwind + i18n | Hecha |
-| Layout | Mínimo: `lang="en"` fijo, `<title>` vacío, sin metadatos |
+| Dependencias | Actualizadas a Astro 7.3 y Tailwind 4.3; build y servidor de desarrollo verificados |
+| Layout | Mínimo: `lang="en"` fijo, sin metadatos. El `<title>` usa un `<slot>`, que no funciona dentro de `<title>`, así que sale vacío |
 | Secciones | Marcadores de posición (bloque de color a pantalla completa) |
 | `Header`, `ProfileAvatar` | Archivos vacíos |
 | Página `/en/` | No importa `global.css`, así que se queda sin Tailwind |

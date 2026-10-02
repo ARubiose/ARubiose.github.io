@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Portfolio personal en **Astro 5 + Tailwind 4** cuyo contenido sale de una base de
+Portfolio personal en **Astro 7 + Tailwind 4** cuyo contenido sale de una base de
 conocimiento mantenida por el agente (adaptación de la *LLM Wiki* de Karpathy a Claude Code).
 El repo es **público**: se despliega en GitHub Pages y sirve como plantilla.
 
@@ -24,7 +24,7 @@ Las convenciones de la wiki se cargan solas al trabajar en `wiki/` o `raw/`.
 
 ## Portfolio (`src/`)
 
-- Stack: Astro 5, Tailwind CSS 4 (plugin de Vite), pnpm. i18n con `es` (por defecto) y `en`.
+- Stack: Astro 7, Tailwind CSS 4 (plugin de Vite), pnpm 11, Node 24 (`.nvmrc`; usa `nvm use`). i18n con `es` (por defecto) y `en`.
 - Alias de importación: `@layouts`, `@sections`, `@components`, `@styles`, `@assets` (ver `tsconfig.json`).
 - Secciones en `src/sections/`: `intro`, `education`, `experience`, `contact`.
 - El contenido se deriva **solo** de `wiki/public/`; no se inventa en los componentes.

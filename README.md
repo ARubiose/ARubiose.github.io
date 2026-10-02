@@ -20,17 +20,22 @@ El portfolio (`src/`) presenta ese contenido como sitio web en español e inglé
 
 ## Requisitos previos
 
-- **Node.js** 20 o superior
-- **pnpm** (`npm i -g pnpm` o `corepack enable`)
+- **Node.js** 22.12 o superior. El proyecto fija Node 24 en `.nvmrc`: `nvm use`
+- **pnpm** 11 (`corepack enable` o `npm i -g pnpm`)
 - **Claude Code** para las operaciones de la wiki (`npm i -g @anthropic-ai/claude-code`)
 - Opcional: **Obsidian** para navegar `wiki/` como un grafo
 
 ## Puesta en marcha
 
 ```sh
+nvm use
 pnpm install
 pnpm dev          # http://localhost:4321
 ```
+
+pnpm 11 solo ejecuta scripts de instalación de los paquetes aprobados en
+`pnpm-workspace.yaml` (`esbuild`, `sharp`, `@tailwindcss/oxide`). Si una dependencia nueva
+los necesita, apruébala con `pnpm approve-builds`.
 
 Para alimentar la wiki:
 
