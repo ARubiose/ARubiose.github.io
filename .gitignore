@@ -34,3 +34,7 @@ wiki/private/**
 !wiki/private/README.md
 !wiki/private/*/
 !wiki/private/*/.gitkeep
+
+# tests
+test-results/
+playwright-report/
