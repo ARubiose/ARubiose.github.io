@@ -32,15 +32,17 @@ const broken = findBrokenSkillRefs(
 );
 if (broken.length) throw new Error(`Habilidades inexistentes en la wiki: ${broken.map((b) => `${b.entry} → ${b.skill}`).join(", ")}`);
 
+const now = new Date().toISOString().slice(0, 7);
 const view = buildHomeView(
     {
         profile: profile.data,
-        experience: experienceEntries.map((e) => e.data),
-        projects: projectEntries.map((e) => e.data),
-        skills: skillEntries.map((e) => e.data),
-        education: educationEntries.map((e) => e.data),
+        experience: experienceEntries.map(({ id, data }) => ({ id, data })),
+        projects: projectEntries.map(({ id, data }) => ({ id, data })),
+        skills: skillEntries.map(({ id, data }) => ({ id, data })),
+        education: educationEntries.map(({ id, data }) => ({ id, data })),
     },
     locale,
+    now,
 );
 
 const urls = Object.fromEntries(locales.map((l) => [l, getRelativeLocaleUrl(l, "")])) as Record<Locale, string>;

@@ -17,13 +17,7 @@ const t = useTranslations(locale);
         <h2 class="text-2xl font-bold">{t("section.education")}</h2>
         <ol>
             {items.map((e) => (
-                <TimelineItem
-                    title={e.degree}
-                    subtitle={e.institution}
-                    period={e.period}
-                    summary={e.summary}
-                    note={e.grade ? `${t("education.grade")}: ${e.grade}` : undefined}
-                />
+                <TimelineItem title={e.title} subtitle={e.subtitle} period={e.period} summary={e.summary} note={e.note} />
             ))}
         </ol>
     </section>

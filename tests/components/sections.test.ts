@@ -13,18 +13,17 @@ beforeAll(async () => {
 });
 
 const job = {
-    type: "experience" as const,
-    title: "Acme",
-    company: "Acme",
-    role: "Engineer",
+    id: "acme",
+    file: "acme.log",
+    title: "Engineer",
+    subtitle: "Acme",
     start: "2026-06",
     end: null,
     period: "Jun 2026 - present",
+    current: true,
+    duration: "",
     summary: "Python backend.",
     highlights: ["API design."],
-    tags: [],
-    sources: ["x"],
-    updated: new Date(),
 };
 
 describe("Experience", () => {
@@ -85,20 +84,7 @@ test("Skills agrupa con la etiqueta de cada categoría", async () => {
 });
 
 test("Education muestra la nota con su etiqueta", async () => {
-    const item = {
-        type: "education" as const,
-        title: "Degree",
-        institution: "Uni",
-        degree: "Double degree",
-        start: "2015",
-        end: "2020",
-        period: "2015 - 2020",
-        grade: "8.55",
-        summary: "Five years.",
-        tags: [],
-        sources: ["x"],
-        updated: new Date(),
-    };
+    const item = { ...job, id: "uni", file: "uni.md", title: "Double degree", subtitle: "Uni", start: "2015", end: "2020", period: "2015 - 2020", current: false, highlights: [], note: "Average grade: 8.55" };
     const html = await container.renderToString(Education, { props: { items: [item], locale: "en" } });
     expect(html).toContain("Average grade: 8.55");
 });

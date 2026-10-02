@@ -34,6 +34,7 @@ export const ui = {
         "xp.months": "meses",
         "xp.and": "y",
         "skills.noUse": "sin uso registrado",
+        "projects.kind": "Proyecto",
     },
     en: {
         "nav.label": "Sections",
@@ -66,6 +67,7 @@ export const ui = {
         "xp.months": "months",
         "xp.and": "",
         "skills.noUse": "no recorded use",
+        "projects.kind": "Project",
     },
 } as const satisfies Record<Locale, Record<string, string>>;
 

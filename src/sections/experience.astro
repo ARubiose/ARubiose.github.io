@@ -17,7 +17,7 @@ const t = useTranslations(locale);
         <h2 class="text-2xl font-bold">{t("section.experience")}</h2>
         <ol>
             {items.map((e) => (
-                <TimelineItem title={e.role} subtitle={e.company} period={e.period} summary={e.summary} highlights={e.highlights} />
+                <TimelineItem title={e.title} subtitle={e.subtitle} period={e.period} summary={e.summary} highlights={e.highlights} />
             ))}
         </ol>
     </section>
