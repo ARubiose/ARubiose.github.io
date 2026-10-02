@@ -9,11 +9,12 @@ links:
   email: alvaro.rubio.segovia@gmail.com
   linkedin: https://www.linkedin.com/in/alvaro-rubio-segovia/
   github: https://github.com/ARubiose
+  source: https://github.com/ARubiose/portfolio-astro
 tags: [ia, backend, python, arquitectura]
 en:
   headline: AI & software engineer
   summary: Software engineer currently applying artificial intelligence to hair health at SKIN AI, with a solid background in Python backend development, systems architecture and computer vision.
-sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf, "humano (2026-10-02)", "https://github.com/ARubiose (2026-10-02)"]
+sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf, "humano (2026-10-02)", "https://github.com/ARubiose (2026-10-02)", "https://github.com/ARubiose/portfolio-astro (2026-10-02)"]
 updated: 2026-10-02
 ---
 

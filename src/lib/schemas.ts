@@ -39,7 +39,7 @@ export const profileSchema = z.object({
     name: text,
     headline: text,
     location: text,
-    links: z.object({ email: z.email(), linkedin: z.url(), github: z.url() }),
+    links: z.object({ email: z.email(), linkedin: z.url(), github: z.url(), source: z.url().optional() }),
     en: z.object({ headline: text, summary: text }),
 });
 

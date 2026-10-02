@@ -59,7 +59,7 @@ const urls = Object.fromEntries(locales.map((l) => [l, getRelativeLocaleUrl(l, "
         <Education items={view.education} locale={locale} />
         <Contact links={view.profile.links} locale={locale} />
     </main>
-    <Footer locale={locale} repo={view.projects[0]?.repo ?? view.profile.links.github} />
+    <Footer locale={locale} repo={view.siteRepo} />
 </Layout>
 
 <script>

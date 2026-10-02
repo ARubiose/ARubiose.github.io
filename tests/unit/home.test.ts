@@ -79,3 +79,9 @@ test("un puesto y un proyecto con el mismo id no se pisan", () => {
     expect(python.usedIn.map((u) => u.name).sort()).toEqual(["Old Co", "Old project"]);
     expect(Object.values(view.entryNames).sort()).toEqual(["Old Co", "Old project"]);
 });
+
+test("el pie enlaza el repo del sitio (links.source) o, si no hay, el GitHub del perfil", () => {
+    expect(buildHomeView(data, "es", NOW).siteRepo).toBe("https://github.com/ada");
+    const withSource: HomeData = { ...data, profile: { ...data.profile, links: { ...data.profile.links, source: "https://github.com/ada/this-site" } } };
+    expect(buildHomeView(withSource, "es", NOW).siteRepo).toBe("https://github.com/ada/this-site");
+});

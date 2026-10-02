@@ -34,6 +34,7 @@ export type HomeView = {
     professionalXp: string;
     usage: Record<string, string[]>;
     entryNames: Record<string, string>;
+    siteRepo: string; // repo de este sitio (links.source) o el GitHub del perfil
     sections: { id: SectionId; label: string }[];
 };
 
@@ -112,6 +113,6 @@ export function buildHomeView(data: HomeData, locale: Locale, now: string): Home
 
     return {
         profile: localize(data.profile, locale), experience, education, projects, skillGroups,
-        professionalXp, usage, entryNames, sections,
+        professionalXp, usage, entryNames, siteRepo: data.profile.links.source ?? data.profile.links.github, sections,
     };
 }

@@ -80,7 +80,7 @@ pública solo lleva la parte publicable. Lo privado sí puede enlazar a lo públ
 
   | `type` | Campos propios | Traducibles en `en:` |
   | --- | --- | --- |
-  | `profile` | `name`, `headline`, `location`, `links: {email, linkedin, github}` | `headline`, `summary` |
+  | `profile` | `name`, `headline`, `location`, `links: {email, linkedin, github, source?}` (`source`: repo de este sitio, enlazado en el pie) | `headline`, `summary` |
   | `experience` | `company`, `role`, `start`, `end`, `highlights`, `skills?` (ids de `skills/` usadas) | `role`, `summary`, `highlights` |
   | `project` | `repo`, `url?`, `status` (`active`·`paused`·`done`), `start`, `highlights`, `skills?` | `title`, `summary`, `highlights` |
   | `skill` | `category` (`backend`·`ai`·`frontend`·`devops`·`security`), `icon` (`si:<slug>` de Simple Icons o `ph:<nombre>` de Phosphor) | `summary` |
