@@ -19,7 +19,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 ---
 
 <div
-    class="builder grid items-start gap-4.5 lg:grid-cols-[250px_1fr_290px]"
+    class="builder grid grid-cols-[minmax(0,1fr)] items-start gap-4.5 lg:grid-cols-[250px_minmax(0,1fr)_290px]"
     data-builder
     data-cap={BUILD_CAP}
     data-broken-template={t("skills.broken")}
@@ -42,7 +42,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
             </dl>
             <div class="builder-only" hidden>
                 <p class="mt-3 flex justify-between text-[12px] text-muted"><span>{t("skills.build")}</span><span data-count>0 / {BUILD_CAP}</span></p>
-                <div class="slots mt-1.5 flex gap-1.5 overflow-x-auto lg:grid lg:grid-cols-3 lg:gap-2" data-slots aria-label={t("skills.build")}></div>
+                <div class="slots mt-1.5 flex gap-1.5 overflow-x-auto lg:grid lg:grid-cols-3 lg:gap-2" data-slots role="group" aria-label={t("skills.build")}></div>
                 <div data-broken role="status" class="mt-2.5"></div>
                 <details class="mt-2.5 text-[12.5px] lg:mt-4" open>
                     <summary class="flex cursor-pointer justify-between text-muted">{t("skills.combo")}</summary>

@@ -279,8 +279,9 @@
 [data-builder].is-enhanced .skill-panel:not([data-active]) {
     display: none;
 }
-[data-inspector-body] .skill-detail,
-[data-sheet-body] .skill-detail {
+/* Más específico que la regla que oculta los detalles dentro del inventario mejorado */
+[data-builder].is-enhanced [data-inspector-body] .skill-detail,
+[data-builder].is-enhanced [data-sheet-body] .skill-detail {
     display: block;
     border: 0;
     padding: 0;
