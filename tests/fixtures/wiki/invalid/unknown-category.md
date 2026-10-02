@@ -2,6 +2,7 @@
 title: Python
 type: skill
 category: databases
+icon: si:python
 summary: Lenguaje principal.
 tags: []
 en:

@@ -1,5 +1,6 @@
 import { z } from "astro/zod";
 import { compareYearMonth, yearMonth } from "./dates";
+import { iconExists } from "./icons";
 
 export const skillCategories = ["backend", "ai", "frontend", "devops", "security"] as const;
 export type SkillCategory = (typeof skillCategories)[number];
@@ -7,6 +8,10 @@ export const projectStatuses = ["active", "paused", "done"] as const;
 
 const text = z.string().trim().min(1);
 const highlights = z.array(text).default([]);
+const icon = z
+    .string()
+    .regex(/^(si|ph):[a-z0-9-]+$/, "Formato esperado: si:<slug> o ph:<nombre>")
+    .refine(iconExists, { message: "El icono no existe en simple-icons ni en Phosphor" });
 
 const meta = {
     title: text,
@@ -68,6 +73,7 @@ export const skillSchema = z.object({
     ...meta,
     type: z.literal("skill"),
     category: z.enum(skillCategories),
+    icon,
     en: z.object({ summary: text }),
 });
 

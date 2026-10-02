@@ -2,7 +2,7 @@
 title: Python
 type: skill
 category: backend
-icon: si:python
+icon: python
 summary: Lenguaje principal.
 tags: []
 en:
