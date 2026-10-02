@@ -61,3 +61,8 @@ const urls = Object.fromEntries(locales.map((l) => [l, getRelativeLocaleUrl(l, "
     </main>
     <Footer locale={locale} repo={view.projects[0]?.repo ?? view.profile.links.github} />
 </Layout>
+
+<script>
+    import { initMotion } from "../scripts/motion";
+    initMotion();
+</script>

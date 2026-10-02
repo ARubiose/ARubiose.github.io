@@ -60,6 +60,8 @@ for (const p of pages) {
         });
 
         test("sin violaciones de accesibilidad graves", async ({ page }) => {
+            // Se analiza el estado final: a mitad de una animación los fundidos dan falsos fallos de contraste.
+            await page.emulateMedia({ reducedMotion: "reduce" });
             await page.goto(p.path);
             const results = await new AxeBuilder({ page }).analyze();
             const serious = results.violations.filter((v) => ["serious", "critical"].includes(v.impact ?? ""));
