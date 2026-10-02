@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
@@ -8,6 +8,26 @@ export default defineConfig({
         locales: ["en", "es"],
         defaultLocale: "es",
     },
+    fonts: [
+        {
+            provider: fontProviders.fontsource(),
+            name: "Space Grotesk",
+            cssVariable: "--font-space-grotesk",
+            weights: [500, 700],
+            styles: ["normal"],
+            subsets: ["latin", "latin-ext"],
+            fallbacks: ["sans-serif"],
+        },
+        {
+            provider: fontProviders.fontsource(),
+            name: "IBM Plex Mono",
+            cssVariable: "--font-ibm-plex-mono",
+            weights: [400, 500],
+            styles: ["normal"],
+            subsets: ["latin", "latin-ext"],
+            fallbacks: ["monospace"],
+        },
+    ],
     vite: {
         plugins: [tailwindcss()],
     },

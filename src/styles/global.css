@@ -1,5 +1,20 @@
 @import "tailwindcss";
+@import "./base.css";
+@import "./skins/terminal.css";
 
-@theme {
-    --color-mint-500: oklch(0.72 0.11 178);
+/* Tokens semánticos: apuntan a variables que define cada skin. */
+@theme inline {
+    --color-bg: var(--skin-bg);
+    --color-surface: var(--skin-surface);
+    --color-surface-2: var(--skin-surface-2);
+    --color-line: var(--skin-line);
+    --color-text: var(--skin-text);
+    --color-body: var(--skin-body);
+    --color-muted: var(--skin-muted);
+    --color-accent: var(--skin-accent);
+    --color-accent-ink: var(--skin-accent-ink);
+    --color-warn: var(--skin-warn);
+    --font-display: var(--skin-font-display);
+    --font-mono: var(--skin-font-mono);
+    --radius-skin: var(--skin-radius);
 }

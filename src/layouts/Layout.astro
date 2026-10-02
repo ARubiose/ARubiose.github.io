@@ -1,6 +1,8 @@
 ---
 import "@styles/global.css";
+import { Font } from "astro:assets";
 import type { Locale } from "@i18n/ui";
+import { defaultSkin, SKIN_STORAGE_KEY, skins } from "@lib/skins";
 
 interface Props {
     locale: Locale;
@@ -11,18 +13,27 @@ const { locale, title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang={locale}>
+<html lang={locale} data-skin={defaultSkin}>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="dark" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:locale" content={locale === "es" ? "es_ES" : "en_US"} />
+        <Font cssVariable="--font-space-grotesk" preload />
+        <Font cssVariable="--font-ibm-plex-mono" preload />
+        <script is:inline define:vars={{ skins, key: SKIN_STORAGE_KEY }}>
+            try {
+                const stored = localStorage.getItem(key);
+                if (stored && skins.includes(stored)) document.documentElement.dataset.skin = stored;
+            } catch {}
+        </script>
     </head>
-    <body class="bg-white text-neutral-900">
+    <body class="bg-bg text-text font-mono">
         <slot />
     </body>
 </html>
