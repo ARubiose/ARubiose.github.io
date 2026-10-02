@@ -62,6 +62,9 @@ El repo es público. **Ante la duda, un dato va a `wiki/private/`.** Nunca escri
 - Información confidencial de empleadores (clientes, cifras internas, código).
 - Contenido de `wiki/private/` o enlaces a sus páginas.
 
+Excepción: un dato de contacto que el humano autoriza de forma explícita (p. ej. el email del
+perfil) puede publicarse; la autorización se anota en `wiki/private/notes/`.
+
 Si una página pública necesita un dato privado, el dato va a `wiki/private/notes/` y la
 pública solo lleva la parte publicable. Lo privado sí puede enlazar a lo público.
 
