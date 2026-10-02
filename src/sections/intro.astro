@@ -1,19 +1,30 @@
 ---
-import ProfileAvatar from "@components/ProfileAvatar.astro";
+import ProfilePhoto from "@components/ProfilePhoto.astro";
+import type { Locale } from "@i18n/ui";
+import { useTranslations } from "@i18n/utils";
 import type { HomeView } from "@lib/home";
 
 interface Props {
     profile: HomeView["profile"];
+    locale: Locale;
 }
-const { profile } = Astro.props;
+const { profile, locale } = Astro.props;
+const t = useTranslations(locale);
 ---
 
-<section id="about" class="flex flex-col items-start gap-6 py-12 sm:flex-row sm:items-center">
-    <ProfileAvatar alt={profile.name} />
+<section id="about" class="hero grid gap-6 pt-6 md:grid-cols-[340px_1fr] md:items-center md:gap-13 md:pt-14">
+    <ProfilePhoto name={profile.name} locale={locale} />
     <div>
-        <h1 class="text-3xl font-bold">{profile.name}</h1>
-        <p class="text-xl text-neutral-700">{profile.headline}</p>
-        <p class="text-neutral-600">{profile.location}</p>
-        <p class="mt-4">{profile.summary}</p>
+        <p class="prompt text-[13px]" aria-hidden="true">whoami</p>
+        <h1 class="mt-2 font-display text-[38px] leading-[1.04] font-bold tracking-tight md:text-[58px]">
+            <span class="hero-name">{profile.name}</span><span class="cursor" aria-hidden="true"></span>
+        </h1>
+        <p class="hero-role mt-2.5 font-display text-[19px] text-accent md:text-[23px]">{profile.headline}</p>
+        <p class="hero-loc text-[13px] text-muted">{profile.location}</p>
+        <p class="hero-sum mt-4 max-w-[56ch] text-[13.5px] leading-[1.7] text-body md:text-[14.5px]">{profile.summary}</p>
+        <div class="hero-cta mt-6 grid grid-cols-2 gap-3 md:flex">
+            <a class="btn btn-primary" href="#contact">{t("hero.contact")}</a>
+            <a class="btn btn-secondary" href={profile.links.github} target="_blank" rel="noopener">{t("hero.github")}</a>
+        </div>
     </div>
 </section>

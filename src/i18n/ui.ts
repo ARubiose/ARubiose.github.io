@@ -39,6 +39,12 @@ export const ui = {
         "nav.close": "cerrar",
         "nav.prompt": "alvaro@portfolio:~$",
         "nav.list": "ls secciones/",
+        "photo.open": "Ampliar la foto de",
+        "photo.hint": "ampliar",
+        "photo.close": "Cerrar",
+        "photo.dialog": "Foto de perfil ampliada",
+        "hero.contact": "contacto",
+        "hero.github": "github",
     },
     en: {
         "nav.label": "Sections",
@@ -76,6 +82,12 @@ export const ui = {
         "nav.close": "close",
         "nav.prompt": "alvaro@portfolio:~$",
         "nav.list": "ls sections/",
+        "photo.open": "Enlarge the photo of",
+        "photo.hint": "enlarge",
+        "photo.close": "Close",
+        "photo.dialog": "Enlarged profile photo",
+        "hero.contact": "contact",
+        "hero.github": "github",
     },
 } as const satisfies Record<Locale, Record<string, string>>;
 

@@ -1,0 +1,39 @@
+---
+import { Image } from "astro:assets";
+import profileImage from "@assets/images/profile.jpg";
+import type { Locale } from "@i18n/ui";
+import { useTranslations } from "@i18n/utils";
+import Icon from "./Icon.astro";
+
+interface Props {
+    name: string;
+    locale: Locale;
+}
+const { name, locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<div class="window photo-window">
+    <div class="window-bar"><span aria-hidden="true">profile.jpg</span><Icon name="ph:arrows-out-simple" class="text-accent" /></div>
+    <button id="photo-open" class="group relative block w-full cursor-zoom-in" aria-haspopup="dialog" aria-label={`${t("photo.open")} ${name}`}>
+        <Image src={profileImage} alt="" widths={[400, 720]} sizes="(min-width: 768px) 340px, 100vw" class="block aspect-[4/4.2] w-full object-cover object-[50%_30%] grayscale-[.3] transition group-active:grayscale-0 md:aspect-square" loading="eager" />
+        <span class="absolute bottom-2 right-2 flex items-center gap-1.5 border border-line bg-bg/80 px-2 py-0.5 text-[11.5px]" aria-hidden="true">
+            <Icon name="ph:magnifying-glass-plus" class="text-accent" />{t("photo.hint")}
+        </span>
+    </button>
+</div>
+
+<dialog id="photo-dialog" class="photo-dialog m-auto max-h-[92dvh] w-[min(92vw,720px)] bg-transparent p-0 text-text backdrop:bg-[rgb(5_7_6/.92)] backdrop:backdrop-blur-sm" aria-label={t("photo.dialog")}>
+    <figure>
+        <div class="window-bar border border-b-0 border-line bg-surface">
+            <span aria-hidden="true">profile.jpg</span>
+            <button data-photo-close class="border border-line px-2 py-0.5 text-[13px]">✕ <span class="sr-only">{t("photo.close")}</span><span aria-hidden="true">esc</span></button>
+        </div>
+        <Image src={profileImage} alt={name} widths={[720, 1440]} sizes="min(92vw, 720px)" class="block w-full border border-line" />
+    </figure>
+</dialog>
+
+<script>
+    import { initLightbox } from "../scripts/lightbox";
+    initLightbox();
+</script>

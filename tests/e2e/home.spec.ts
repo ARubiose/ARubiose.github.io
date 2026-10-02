@@ -35,9 +35,10 @@ for (const p of pages) {
             expect(text).not.toMatch(/undefined|\[object Object\]|NaN/);
         });
 
-        test("la foto de perfil tiene texto alternativo", async ({ page }) => {
+        test("la foto de perfil tiene nombre accesible y la ampliada, texto alternativo", async ({ page }) => {
             await page.goto(p.path);
-            await expect(page.locator("#about img")).toHaveAttribute("alt", /\S/);
+            await expect(page.locator("#photo-open")).toHaveAttribute("aria-label", /\S/);
+            await expect(page.locator("#photo-dialog img")).toHaveAttribute("alt", /\S/);
         });
 
         test("enlaces externos bien formados", async ({ page }) => {
@@ -50,8 +51,9 @@ for (const p of pages) {
             expect(hrefs.some((h) => h.startsWith("https://github.com/"))).toBe(true);
         });
 
-        test("el selector lleva al otro idioma", async ({ page, baseURL }) => {
+        test("el selector lleva al otro idioma", async ({ page, baseURL }, info) => {
             await page.goto(p.path);
+            if (info.project.name === "mobile") await page.locator('[popovertarget="site-menu"]').click();
             await page.getByRole("link", { name: p.otherLabel }).click();
             await expect(page).toHaveURL(new URL(p.other, baseURL).href);
             await expect(page.locator("html")).toHaveAttribute("lang", p.lang === "es" ? "en" : "es");

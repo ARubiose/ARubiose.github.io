@@ -50,8 +50,8 @@ const urls = Object.fromEntries(locales.map((l) => [l, getRelativeLocaleUrl(l, "
 
 <Layout locale={locale} title={`${view.profile.name} · ${view.profile.headline}`} description={view.profile.summary}>
     <Header locale={locale} sections={view.sections} urls={urls} />
-    <main class="mx-auto max-w-3xl px-6">
-        <Intro profile={view.profile} />
+    <main class="mx-auto max-w-6xl px-4 md:px-10">
+        <Intro profile={view.profile} locale={locale} />
         <Experience items={view.experience} locale={locale} />
         <Projects items={view.projects} locale={locale} />
         <Skills groups={view.skillGroups} locale={locale} />

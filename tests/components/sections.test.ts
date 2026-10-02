@@ -1,5 +1,6 @@
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { beforeAll, describe, expect, test } from "vitest";
+import { clean } from "../support/render";
 import Experience from "@sections/experience.astro";
 import Projects from "@sections/projects.astro";
 import Skills from "@sections/skills.astro";
@@ -98,21 +99,16 @@ test("Contact enlaza email, LinkedIn y GitHub", async () => {
     expect(html).toContain('href="https://github.com/a"');
 });
 
-test("Intro muestra nombre como h1, titular y resumen", async () => {
+test("Intro: nombre como h1, adorno whoami oculto a lectores y botón de foto etiquetado", async () => {
     const profile = {
-        type: "profile" as const,
-        title: "Perfil",
-        name: "Ada Lovelace",
-        headline: "Engineer",
-        location: "London",
+        type: "profile" as const, title: "Perfil", name: "Ada Lovelace", headline: "Engineer", location: "London",
         summary: "Analytical engine.",
         links: { email: "a@example.com", linkedin: "https://linkedin.com/in/a", github: "https://github.com/a" },
-        tags: [],
-        sources: ["x"],
-        updated: new Date(),
+        tags: [], sources: ["x"], updated: new Date(),
     };
-    const html = await container.renderToString(Intro, { props: { profile } });
-    expect(html).toMatch(/<h1[^>]*>Ada Lovelace<\/h1>/);
-    expect(html).toContain("Engineer");
-    expect(html).toContain("Analytical engine.");
+    const html = clean(await container.renderToString(Intro, { props: { profile, locale: "en" } }));
+    expect(html).toMatch(/<h1[^>]*>[\s\S]*Ada Lovelace[\s\S]*<\/h1>/);
+    expect(html).toMatch(/<p class="prompt[^"]*" aria-hidden="true">whoami<\/p>/);
+    expect(html).toMatch(/<button[^>]*id="photo-open"[^>]*aria-label="Enlarge the photo of Ada Lovelace"/);
+    expect(html).toContain('<dialog id="photo-dialog"');
 });

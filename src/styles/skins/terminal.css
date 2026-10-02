@@ -261,3 +261,13 @@
         transform: translateX(3px);
     }
 }
+
+[data-skin="terminal"] .photo-dialog[open] figure {
+    animation: terminal-zoom-in 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes terminal-zoom-in {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+}
