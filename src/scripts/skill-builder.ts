@@ -4,8 +4,9 @@ import { initTabEdges } from "./tab-edges";
 type Data = { usage: Record<string, string[]>; entryNames: Record<string, string> };
 
 export function initSkillBuilder(): void {
-    const root = document.querySelector<HTMLElement>("[data-builder]");
-    if (!root) return;
+    const found = document.querySelector<HTMLElement>("[data-builder]");
+    if (!found) return;
+    const root: HTMLElement = found;
     const data: Data = JSON.parse(root.querySelector("[data-builder-data]")!.textContent!);
     const cap = Number(root.dataset.cap);
     const tabs = [...root.querySelectorAll<HTMLButtonElement>("[role=tab]")];

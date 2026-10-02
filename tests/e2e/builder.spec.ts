@@ -1,6 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const builder = (page: Page) => page.locator("[data-builder]");
 const equip = (page: Page, id: string) => page.locator(`[data-equip="${id}"]`).click();
 const tab = (page: Page, cat: string) => page.locator(`[data-tab="${cat}"]`).click();
 const inspectTitle = async (page: Page, project: string) =>
