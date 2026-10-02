@@ -143,7 +143,7 @@ portfolio consume únicamente `wiki/public/`.
 | Privacidad | Vitest | Teléfono, dirección, código postal y nacimiento en `wiki/public/` y `dist/`, más `wiki/private/forbidden-strings.txt` si existe | `tests/privacy/` |
 | E2E | Playwright + axe | `/` y `/en/`: idioma, secciones, enlaces, selector, accesibilidad | `tests/e2e/` |
 
-Scripts: `pnpm test` (todo salvo E2E), `pnpm test:e2e` (build + preview + Playwright),
+Scripts: `pnpm test` (todo salvo E2E), `pnpm test:e2e` (build + preview + Playwright, y después el escaneo de privacidad sobre `dist/`),
 `pnpm check` (`astro check`). Notas de entorno:
 
 - La Container API es `experimental_AstroContainer` en Astro 7.3; si cambia en una versión

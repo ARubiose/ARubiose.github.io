@@ -22,7 +22,12 @@ describe("wiki pública sin datos privados", () => {
 });
 
 const html = filesUnder(join(ROOT, "dist"), ".html");
-describe.skipIf(html.length === 0)("dist sin datos privados", () => {
+describe("dist sin datos privados", () => {
+    // En local, sin build, se omite; en CI, un dist/ ausente es un fallo, no un verde.
+    test.skipIf(html.length > 0 || !process.env.CI)("hay un build que escanear", () => {
+        expect(html.length, "Ejecuta astro build antes de pnpm test").toBeGreaterThan(0);
+    });
+
     for (const file of html) {
         test(file.replace(ROOT, ""), () => {
             expect(findLeaks(visibleText(readFileSync(file, "utf8")), extra)).toEqual([]);

@@ -50,10 +50,11 @@ for (const p of pages) {
             expect(hrefs.some((h) => h.startsWith("https://github.com/"))).toBe(true);
         });
 
-        test("el selector lleva al otro idioma", async ({ page }) => {
+        test("el selector lleva al otro idioma", async ({ page, baseURL }) => {
             await page.goto(p.path);
             await page.getByRole("link", { name: p.otherLabel }).click();
-            await expect(page).toHaveURL(new RegExp(`${p.other}$`));
+            await expect(page).toHaveURL(new URL(p.other, baseURL).href);
+            await expect(page.locator("html")).toHaveAttribute("lang", p.lang === "es" ? "en" : "es");
         });
 
         test("sin violaciones de accesibilidad graves", async ({ page }) => {
