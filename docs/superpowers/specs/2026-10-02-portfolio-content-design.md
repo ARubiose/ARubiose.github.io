@@ -2,7 +2,7 @@
 
 - Fecha: 2026-10-02
 - Estado: implementada
-- Alcance: fases 1–4 de la hoja de ruta de [system-design.md](../../system-design.md) §7
+- Alcance: fases 1–4 de la hoja de ruta ([tasks.md](../../tasks.md))
   (contenido inicial, base del sitio, contrato de contenido y secciones), más la estrategia
   de tests.
 

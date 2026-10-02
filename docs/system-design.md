@@ -236,43 +236,10 @@ carga solo cuando hace falta o que la hace cumplir sin depender del modelo:
 - **Generación estática.** Sin servidor ni JavaScript de cliente: más rápido, más barato y
   desplegable en GitHub Pages.
 
-## 7. Estado actual y hoja de ruta
+## 7. Estado y hoja de ruta
 
-### Estado (2026-10-02)
-
-| Área | Estado |
-| --- | --- |
-| Configuración Astro + Tailwind + i18n | Hecha |
-| Dependencias | Actualizadas a Astro 7.3 y Tailwind 4.3; build y servidor de desarrollo verificados |
-| Layout y composición | `lang`, `<title>` y metadatos por idioma; composición única para `/` y `/en/` |
-| Secciones | Las seis con datos reales; maquetación sobria con Tailwind |
-| Contenido | Primera ingesta hecha (CV, LinkedIn, puesto actual, GitHub) |
-| Content collections | Hechas, validadas con Zod |
-| Tests | Unitarios, contrato, componentes, privacidad y E2E con axe |
-| Diseño visual | Pendiente |
-| Despliegue | No configurado (`site` sin definir, sin workflow) |
-
-### Fases
-
-1. ✅ **Contenido inicial.** Dejar el CV y otras fuentes en `raw/` y ejecutar `/ingest`. Sin
-   datos reales no tiene sentido diseñar las secciones.
-2. ✅ **Base del sitio.**
-   - Importar `global.css` en el layout, no en cada página.
-   - `lang` y `<title>` según el idioma, y metadatos básicos (description, Open Graph).
-   - Una única composición de página compartida por `/` y `/en/`, para no duplicarla.
-   - Diccionario de textos de interfaz (`src/i18n/`).
-3. ✅ **Contrato de contenido.** `src/content.config.ts` con las colecciones y los esquemas de
-   §4.2; la build falla si la wiki no cumple el contrato.
-4. ✅ **Secciones.** Las seis secciones, `Header` con navegación y selector de idioma.
-5. **Diseño visual.** Dirección de arte, tipografía y tokens de color en `@theme`.
-6. **Despliegue.** `site` en `astro.config.mjs` y workflow de GitHub Actions a GitHub Pages,
-   con `pnpm check`, `pnpm test` y `pnpm test:e2e` en CI, y etiquetas `hreflang`.
-
-### Cuestiones abiertas
-
-- **Imágenes del contenido** (logos de empresas, capturas de proyectos): ¿van en
-  `wiki/public/` junto a la página o en `src/assets/`?
-- **Dominio:** `arubiose.github.io` (repo de usuario) o `/<repo>/` (requiere `base`).
+El estado, las fases pendientes, las mejoras aplazadas y las cuestiones abiertas están en
+[tasks.md](tasks.md), que es la única fuente de la hoja de ruta.
 
 ## 8. Decisiones
 
