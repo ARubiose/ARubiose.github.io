@@ -25,7 +25,20 @@ test("móvil: el popover abre, navega, se cierra al elegir y con Esc", async ({ 
 });
 
 test("sin desbordamiento horizontal", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    expect(overflow).toBeLessThanOrEqual(0);
+    // body usa overflow-x: clip, así que scrollWidth no ve el desbordamiento: se miden los elementos.
+    const offenders = await page.evaluate(() => {
+        const vw = document.documentElement.clientWidth;
+        const scrollsX = (el: Element) => ["auto", "scroll"].includes(getComputedStyle(el).overflowX);
+        return [...document.querySelectorAll("body *")]
+            .filter((el) => {
+                const r = el.getBoundingClientRect();
+                if (r.width === 0 || r.height === 0 || r.right <= vw + 1) return false;
+                for (let a = el.parentElement; a; a = a.parentElement) if (scrollsX(a)) return false;
+                return getComputedStyle(el).visibility !== "hidden";
+            })
+            .map((el) => `${el.tagName.toLowerCase()}.${[...el.classList].slice(0, 3).join(".")} → ${Math.round(el.getBoundingClientRect().right)}px`);
+    });
+    expect(offenders).toEqual([]);
 });
