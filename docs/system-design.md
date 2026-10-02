@@ -37,12 +37,16 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 | Módulo | Ruta | Responsabilidad | En git |
 | --- | --- | --- | --- |
 | Páginas | `src/pages/` | Rutas: `/` (es) y `/en/` (en) | Sí |
-| Layout | `src/layouts/Layout.astro` | Documento HTML base: `<head>`, metadatos, slot de contenido | Sí |
-| Secciones | `src/sections/` | Bloques de la página: `intro`, `education`, `experience`, `contact` | Sí |
-| Componentes | `src/components/` | Piezas reutilizables dentro de las secciones: `Header`, `ProfileAvatar` | Sí |
+| Layouts | `src/layouts/` | `Layout.astro` (documento HTML, `lang`, metadatos) y `HomePage.astro` (carga colecciones y compone la portada) | Sí |
+| Secciones | `src/sections/` | Bloques de la página: `intro`, `experience`, `projects`, `skills`, `education`, `contact` | Sí |
+| Componentes | `src/components/` | Piezas reutilizables: `Header`, `LanguageSwitcher`, `ProfileAvatar`, `TimelineItem`, `ProjectCard`, `SkillGroup` | Sí |
+| Lógica | `src/lib/` | Esquemas Zod (`schemas.ts`), fechas, ordenación y vista de la portada (`home.ts`); funciones puras | Sí |
+| i18n | `src/i18n/` | Diccionario de interfaz (`ui.ts`) y `useTranslations`/`localize` | Sí |
+| Colecciones | `src/content.config.ts` | Colecciones de Astro sobre `wiki/public/` | Sí |
+| Tests | `tests/` | Unitarios, contrato, componentes, privacidad y E2E (§3.7) | Sí |
 | Estilos | `src/styles/global.css` | Tailwind 4 y tokens de diseño (`@theme`) | Sí |
 | Assets | `src/assets/`, `public/` | Imágenes que Astro optimiza / archivos que se sirven tal cual | Sí |
-| Configuración | `astro.config.mjs`, `tsconfig.json` | i18n, plugin de Tailwind, alias de importación | Sí |
+| Configuración | `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`, `playwright.config.ts` | i18n, plugin de Tailwind, alias de importación, tests | Sí |
 | Wiki pública | `wiki/public/` | Contenido publicable; fuente de datos del portfolio | Sí |
 | Wiki privada | `wiki/private/` | Notas personales, síntesis, log | No |
 | Fuentes | `raw/` | Material original (CV, LinkedIn…) | No |
@@ -74,27 +78,41 @@ Comportamientos de Astro 7 que hay que tener en cuenta al desarrollar:
 ### 3.2 Composición
 
 ```text
-pages/index.astro (es)  ─┐
-pages/en/index.astro    ─┴─▶ Layout.astro ─▶ <slot/>
-                                              ├─ sections/intro.astro      ─▶ components/ProfileAvatar
-                                              ├─ sections/education.astro
-                                              ├─ sections/experience.astro
-                                              └─ sections/contact.astro
+pages/index.astro     ─┐ locale "es"
+pages/en/index.astro  ─┴─▶ layouts/HomePage.astro ─▶ Layout.astro (lang, <title>, meta, global.css)
+                           │ getCollection + buildHomeView     ├─ Header ─▶ LanguageSwitcher
+                           │ (localiza, ordena, formatea)      ├─ sections/intro       ─▶ ProfileAvatar
+                           └──── props localizadas ──────────▶ ├─ sections/experience  ─▶ TimelineItem
+                                                               ├─ sections/projects    ─▶ ProjectCard
+                                                               ├─ sections/skills      ─▶ SkillGroup
+                                                               ├─ sections/education   ─▶ TimelineItem
+                                                               └─ sections/contact
 ```
 
-- **Página única con secciones.** Cada página monta las secciones en orden dentro del layout.
-  Cada sección es autocontenida: su marcado y sus estilos con ámbito (`<style>` de Astro,
-  aislado por componente).
-- **Secciones frente a componentes.** Una sección es un bloque de la página ligado a una
-  fuente de datos (una colección de la wiki). Un componente es una pieza visual
-  reutilizable que recibe props y no sabe de dónde vienen los datos.
-- **Alias de importación:** `@layouts`, `@sections`, `@components`, `@styles`, `@assets`.
+- **Una sola composición.** Las páginas de idioma solo montan `HomePage` con su `locale`.
+- **Las secciones reciben props, no leen colecciones.** `HomePage` lee las colecciones y
+  `buildHomeView` (`src/lib/home.ts`, pura) las localiza, ordena y formatea. Así las
+  secciones se prueban con la Container API sin `astro:content`.
+- **Secciones vacías.** Una sección sin elementos no se renderiza y la navegación no la
+  enlaza (`HomeView.sections`).
+- **Componentes** reutilizables que reciben props y no saben de dónde vienen los datos.
+- **Alias de importación:** `@layouts`, `@sections`, `@components`, `@styles`, `@assets`,
+  `@lib`, `@i18n`.
 
 ### 3.3 Internacionalización
 
-Enrutado i18n nativo de Astro (`astro.config.mjs`): `es` por defecto y sin prefijo (`/`),
-`en` con prefijo (`/en/`). Hoy cada idioma tiene su propia página, que repite la misma
-composición; todavía no hay textos traducidos ni detección del idioma en el layout.
+- **Rutas:** i18n nativo de Astro: `es` por defecto y sin prefijo (`/`), `en` en `/en/`.
+  `getRelativeLocaleUrl()` genera los enlaces del selector de idioma.
+- **Textos de interfaz:** diccionario propio en `src/i18n/ui.ts` (receta oficial de Astro),
+  tipado para que ambos idiomas tengan las mismas claves.
+- **Contenido:** bloque `en:` en el frontmatter de cada página de la wiki; `localize()` elige
+  los campos según el idioma.
+- **Paraglide JS:** descartado por ahora (no hay JS de cliente que optimizar, solapa el
+  routing de Astro y añade herramientas a la plantilla). Pasar a él si entra un tercer
+  idioma, el texto de interfaz crece a decenas de cadenas o se necesitan plurales; el cambio
+  queda limitado a `ui.ts` y sus usos.
+- No se usan `fallback`, `Astro.preferredLocale` ni `domains`: el sitio es estático y los dos
+  idiomas existen siempre. Las etiquetas `hreflang` irán con el despliegue (necesitan `site`).
 
 ### 3.4 Estilos
 
@@ -115,6 +133,25 @@ Las imágenes del contenido van en `src/assets/` para que Astro las optimice
 mediante GitHub Actions (`withastro/action`). Solo necesita lo que está en el repo, porque el
 portfolio consume únicamente `wiki/public/`.
 
+### 3.7 Tests
+
+| Nivel | Herramienta | Qué cubre | Ruta |
+| --- | --- | --- | --- |
+| Unitario | Vitest | `localize`, `formatPeriod`, `useTranslations`, ordenación, vista | `tests/unit/` |
+| Contrato | Vitest + Zod | Fixtures válidos/inválidos y toda la wiki pública real | `tests/content/` |
+| Componentes | Vitest + Container API | Secciones y cabecera en ambos idiomas y con listas vacías | `tests/components/` |
+| Privacidad | Vitest | Teléfono, dirección, código postal y nacimiento en `wiki/public/` y `dist/`, más `wiki/private/forbidden-strings.txt` si existe | `tests/privacy/` |
+| E2E | Playwright + axe | `/` y `/en/`: idioma, secciones, enlaces, selector, accesibilidad | `tests/e2e/` |
+
+Scripts: `pnpm test` (todo salvo E2E), `pnpm test:e2e` (build + preview + Playwright),
+`pnpm check` (`astro check`). Notas de entorno:
+
+- La Container API es `experimental_AstroContainer` en Astro 7.3; si cambia en una versión
+  menor, E2E hace de red.
+- El preview de Playwright usa `--ignore-lock`: Astro 7 lanza `astro preview` en segundo
+  plano cuando detecta un agente de IA, y Playwright lo interpreta como una salida temprana.
+- TypeScript está en la versión 6 porque `@astrojs/check` aún no admite la 7.
+
 ## 4. Capa de contenido
 
 ### 4.1 La wiki
@@ -131,44 +168,19 @@ Las convenciones completas (estructura, privacidad, frontmatter, índices y log)
 
 ### 4.2 Contrato con el portfolio
 
-El **frontmatter es la interfaz** entre la wiki y Astro. El plan es exponer cada carpeta de
-`wiki/public/` como una *content collection* con un esquema Zod. Así se valida en build lo
-que escribe el agente, y si una página no cumple el esquema, la build falla:
-
-```ts
-// src/content.config.ts (propuesta)
-import { defineCollection } from "astro:content";
-import { glob } from "astro/loaders";
-import { z } from "astro/zod"; // Zod 4
-
-const base = z.object({
-  title: z.string(),
-  summary: z.string(),
-  tags: z.array(z.string()).default([]),
-  updated: z.coerce.date(),
-});
-
-const experience = defineCollection({
-  loader: glob({ pattern: "*.md", base: "./wiki/public/experience" }),
-  schema: base.extend({
-    type: z.literal("experience"),
-    company: z.string(),
-    role: z.string(),
-    period: z.string(),
-  }),
-});
-
-// projects, skills, education y profile siguen el mismo patrón
-export const collections = { experience /* , ... */ };
-```
+El **frontmatter es la interfaz** entre la wiki y Astro, y el portfolio usa **solo el
+frontmatter** (el cuerpo es prosa de wiki y no se publica). Los esquemas Zod de
+[`src/lib/schemas.ts`](../src/lib/schemas.ts) definen el contrato; los usan
+[`src/content.config.ts`](../src/content.config.ts) (la build falla si una página no lo
+cumple) y los tests de contrato. Los campos por tipo están en la regla de la wiki.
 
 | Origen | Colección | Sección |
 | --- | --- | --- |
-| `wiki/public/profile.md` | `profile` | `intro` |
+| `wiki/public/profile.md` | `profile` | `intro`, `contact` |
 | `wiki/public/experience/` | `experience` | `experience` |
+| `wiki/public/projects/` | `projects` | `projects` |
+| `wiki/public/skills/` | `skills` | `skills` (agrupadas por `category`) |
 | `wiki/public/education/` | `education` | `education` |
-| `wiki/public/projects/` | `projects` | *(sección por crear)* |
-| `wiki/public/skills/` | `skills` | *(dentro de `intro` o en una sección propia)* |
 
 ## 5. Agente (Claude Code)
 
@@ -226,46 +238,38 @@ carga solo cuando hace falta o que la hace cumplir sin depender del modelo:
 
 ## 7. Estado actual y hoja de ruta
 
-### Estado (2026-10-01)
+### Estado (2026-10-02)
 
 | Área | Estado |
 | --- | --- |
 | Configuración Astro + Tailwind + i18n | Hecha |
 | Dependencias | Actualizadas a Astro 7.3 y Tailwind 4.3; build y servidor de desarrollo verificados |
-| Layout | Mínimo: `lang="en"` fijo, sin metadatos. El `<title>` usa un `<slot>`, que no funciona dentro de `<title>`, así que sale vacío |
-| Secciones | Marcadores de posición (bloque de color a pantalla completa) |
-| `Header`, `ProfileAvatar` | Archivos vacíos |
-| Página `/en/` | No importa `global.css`, así que se queda sin Tailwind |
-| Wiki y agente | Estructura, regla y skills listas; sin contenido ingerido |
-| Content collections | No existen |
+| Layout y composición | `lang`, `<title>` y metadatos por idioma; composición única para `/` y `/en/` |
+| Secciones | Las seis con datos reales; maquetación sobria con Tailwind |
+| Contenido | Primera ingesta hecha (CV, LinkedIn, puesto actual, GitHub) |
+| Content collections | Hechas, validadas con Zod |
+| Tests | Unitarios, contrato, componentes, privacidad y E2E con axe |
+| Diseño visual | Pendiente |
 | Despliegue | No configurado (`site` sin definir, sin workflow) |
 
 ### Fases
 
-1. **Contenido inicial.** Dejar el CV y otras fuentes en `raw/` y ejecutar `/ingest`. Sin
+1. ✅ **Contenido inicial.** Dejar el CV y otras fuentes en `raw/` y ejecutar `/ingest`. Sin
    datos reales no tiene sentido diseñar las secciones.
-2. **Base del sitio.**
+2. ✅ **Base del sitio.**
    - Importar `global.css` en el layout, no en cada página.
    - `lang` y `<title>` según el idioma, y metadatos básicos (description, Open Graph).
    - Una única composición de página compartida por `/` y `/en/`, para no duplicarla.
    - Diccionario de textos de interfaz (`src/i18n/`).
-3. **Contrato de contenido.** `src/content.config.ts` con las colecciones y los esquemas de
+3. ✅ **Contrato de contenido.** `src/content.config.ts` con las colecciones y los esquemas de
    §4.2; la build falla si la wiki no cumple el contrato.
-4. **Secciones.** Implementar `intro`, `experience`, `education` y `contact` con datos de las
-   colecciones, crear `projects` y decidir dónde van `skills`. `Header` con navegación y
-   selector de idioma.
+4. ✅ **Secciones.** Las seis secciones, `Header` con navegación y selector de idioma.
 5. **Diseño visual.** Dirección de arte, tipografía y tokens de color en `@theme`.
 6. **Despliegue.** `site` en `astro.config.mjs` y workflow de GitHub Actions a GitHub Pages,
-   con `astro check` y `astro build` en CI.
+   con `pnpm check`, `pnpm test` y `pnpm test:e2e` en CI, y etiquetas `hreflang`.
 
 ### Cuestiones abiertas
 
-- **Contenido en inglés.** La wiki está en español. Opciones: campos traducidos en el
-  frontmatter (`summary_en`), páginas paralelas por idioma o traducción en build. Hay que
-  decidirlo antes de la fase 3, porque afecta al esquema.
-- **Cuerpo de las páginas.** ¿El portfolio usa solo el frontmatter o también renderiza el
-  cuerpo? Si lo renderiza, hay que quitar o transformar `## Relacionado`, `## Fuentes` y los
-  enlaces relativos entre páginas de la wiki.
 - **Imágenes del contenido** (logos de empresas, capturas de proyectos): ¿van en
   `wiki/public/` junto a la página o en `src/assets/`?
 - **Dominio:** `arubiose.github.io` (repo de usuario) o `/<repo>/` (requiere `base`).
@@ -283,6 +287,11 @@ carga solo cuando hace falta o que la hace cumplir sin depender del modelo:
 | Índice mantenido por el LLM | Búsqueda vectorial / RAG | Volumen pequeño; sin infraestructura extra |
 | Sin hook de privacidad en `git commit` | Hook con regex | No detecta fugas semánticas; lo cubre `lint` |
 | Contenido en español, rutas en inglés | Todo en un idioma | Rutas estables y reutilizables como plantilla |
+| Fuentes web y declaraciones del humano, con validación | Solo `raw/` | Menos fricción sin perder trazabilidad. [0003](decisions/0003-web-and-human-sources.md) |
+| Traducción en el frontmatter (`en:`) | Páginas por idioma, traducción en build | Una página por entidad; Zod exige cada traducción |
+| Diccionario propio para la interfaz | Paraglide JS | Sin JS de cliente que optimizar; ver §3.3 |
+| Secciones con props, datos cargados en `HomePage` | Secciones que leen colecciones | Testeables con la Container API |
+| Fechas `start`/`end` (`AAAA-MM`) | `period` en texto libre | Ordenables y formateables por idioma |
 
 ## 9. Referencias
 

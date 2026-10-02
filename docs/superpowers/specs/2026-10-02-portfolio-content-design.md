@@ -1,7 +1,7 @@
 # Diseño: contenido del portfolio, i18n y tests
 
 - Fecha: 2026-10-02
-- Estado: pendiente de revisión
+- Estado: implementada
 - Alcance: fases 1–4 de la hoja de ruta de [system-design.md](../../system-design.md) §7
   (contenido inicial, base del sitio, contrato de contenido y secciones), más la estrategia
   de tests.
@@ -120,8 +120,10 @@ pages/en/index.astro  ─┴─▶ HomePage.astro ─▶ Layout.astro (lang, <ti
 ```
 
 - Las dos páginas de idioma son triviales: montan `HomePage`, que contiene la composición
-  única. El idioma se obtiene de `Astro.currentLocale`.
-- **Secciones** leen colecciones (`getCollection` / `getEntry`) y aplican `localize`.
+  única. Cada página pasa su `locale` a `HomePage`.
+- **`HomePage`** lee las colecciones (`getCollection` / `getEntry`) y `buildHomeView` las
+  localiza, ordena y formatea; las **secciones** reciben props ya localizadas (así se prueban
+  con la Container API).
 - **Componentes** reciben props ya localizadas y no conocen la fuente:
   `TimelineItem` (experiencia y formación), `ProjectCard`, `SkillGroup`, `ProfileAvatar`,
   `LanguageSwitcher`.
@@ -131,7 +133,8 @@ pages/en/index.astro  ─┴─▶ HomePage.astro ─▶ Layout.astro (lang, <ti
 
 | Módulo | Responsabilidad |
 | --- | --- |
-| `src/content/schemas.ts` | Esquemas Zod de cada colección, exportados |
+| `src/lib/schemas.ts` | Esquemas Zod de cada colección, exportados |
+| `src/lib/home.ts` | `buildHomeView`: datos de la wiki → vista localizada de la portada |
 | `src/content.config.ts` | Define las colecciones con `glob()` sobre `wiki/public/` y los esquemas |
 | `src/i18n/ui.ts` | Diccionario de textos de interfaz por idioma (tipado `as const`) |
 | `src/i18n/utils.ts` | `useTranslations(locale)`, `localize(entry, locale)` |

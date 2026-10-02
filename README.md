@@ -34,6 +34,14 @@ pnpm install
 pnpm dev          # http://localhost:4321
 ```
 
+Tests (la primera vez, `pnpm exec playwright install chromium`):
+
+```sh
+pnpm check        # tipos (astro check)
+pnpm test         # unitarios, contrato de contenido, componentes y privacidad
+pnpm test:e2e     # build + Playwright en / y /en/, con axe
+```
+
 pnpm 11 solo ejecuta scripts de instalación de los paquetes aprobados en
 `pnpm-workspace.yaml` (`esbuild`, `sharp`, `@tailwindcss/oxide`). Si una dependencia nueva
 los necesita, apruébala con `pnpm approve-builds`.

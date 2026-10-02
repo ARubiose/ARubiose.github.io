@@ -25,10 +25,14 @@ Las convenciones de la wiki se cargan solas al trabajar en `wiki/` o `raw/`.
 ## Portfolio (`src/`)
 
 - Stack: Astro 7, Tailwind CSS 4 (plugin de Vite), pnpm 11, Node 24 (`.nvmrc`; usa `nvm use`). i18n con `es` (por defecto) y `en`.
-- Alias de importación: `@layouts`, `@sections`, `@components`, `@styles`, `@assets` (ver `tsconfig.json`).
-- Secciones en `src/sections/`: `intro`, `education`, `experience`, `contact`.
-- El contenido se deriva **solo** de `wiki/public/`; no se inventa en los componentes.
-- Comandos: `pnpm dev`, `pnpm build`, `pnpm preview`.
+- Alias de importación: `@layouts`, `@sections`, `@components`, `@styles`, `@assets`, `@lib`, `@i18n` (ver `tsconfig.json`).
+- Secciones en `src/sections/`: `intro`, `experience`, `projects`, `skills`, `education`, `contact`.
+  Reciben props; `src/layouts/HomePage.astro` carga las colecciones.
+- El contenido se deriva **solo** de `wiki/public/` (solo el frontmatter); lo único escrito a
+  mano es el diccionario de interfaz `src/i18n/ui.ts`. El contrato son los esquemas Zod de
+  `src/lib/schemas.ts`.
+- Comandos: `pnpm dev`, `pnpm build`, `pnpm preview`, `pnpm check`, `pnpm test`, `pnpm test:e2e`.
+- Desarrollo con TDD; ver la estrategia de tests en `docs/system-design.md` §3.7.
 
 ## Convenciones
 
