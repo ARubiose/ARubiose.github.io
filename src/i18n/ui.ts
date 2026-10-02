@@ -28,6 +28,12 @@ export const ui = {
         "lang.label": "Idioma",
         "lang.es": "Español",
         "lang.en": "English",
+        "xp.year": "año",
+        "xp.years": "años",
+        "xp.month": "mes",
+        "xp.months": "meses",
+        "xp.and": "y",
+        "skills.noUse": "sin uso registrado",
     },
     en: {
         "nav.label": "Sections",
@@ -54,6 +60,12 @@ export const ui = {
         "lang.label": "Language",
         "lang.es": "Español",
         "lang.en": "English",
+        "xp.year": "year",
+        "xp.years": "years",
+        "xp.month": "month",
+        "xp.months": "months",
+        "xp.and": "",
+        "skills.noUse": "no recorded use",
     },
 } as const satisfies Record<Locale, Record<string, string>>;
 
