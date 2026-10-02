@@ -1,7 +1,7 @@
 ---
 import type { Locale } from "@i18n/ui";
 import { useTranslations } from "@i18n/utils";
-import type { HomeView } from "@lib/home";
+import { displayUrl, type HomeView } from "@lib/home";
 
 interface Props {
     links: HomeView["profile"]["links"];
@@ -9,13 +9,23 @@ interface Props {
 }
 const { links, locale } = Astro.props;
 const t = useTranslations(locale);
+const rows = [
+    { cmd: t("contact.mailCmd"), href: `mailto:${links.email}`, text: links.email, label: t("contact.email"), external: false },
+    { cmd: t("contact.openCmd"), href: links.linkedin, text: displayUrl(links.linkedin), label: t("contact.linkedin"), external: true },
+    { cmd: t("contact.openCmd"), href: links.github, text: displayUrl(links.github), label: t("contact.github"), external: true },
+];
 ---
 
-<section id="contact" class="py-8">
-    <h2 class="text-2xl font-bold">{t("section.contact")}</h2>
-    <ul class="mt-4 flex flex-wrap gap-6">
-        <li><a href={`mailto:${links.email}`} class="underline">{t("contact.email")}</a></li>
-        <li><a href={links.linkedin} class="underline">{t("contact.linkedin")}</a></li>
-        <li><a href={links.github} class="underline">{t("contact.github")}</a></li>
+<section id="contact" class="mt-11 md:mt-18">
+    <h2 class="section-title mb-4 text-[26px] md:mb-5 md:text-[30px]">{t("section.contact")}</h2>
+    <ul class="grid gap-2.5 text-[15px] md:text-[16px]">
+        {rows.map((r) => (
+            <li>
+                <a class="group inline-flex flex-wrap gap-x-2.5" href={r.href} aria-label={`${r.label}: ${r.text}`} {...(r.external ? { target: "_blank", rel: "noopener" } : {})}>
+                    <span class="text-accent" aria-hidden="true">{r.cmd}</span>
+                    <span class="break-all border-b border-transparent group-hover:border-accent">{r.text}</span>
+                </a>
+            </li>
+        ))}
     </ul>
 </section>

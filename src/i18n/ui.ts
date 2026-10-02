@@ -46,6 +46,10 @@ export const ui = {
         "hero.contact": "contacto",
         "hero.github": "github",
         "timeline.current": "EN CURSO",
+        "contact.mailCmd": "$ mail",
+        "contact.openCmd": "$ open",
+        "footer.madeWith": "hecho con Astro y una LLM Wiki",
+        "footer.code": "código en GitHub",
     },
     en: {
         "nav.label": "Sections",
@@ -90,6 +94,10 @@ export const ui = {
         "hero.contact": "contact",
         "hero.github": "github",
         "timeline.current": "CURRENT",
+        "contact.mailCmd": "$ mail",
+        "contact.openCmd": "$ open",
+        "footer.madeWith": "built with Astro and an LLM Wiki",
+        "footer.code": "source on GitHub",
     },
 } as const satisfies Record<Locale, Record<string, string>>;
 

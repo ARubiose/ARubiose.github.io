@@ -47,27 +47,21 @@ test("Education muestra la nota", async () => {
 
 describe("Projects", () => {
     const project = {
-        type: "project" as const,
-        title: "This portfolio",
-        repo: "https://github.com/ada/portfolio",
-        status: "active" as const,
-        start: "2026-10",
-        summary: "Portfolio from a wiki.",
-        highlights: [],
-        tags: [],
-        sources: ["x"],
-        updated: new Date(),
+        id: "site", file: "my-site/README.md", statusLabel: "En desarrollo",
+        type: "project" as const, title: "Este portfolio", repo: "https://github.com/ada/my-site", status: "active" as const,
+        start: "2026-10", summary: "Portfolio desde una wiki.", highlights: ["Uno."], tags: [], sources: ["x"], updated: new Date(),
     };
 
-    test("tarjeta con estado traducido y enlace al repo", async () => {
-        const html = await container.renderToString(Projects, { props: { items: [project], locale: "es" } });
+    test("README con archivo, estado y enlace al repo", async () => {
+        const html = clean(await container.renderToString(Projects, { props: { items: [project], locale: "es" } }));
         expect(html).toContain('id="projects"');
+        expect(html).toMatch(/aria-hidden="true">my-site\/README\.md</);
         expect(html).toContain("En desarrollo");
-        expect(html).toContain('href="https://github.com/ada/portfolio"');
+        expect(html).toContain('href="https://github.com/ada/my-site"');
     });
 
     test("sin proyectos no renderiza nada", async () => {
-        const html = await container.renderToString(Projects, { props: { items: [], locale: "es" } });
+        const html = clean(await container.renderToString(Projects, { props: { items: [], locale: "es" } }));
         expect(html.trim()).toBe("");
     });
 });
@@ -86,13 +80,13 @@ test("Skills agrupa con la etiqueta de cada categoría", async () => {
     expect(html).toContain("Python");
 });
 
-test("Contact enlaza email, LinkedIn y GitHub", async () => {
-    const links = { email: "a@example.com", linkedin: "https://linkedin.com/in/a", github: "https://github.com/a" };
-    const html = await container.renderToString(Contact, { props: { links, locale: "es" } });
-    expect(html).toContain('id="contact"');
+test("Contact: comandos con enlaces reales y URL visible sin protocolo", async () => {
+    const links = { email: "a@example.com", linkedin: "https://www.linkedin.com/in/a/", github: "https://github.com/a" };
+    const html = clean(await container.renderToString(Contact, { props: { links, locale: "es" } }));
     expect(html).toContain('href="mailto:a@example.com"');
-    expect(html).toContain('href="https://linkedin.com/in/a"');
-    expect(html).toContain('href="https://github.com/a"');
+    expect(html).toContain('href="https://www.linkedin.com/in/a/"');
+    expect(html).toContain("linkedin.com/in/a<");
+    expect(html).toContain("$ mail");
 });
 
 test("Intro: nombre como h1, adorno whoami oculto a lectores y botón de foto etiquetado", async () => {

@@ -1,0 +1,18 @@
+---
+import type { Locale } from "@i18n/ui";
+import { useTranslations } from "@i18n/utils";
+
+interface Props {
+    locale: Locale;
+    repo: string;
+}
+const { locale, repo } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<footer class="mt-18 border-t border-line">
+    <div class="mx-auto flex max-w-6xl flex-wrap justify-between gap-2 px-4 py-4.5 text-[12.5px] text-muted md:px-10">
+        <span>{t("footer.madeWith")}</span>
+        <a class="hover:text-text" href={repo} target="_blank" rel="noopener">{t("footer.code")}</a>
+    </div>
+</footer>
