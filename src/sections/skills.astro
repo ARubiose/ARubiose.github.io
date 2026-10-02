@@ -1,5 +1,5 @@
 ---
-import SkillGroup from "@components/SkillGroup.astro";
+import SkillBuilder from "@components/SkillBuilder.astro";
 import type { Locale } from "@i18n/ui";
 import { useTranslations } from "@i18n/utils";
 import type { HomeView } from "@lib/home";
@@ -7,14 +7,19 @@ import type { HomeView } from "@lib/home";
 interface Props {
     groups: HomeView["skillGroups"];
     locale: Locale;
+    profile: Pick<HomeView["profile"], "name" | "headline">;
+    professionalXp: string;
+    usage: HomeView["usage"];
+    entryNames: HomeView["entryNames"];
 }
-const { groups, locale } = Astro.props;
+const { groups, locale, ...rest } = Astro.props;
 const t = useTranslations(locale);
 ---
 
 {groups.length > 0 && (
-    <section id="skills" class="py-8">
-        <h2 class="text-2xl font-bold">{t("section.skills")}</h2>
-        {groups.map((g) => <SkillGroup label={g.label} items={g.items} />)}
+    <section id="skills" class="mt-11 md:mt-18">
+        <h2 class="section-title mb-1.5 text-[26px] md:text-[30px]">{t("section.skills")}</h2>
+        <p class="mb-5 text-muted">{t("skills.lead")}</p>
+        <SkillBuilder locale={locale} groups={groups} {...rest} />
     </section>
 )}

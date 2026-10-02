@@ -66,18 +66,32 @@ describe("Projects", () => {
     });
 });
 
-test("Skills agrupa con la etiqueta de cada categoría", async () => {
-    const groups = [
-        {
-            category: "backend" as const,
-            label: "Backend",
-            items: [{ type: "skill" as const, title: "Python", category: "backend" as const, summary: "Main.", tags: [], sources: ["x"], updated: new Date() }],
-        },
-    ];
-    const html = await container.renderToString(Skills, { props: { groups, locale: "es" } });
+test("Skills sin JS: todas las categorías, XP, desde y dónde se usó cada habilidad", async () => {
+    const skill = (id: string, title: string, category: "backend" | "ai", over = {}) => ({
+        id, title, category, summary: `${title} summary.`, icon: "si:python", months: 46, xp: "3 years 10 months",
+        xpShort: "3.8 years", since: 2022, usedIn: [{ id: "zalcu", name: "Zalcu Technologies", role: "Developer" }], ...over,
+    });
+    const props = {
+        locale: "en",
+        groups: [
+            { category: "backend", label: "Backend", items: [skill("python", "Python", "backend")] },
+            { category: "ai", label: "Artificial intelligence", items: [skill("llm", "LLM agents", "ai", { months: 0, xp: "no recorded use", xpShort: "no recorded use", since: null, usedIn: [] })] },
+        ],
+        profile: { name: "Ada", headline: "Engineer" },
+        professionalXp: "5.3 years",
+        usage: { python: ["zalcu"] },
+        entryNames: { zalcu: "Zalcu Technologies" },
+    };
+    const html = clean(await container.renderToString(Skills, { props }));
     expect(html).toContain('id="skills"');
-    expect(html).toContain("Backend");
-    expect(html).toContain("Python");
+    expect(html).toMatch(/<h3 class="panel-title[^"]*">Backend<\/h3>/);
+    expect(html).toMatch(/<h3 class="panel-title[^"]*">Artificial intelligence<\/h3>/);
+    expect(html).toContain("3 years 10 months");
+    expect(html).toContain("Zalcu Technologies");
+    expect(html).toContain("no recorded use");
+    expect(html).toMatch(/data-tabs[^>]*hidden|hidden[^>]*data-tabs/);
+    expect(html).toContain('data-cap="6"');
+    expect(html).toContain("data-builder-data");
 });
 
 test("Contact: comandos con enlaces reales y URL visible sin protocolo", async () => {

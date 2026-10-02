@@ -55,7 +55,7 @@ const urls = Object.fromEntries(locales.map((l) => [l, getRelativeLocaleUrl(l, "
         <Intro profile={view.profile} locale={locale} />
         <Experience items={view.experience} locale={locale} />
         <Projects items={view.projects} locale={locale} />
-        <Skills groups={view.skillGroups} locale={locale} />
+        <Skills groups={view.skillGroups} locale={locale} profile={view.profile} professionalXp={view.professionalXp} usage={view.usage} entryNames={view.entryNames} />
         <Education items={view.education} locale={locale} />
         <Contact links={view.profile.links} locale={locale} />
     </main>

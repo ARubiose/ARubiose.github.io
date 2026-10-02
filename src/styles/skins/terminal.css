@@ -271,3 +271,40 @@
         transform: scale(0.92);
     }
 }
+
+[data-builder].is-enhanced .panel-title,
+[data-builder].is-enhanced .skill-detail {
+    display: none;
+}
+[data-builder].is-enhanced .skill-panel:not([data-active]) {
+    display: none;
+}
+[data-inspector-body] .skill-detail,
+[data-sheet-body] .skill-detail {
+    display: block;
+    border: 0;
+    padding: 0;
+}
+[data-inspector-body] .detail-head,
+[data-sheet-body] .detail-head {
+    display: flex;
+    margin-bottom: 14px;
+}
+[data-skin="terminal"] .sheet-dialog[open] {
+    animation: terminal-sheet-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes terminal-sheet-up {
+    from {
+        transform: translateY(100%);
+    }
+}
+.tabbar[data-more-l] .edge-l,
+.tabbar[data-more-r] .edge-r {
+    display: flex;
+}
+.tabbar[data-more-l] .edge-l {
+    background: linear-gradient(90deg, var(--skin-bg) 45%, transparent);
+}
+.tabbar[data-more-r] .edge-r {
+    background: linear-gradient(270deg, var(--skin-bg) 45%, transparent);
+}
