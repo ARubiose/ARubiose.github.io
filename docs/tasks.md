@@ -30,6 +30,8 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 - [ ] **6. Despliegue.** `site` en `astro.config.mjs`, workflow de GitHub Actions a GitHub
   Pages con `pnpm check`, `pnpm test` y `pnpm test:e2e`, y etiquetas `hreflang`
   (`getAbsoluteLocaleUrlList()`).
+  Al crear el CI, añadir `github-actions` a `skills` de `wiki/public/projects/portfolio-llm-wiki.md`
+  (decisión del humano, 2026-10-02).
 
 ### Mejoras menores (revisión final de las fases 1–4)
 

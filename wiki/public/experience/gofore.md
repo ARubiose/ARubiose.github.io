@@ -9,6 +9,7 @@ summary: Investigación en métodos de visión por computador basados en deep le
 highlights:
   - Diseño de un modelo de segmentación semántica para tecnologías de apoyo.
   - Investigación en visión por computador con deep learning.
+skills: [python, computer-vision]
 tags: [ia, deep-learning, vision-por-computador, investigacion]
 en:
   role: Machine learning engineer

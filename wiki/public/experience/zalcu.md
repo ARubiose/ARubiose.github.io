@@ -11,6 +11,7 @@ highlights:
   - Diseño de sistemas escalables, asumiendo funciones de arquitecto de software.
   - Desarrollo, pruebas y despliegue con Docker, pytest y CI/CD en GitHub Actions.
   - Interfaces web con HTML, CSS, JavaScript y React.
+skills: [python, fastapi, django, celery, redis, software-architecture, docker, pytest, github-actions, react, web-fundamentals]
 tags: [backend, python, arquitectura]
 en:
   role: Software developer and architect

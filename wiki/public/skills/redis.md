@@ -2,6 +2,7 @@
 title: Redis
 type: skill
 category: backend
+icon: si:redis
 summary: Broker de mensajes para las tareas asíncronas de Celery.
 tags: []
 en:

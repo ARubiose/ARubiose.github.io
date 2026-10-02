@@ -81,12 +81,15 @@ pública solo lleva la parte publicable. Lo privado sí puede enlazar a lo públ
   | `type` | Campos propios | Traducibles en `en:` |
   | --- | --- | --- |
   | `profile` | `name`, `headline`, `location`, `links: {email, linkedin, github}` | `headline`, `summary` |
-  | `experience` | `company`, `role`, `start`, `end`, `highlights` | `role`, `summary`, `highlights` |
-  | `project` | `repo`, `url?`, `status` (`active`·`paused`·`done`), `start`, `highlights` | `title`, `summary`, `highlights` |
-  | `skill` | `category` (`backend`·`ai`·`frontend`·`devops`·`security`) | `summary` |
+  | `experience` | `company`, `role`, `start`, `end`, `highlights`, `skills?` (ids de `skills/` usadas) | `role`, `summary`, `highlights` |
+  | `project` | `repo`, `url?`, `status` (`active`·`paused`·`done`), `start`, `highlights`, `skills?` | `title`, `summary`, `highlights` |
+  | `skill` | `category` (`backend`·`ai`·`frontend`·`devops`·`security`), `icon` (`si:<slug>` de Simple Icons o `ph:<nombre>` de Phosphor) | `summary` |
   | `education` | `institution`, `degree`, `start`, `end`, `grade?` | `degree`, `summary` |
 
 - **Fechas:** `start`/`end` como `AAAA-MM` o `AAAA`; `end: null` es «actualidad».
+- **Habilidades y XP:** la experiencia de una habilidad no se escribe; el portfolio la calcula
+  como la unión de los meses de los puestos y proyectos que la citan en `skills`. Una
+  habilidad que nadie cita se muestra «sin uso registrado».
 - **Traducción:** cada campo traducible lleva su versión inglesa en el bloque `en:`.
   `highlights` y `en.highlights` tienen la misma longitud. Los nombres propios no se
   traducen. Las páginas privadas (`note`, `synthesis`) no llevan `en:`.

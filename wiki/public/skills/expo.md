@@ -2,6 +2,7 @@
 title: Expo
 type: skill
 category: frontend
+icon: si:expo
 summary: Aplicaciones web y móviles multiplataforma.
 tags: []
 en:

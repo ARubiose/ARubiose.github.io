@@ -2,6 +2,7 @@
 title: Docker
 type: skill
 category: devops
+icon: si:docker
 summary: Contenedores para desarrollo, pruebas y despliegue.
 tags: []
 en:

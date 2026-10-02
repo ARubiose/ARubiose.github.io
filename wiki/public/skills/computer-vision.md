@@ -2,6 +2,7 @@
 title: Deep learning y visión por computador
 type: skill
 category: ai
+icon: ph:scan
 summary: Modelos de visión con deep learning, como segmentación semántica para tecnologías de apoyo.
 tags: []
 en:

@@ -10,6 +10,7 @@ highlights:
   - Wiki dividida en parte pública, que alimenta la web, y privada, fuera de git.
   - El frontmatter de la wiki es un contrato validado con Zod en cada build.
   - Web estática en español e inglés con tests unitarios, de contrato, de componentes, de privacidad y E2E.
+skills: [llm-agents, web-fundamentals]
 tags: [astro, tailwind, llm, claude-code, plantilla]
 en:
   title: Portfolio with an LLM Wiki

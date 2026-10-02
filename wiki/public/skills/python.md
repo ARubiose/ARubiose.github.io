@@ -2,11 +2,12 @@
 title: Python
 type: skill
 category: backend
+icon: si:python
 summary: Lenguaje principal en backend, investigación de machine learning y herramientas de ciberseguridad.
 tags: []
 en:
   summary: Main language for backend, machine learning research and security tooling.
-sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf]
+sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf, "humano (2026-10-02)"]
 updated: 2026-10-02
 ---
 
@@ -19,8 +20,10 @@ Lenguaje principal en backend, investigación de machine learning y herramientas
 - [Zalcu Technologies](../experience/zalcu.md)
 - [Gofore](../experience/gofore.md)
 - [Oesia](../experience/oesia.md)
+- [SKIN AI](../experience/skin-ai.md)
 
 ## Fuentes
 
 - raw/assets/Curriculum_Vitae___English_Variation.pdf
 - raw/assets/Linkedin_profile.pdf
+- humano (2026-10-02)

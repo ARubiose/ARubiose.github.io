@@ -2,6 +2,7 @@
 title: pytest
 type: skill
 category: devops
+icon: si:pytest
 summary: Tests automatizados en Python.
 tags: []
 en:

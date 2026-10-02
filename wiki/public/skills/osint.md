@@ -2,6 +2,7 @@
 title: OSINT y ciberseguridad
 type: skill
 category: security
+icon: ph:detective
 summary: Monitorización y análisis de fuentes abiertas, y herramientas de seguridad en Python.
 tags: []
 en:

@@ -2,6 +2,7 @@
 title: Celery
 type: skill
 category: backend
+icon: si:celery
 summary: Colas de tareas para procesar archivos de forma asíncrona con FastAPI y Django.
 tags: []
 en:

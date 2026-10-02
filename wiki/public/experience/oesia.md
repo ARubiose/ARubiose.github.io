@@ -9,6 +9,7 @@ summary: Prácticas en el centro de operaciones de seguridad (SOC), con desarrol
 highlights:
   - Herramienta de automatización de correo en Python.
   - Herramienta OSINT en Python con Beautiful Soup.
+skills: [python, osint]
 tags: [ciberseguridad, osint, python]
 en:
   role: Cybersecurity technician (internship)

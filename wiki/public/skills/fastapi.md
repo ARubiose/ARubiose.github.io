@@ -2,6 +2,7 @@
 title: FastAPI
 type: skill
 category: backend
+icon: si:fastapi
 summary: Framework de APIs en Python para el procesamiento asíncrono en Zalcu y el backend de SKIN AI.
 tags: []
 en:

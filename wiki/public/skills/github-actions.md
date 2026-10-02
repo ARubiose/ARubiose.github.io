@@ -2,6 +2,7 @@
 title: GitHub Actions
 type: skill
 category: devops
+icon: si:githubactions
 summary: Pipelines de CI/CD.
 tags: []
 en:

@@ -2,6 +2,7 @@
 title: React
 type: skill
 category: frontend
+icon: si:react
 summary: Interfaces web dinámicas y fáciles de usar.
 tags: []
 en:

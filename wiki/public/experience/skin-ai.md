@@ -9,6 +9,7 @@ summary: Desarrollo de una aplicación web y móvil que reconoce enfermedades ca
 highlights:
   - Aplicación web y móvil con Expo.
   - Backend en FastAPI que da servicio a los modelos de IA.
+skills: [python, fastapi, expo, computer-vision]
 tags: [ia, fastapi, expo, salud]
 en:
   role: AI Engineer

@@ -2,6 +2,7 @@
 title: Agentes LLM
 type: skill
 category: ai
+icon: ph:robot
 summary: Diseño de flujos con agentes LLM, como la wiki mantenida por Claude Code de este portfolio.
 tags: []
 en:

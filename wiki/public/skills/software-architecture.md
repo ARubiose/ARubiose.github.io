@@ -2,6 +2,7 @@
 title: Arquitectura de software
 type: skill
 category: backend
+icon: ph:tree-structure
 summary: Diseño de sistemas escalables y eficientes, con responsabilidades de arquitecto.
 tags: []
 en:

@@ -2,6 +2,7 @@
 title: Django
 type: skill
 category: backend
+icon: si:django
 summary: Framework web en Python, usado junto a Celery y Redis para procesar archivos.
 tags: []
 en:
