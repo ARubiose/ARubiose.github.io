@@ -1,0 +1,23 @@
+---
+import type { Locale } from "@i18n/ui";
+import { useTranslations } from "@i18n/utils";
+import type { SectionId } from "@lib/home";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+
+interface Props {
+    locale: Locale;
+    sections: { id: SectionId; label: string }[];
+    urls: Record<Locale, string>;
+}
+const { locale, sections, urls } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<header class="flex flex-wrap items-center justify-between gap-4 px-6 py-4">
+    <nav aria-label={t("nav.label")}>
+        <ul class="flex flex-wrap gap-4">
+            {sections.map((s) => <li><a href={`#${s.id}`}>{s.label}</a></li>)}
+        </ul>
+    </nav>
+    <LanguageSwitcher locale={locale} urls={urls} />
+</header>
