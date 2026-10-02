@@ -72,14 +72,18 @@ export function buildHomeView(data: HomeData, locale: Locale, now: string): Home
         return { ...l, id, file: `${l.repo.split("/").filter(Boolean).pop()}/README.md`, statusLabel: t(`projects.status.${l.status}`) };
     });
 
+    // Ids con prefijo por tipo: un puesto y un proyecto pueden compartir nombre de archivo.
     const spans: Record<string, Span & { name: string; role: string }> = {};
     for (const { id, data: d } of data.experience) {
-        spans[id] = { start: d.start, end: d.end, name: d.company, role: localize(d, locale).role };
+        spans[`experience/${id}`] = { start: d.start, end: d.end, name: d.company, role: localize(d, locale).role };
     }
     for (const { id, data: d } of data.projects) {
-        spans[id] = { start: d.start, end: null, name: d.title, role: t("projects.kind") };
+        spans[`project/${id}`] = { start: d.start, end: null, name: d.title, role: t("projects.kind") };
     }
-    const entriesWithSkills = [...data.experience, ...data.projects].map((e) => ({ id: e.id, skills: e.data.skills }));
+    const entriesWithSkills = [
+        ...data.experience.map((e) => ({ id: `experience/${e.id}`, skills: e.data.skills })),
+        ...data.projects.map((e) => ({ id: `project/${e.id}`, skills: e.data.skills })),
+    ];
     const usage = skillUsage(entriesWithSkills);
 
     const skillViews: SkillView[] = data.skills.map(({ id, data: d }) => {

@@ -40,7 +40,7 @@ test("habilidades: XP por unión de usos, desde y dónde se usó", () => {
     const view = buildHomeView(data, "es", NOW);
     const python = view.skillGroups.flatMap((g) => g.items).find((s) => s.id === "python")!;
     expect(python.since).toBe(2020);
-    expect(python.usedIn.map((u) => u.id)).toEqual(["new", "site", "old"]);
+    expect(python.usedIn.map((u) => u.id)).toEqual(["experience/new", "project/site", "experience/old"]);
     expect(python.months).toBeGreaterThan(6);
 });
 
@@ -55,8 +55,8 @@ test("XP profesional solo cuenta puestos", () => {
 
 test("datos para el cliente: uso y nombres", () => {
     const view = buildHomeView(data, "es", NOW);
-    expect(view.usage).toEqual({ python: ["old", "new", "site"], expo: ["new"] });
-    expect(view.entryNames).toEqual({ old: "Old Co", new: "New Co", site: "Web" });
+    expect(view.usage).toEqual({ python: ["experience/old", "experience/new", "project/site"], expo: ["experience/new"] });
+    expect(view.entryNames).toEqual({ "experience/old": "Old Co", "experience/new": "New Co", "project/site": "Web" });
 });
 
 test("las secciones vacías no aparecen en la navegación", () => {
@@ -66,4 +66,16 @@ test("las secciones vacías no aparecen en la navegación", () => {
 test("displayUrl quita protocolo y barra final", () => {
     expect(displayUrl("https://www.linkedin.com/in/ada/")).toBe("linkedin.com/in/ada");
     expect(displayUrl("https://github.com/ada")).toBe("github.com/ada");
+});
+
+test("un puesto y un proyecto con el mismo id no se pisan", () => {
+    const clash: HomeData = {
+        ...data,
+        experience: [data.experience[0]],
+        projects: [{ id: "old", data: { ...data.projects[0].data, title: "Old project", start: "2025-01" } }],
+    };
+    const view = buildHomeView(clash, "es", NOW);
+    const python = view.skillGroups.flatMap((g) => g.items).find((s) => s.id === "python")!;
+    expect(python.usedIn.map((u) => u.name).sort()).toEqual(["Old Co", "Old project"]);
+    expect(Object.values(view.entryNames).sort()).toEqual(["Old Co", "Old project"]);
 });
