@@ -11,15 +11,16 @@ const t = useTranslations(locale);
 ---
 
 <nav aria-label={t("lang.label")}>
-    <ul class="flex gap-3 text-sm">
+    <ul class="flex gap-2 text-[13px] text-muted">
         {
-            locales.map((l) => (
-                <li>
+            locales.map((l, i) => (
+                <li class="flex gap-2">
+                    {i > 0 && <span aria-hidden="true">/</span>}
                     {l === locale ? (
-                        <span aria-current="true" class="font-semibold">{t(`lang.${l}`)}</span>
+                        <span aria-current="true" class="text-text">{l.toUpperCase()}</span>
                     ) : (
-                        <a href={urls[l]} hreflang={l} lang={l} class="underline">
-                            {t(`lang.${l}`)}
+                        <a href={urls[l]} hreflang={l} lang={l} aria-label={t(`lang.${l}`)} class="hover:text-text">
+                            {l.toUpperCase()}
                         </a>
                     )}
                 </li>

@@ -35,6 +35,10 @@ export const ui = {
         "xp.and": "y",
         "skills.noUse": "sin uso registrado",
         "projects.kind": "Proyecto",
+        "nav.menu": "menu",
+        "nav.close": "cerrar",
+        "nav.prompt": "alvaro@portfolio:~$",
+        "nav.list": "ls secciones/",
     },
     en: {
         "nav.label": "Sections",
@@ -68,6 +72,10 @@ export const ui = {
         "xp.and": "",
         "skills.noUse": "no recorded use",
         "projects.kind": "Project",
+        "nav.menu": "menu",
+        "nav.close": "close",
+        "nav.prompt": "alvaro@portfolio:~$",
+        "nav.list": "ls sections/",
     },
 } as const satisfies Record<Locale, Record<string, string>>;
 
