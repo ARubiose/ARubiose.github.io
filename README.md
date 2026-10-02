@@ -5,14 +5,15 @@ mantenida por un agente LLM**, siguiendo el patrón *LLM Wiki* de Andrej Karpath
 
 ## Qué hace el agente
 
-Tú dejas material en bruto (CV, exportación de LinkedIn, notas de proyectos) en `raw/`.
+Tú dejas material en bruto (CV, exportación de LinkedIn, notas de proyectos) en `raw/` o le
+pasas URLs públicas, cuyos datos validas antes de que entren en la wiki.
 El agente (Claude Code) lo convierte en una wiki
 estructurada en `wiki/`: una página por puesto, proyecto, habilidad y formación, enlazadas
 entre sí, con un índice y un registro de cambios. Tiene tres operaciones:
 
 | Comando | Qué hace |
 | --- | --- |
-| `/ingest raw/<archivo>` | Lee una fuente nueva y crea o actualiza las páginas afectadas |
+| `/ingest raw/<archivo>` o `/ingest <URL>` | Lee una fuente nueva y crea o actualiza las páginas afectadas |
 | `/query <pregunta>` | Responde a partir de la wiki y puede guardar la respuesta como síntesis |
 | `/lint` | Busca enlaces rotos, páginas huérfanas, contradicciones y huecos |
 

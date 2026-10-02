@@ -1,15 +1,17 @@
 ---
 name: ingest
-description: Incorpora una fuente de raw/ (CV, exportación de LinkedIn, notas, certificados) a la LLM Wiki del portfolio. Úsala cuando el usuario añada material a raw/ o pida meter, ingerir o procesar información personal o profesional en la wiki.
-argument-hint: <ruta en raw/>
+description: Incorpora una fuente de raw/ (CV, exportación de LinkedIn, notas, certificados) o una URL pública a la LLM Wiki del portfolio. Úsala cuando el usuario añada material a raw/, comparta un enlace o pida meter, ingerir o procesar información personal o profesional en la wiki.
+argument-hint: <ruta en raw/ o URL>
 ---
 
 Ingiere la fuente `$ARGUMENTS` en la wiki.
 
 1. Lee la fuente completa y después `wiki/index.md` y `wiki/private/index.md`, para saber
-   qué páginas existen ya.
+   qué páginas existen ya. Si es una URL y no se puede leer (login, bloqueo), no insistas:
+   pide al usuario que guarde la página en `raw/`.
 2. **Antes de escribir nada**, presenta al usuario:
-   - 3–5 puntos con lo que has extraído.
+   - 3–5 puntos con lo que has extraído. Si la fuente es web, incluye la URL; su
+     confirmación es la validación que exige la regla de la wiki.
    - Las páginas que vas a crear o actualizar, separadas en públicas y privadas.
    - Los datos dudosos de privacidad y las contradicciones con lo que ya hay.
 

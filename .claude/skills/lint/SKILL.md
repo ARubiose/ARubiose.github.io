@@ -14,7 +14,8 @@ Busca, en este orden de gravedad:
 2. **Enlaces rotos** entre páginas.
 3. **Páginas huérfanas:** sin enlaces entrantes o ausentes de su índice.
 4. **Frontmatter** incompleto o con un `type` inválido. Un `sources` que apunta a un archivo
-   inexistente es solo un aviso, porque `raw/` no está en git.
+   inexistente es solo un aviso, porque `raw/` no está en git. Las URLs no se comprueban;
+   avisa solo si les falta la fecha de consulta.
 5. **Contradicciones** entre páginas y datos desactualizados.
 6. **Huecos:** entidades mencionadas sin página propia y archivos de `raw/` que no aparecen
    en ningún `sources`.

@@ -35,6 +35,22 @@ wiki/
 
 No crees carpetas nuevas sin proponerlo antes.
 
+## Fuentes
+
+Un dato solo entra en la wiki si sale de una fuente:
+
+- **`raw/`** (preferente): archivos que deja el humano. Son estables y revisables.
+- **Web, con validación humana:** URLs públicas que da el humano o que encuentra el agente.
+  Antes de escribir nada, presenta la URL y los datos extraídos, y espera a que el humano
+  los valide de forma explícita. Lo no validado no se usa.
+  - No intentes saltar muros de login ni bloqueos (LinkedIn, por ejemplo): pide al humano
+    que guarde la página en `raw/`.
+  - La web cambia. Si la fuente es importante, sugiere guardar una copia en `raw/`.
+  - Que un dato sea público en internet no lo hace publicable aquí: la regla de privacidad
+    se aplica igual.
+- **Declaraciones del humano:** lo que cuenta en la conversación. Se cita como
+  `humano (AAAA-MM-DD)`. Si es extenso, sugiere guardarlo como nota en `raw/`.
+
 ## Regla de privacidad
 
 El repo es público. **Ante la duda, un dato va a `wiki/private/`.** Nunca escribas en
@@ -60,14 +76,16 @@ pública solo lleva la parte publicable. Lo privado sí puede enlazar a lo públ
   type: experience     # profile | experience | project | skill | education | note | synthesis
   summary: Una frase; se usa en el índice y en el portfolio.
   tags: [backend, typescript]
-  sources: [raw/cv-2026.pdf]
+  sources: [raw/cv-2026.pdf, "https://github.com/usuario (2026-10-02)", "humano (2026-10-02)"]
   updated: 2026-10-01
   ---
   ```
 
   Opcionales: `period` (`2023-03 – actualidad`), `role`, `company`, `url`, `repo`, `status`.
+  Una fuente web se cita con su URL y la fecha de consulta entre paréntesis.
 - **Enlaces:** Markdown relativos (`[TypeScript](../skills/typescript.md)`), no `[[wikilinks]]`.
-- **Respaldo:** todo dato concreto (fechas, cifras, cargos) sale de `raw/`. Lo inferido se
+- **Respaldo:** todo dato concreto (fechas, cifras, cargos) sale de una fuente (ver
+  *Fuentes*). Lo inferido se
   marca con `> ⚠️ Inferido:`; las discrepancias entre fuentes, con `> ⚠️ Conflicto:` citando
   ambas, y se avisa al humano.
 - **Cierre:** cada página termina con `## Relacionado` y `## Fuentes`.
@@ -92,3 +110,6 @@ estructura, una línea por página:
 - Creadas: public/experience/acme-corp.md, private/notes/acme-corp.md
 - Actualizadas: public/profile.md, index.md, private/index.md
 ```
+
+Si la fuente es web, la línea `Fuente` lleva la URL y la fecha de consulta, y se añade
+`- Validado por el humano: sí`.

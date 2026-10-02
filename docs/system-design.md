@@ -120,6 +120,8 @@ portfolio consume únicamente `wiki/public/`.
 ### 4.1 La wiki
 
 - **`raw/`**: fuentes originales, inmutables y locales.
+- **Web**: URLs públicas como fuente secundaria. El agente presenta lo que extrae y solo lo
+  usa si el humano lo valida; se cita con la URL y la fecha de consulta.
 - **`wiki/public/`**: una página Markdown por entidad publicable (`profile.md`,
   `experience/`, `projects/`, `skills/`, `education/`), con frontmatter normalizado.
 - **`wiki/private/`**: lo que no debe publicarse, el log y las síntesis.
@@ -187,7 +189,7 @@ carga solo cuando hace falta o que la hace cumplir sin depender del modelo:
 
 ### 5.2 Operaciones
 
-- **Ingest:** lee una fuente, propone qué extrae y qué páginas toca (públicas y privadas),
+- **Ingest:** lee una fuente (archivo de `raw/` o URL), propone qué extrae y qué páginas toca (públicas y privadas),
   espera confirmación y después escribe páginas, enlaces, índices y log.
 - **Query:** índices → páginas relevantes → respuesta citada. Opcionalmente, la respuesta se
   guarda como síntesis privada.
