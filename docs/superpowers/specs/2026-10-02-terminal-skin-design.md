@@ -1,7 +1,7 @@
 # Diseño: fase 5, diseño visual con la skin Terminal
 
 - Fecha: 2026-10-02
-- Estado: pendiente de revisión
+- Estado: implementada
 - Alcance: fase 5 de [tasks.md](../../tasks.md) (diseño visual). Construye la arquitectura de
   skins y la skin **Terminal** completa. Las skins Táctico y Menú de juego quedan para una
   fase posterior.
@@ -141,7 +141,7 @@ Sin framework de interfaz. Módulos TypeScript en `<script>` de Astro (empaqueta
 ### 3.3 Contrato de la wiki
 
 - **`skills`** (opcional) en `experience` y `project`: ids de habilidades usadas, validados
-  con `reference("skills")` en `src/content.config.ts` y en el test de contrato.
+  con `findBrokenSkillRefs` en `HomePage.astro` (el build falla) y en el test de contrato.
 - **`icon`** (obligatorio) en `skill`: `si:<slug>` (Simple Icons) o `ph:<nombre>` (Phosphor);
   el esquema valida el formato y la existencia del icono.
 - **Cálculo en build** (`src/lib/skills.ts`):

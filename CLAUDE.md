@@ -32,6 +32,11 @@ Las convenciones de la wiki se cargan solas al trabajar en `wiki/` o `raw/`.
   mano es el diccionario de interfaz `src/i18n/ui.ts`. El contrato son los esquemas Zod de
   `src/lib/schemas.ts`.
 - Comandos: `pnpm dev`, `pnpm build`, `pnpm preview`, `pnpm check`, `pnpm test`, `pnpm test:e2e`.
+- Estilos por skins: tokens semánticos en `src/styles/global.css` y una hoja por skin en
+  `src/styles/skins/`; los componentes usan clases semánticas, nunca colores ni fuentes
+  concretos. Maquetas de referencia en `docs/design/mockups/`.
+- JavaScript de cliente solo como mejora progresiva en `src/scripts/`; la lógica testeable
+  va en `src/lib/`.
 - Desarrollo con TDD; ver la estrategia de tests en `docs/system-design.md` §3.7.
 
 ## Convenciones

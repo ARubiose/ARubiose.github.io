@@ -39,27 +39,32 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 | Páginas | `src/pages/` | Rutas: `/` (es) y `/en/` (en) | Sí |
 | Layouts | `src/layouts/` | `Layout.astro` (documento HTML, `lang`, metadatos) y `HomePage.astro` (carga colecciones y compone la portada) | Sí |
 | Secciones | `src/sections/` | Bloques de la página: `intro`, `experience`, `projects`, `skills`, `education`, `contact` | Sí |
-| Componentes | `src/components/` | Piezas reutilizables: `Header`, `LanguageSwitcher`, `ProfileAvatar`, `TimelineItem`, `ProjectCard`, `SkillGroup` | Sí |
-| Lógica | `src/lib/` | Esquemas Zod (`schemas.ts`), fechas, ordenación y vista de la portada (`home.ts`); funciones puras | Sí |
+| Componentes | `src/components/` | Piezas reutilizables: `Header` (menú móvil con popover), `LanguageSwitcher`, `Icon`, `Window`, `ProfilePhoto` (visor con `<dialog>`), `Timeline`/`TimelineItem`, `ProjectCard`, `SkillBuilder`, `Footer` | Sí |
+| Lógica | `src/lib/` | Funciones puras: esquemas Zod (`schemas.ts`), fechas, ordenación, iconos (`icons.ts`), XP y build (`skills.ts`, `build.ts`), skins (`skins.ts`) y vista de la portada (`home.ts`) | Sí |
+| Scripts | `src/scripts/` | Mejora progresiva en el cliente: navegación activa, visor de la foto, creador de personaje, flechas de pestañas, animaciones GSAP | Sí |
 | i18n | `src/i18n/` | Diccionario de interfaz (`ui.ts`) y `useTranslations`/`localize` | Sí |
 | Colecciones | `src/content.config.ts` | Colecciones de Astro sobre `wiki/public/` | Sí |
 | Tests | `tests/` | Unitarios, contrato, componentes, privacidad y E2E (§3.7) | Sí |
-| Estilos | `src/styles/global.css` | Tailwind 4 y tokens de diseño (`@theme`) | Sí |
+| Estilos | `src/styles/` | `global.css` (Tailwind y tokens semánticos), `base.css` (reset en `@layer base`) y `skins/` (una hoja por skin) | Sí |
 | Assets | `src/assets/`, `public/` | Imágenes que Astro optimiza / archivos que se sirven tal cual | Sí |
 | Configuración | `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`, `playwright.config.ts` | i18n, plugin de Tailwind, alias de importación, tests | Sí |
 | Wiki pública | `wiki/public/` | Contenido publicable; fuente de datos del portfolio | Sí |
 | Wiki privada | `wiki/private/` | Notas personales, síntesis, log | No |
 | Fuentes | `raw/` | Material original (CV, LinkedIn…) | No |
 | Agente | `.claude/` | Regla de la wiki, skills `ingest`/`query`/`lint`, permisos | Sí |
-| Docs | `docs/` | Este documento y las decisiones (`decisions/`) | Sí |
+| Docs | `docs/` | Este documento, las decisiones (`decisions/`), las tareas (`tasks.md`) y las maquetas (`design/mockups/`) | Sí |
 
 ## 3. Portfolio (Astro)
 
 ### 3.1 Stack
 
 - **Astro 7.3** (Vite 8, compilador en Rust) con salida estática (`output: "static"`, el
-  valor por defecto). Sin framework de UI ni JavaScript de cliente por ahora: todo se
-  renderiza en build.
+  valor por defecto). Sin framework de UI: el HTML se genera completo en build y unos
+  módulos pequeños de `src/scripts/` lo mejoran en el cliente.
+- **Fuentes** con la API de fuentes de Astro (Space Grotesk e IBM Plex Mono vía Fontsource),
+  descargadas en el build y servidas desde `/_astro/fonts/`. El build necesita red.
+- **GSAP 3.15** (licencia gratuita, también comercial) con ScrollTrigger y ScrambleTextPlugin.
+- **Iconos:** `simple-icons` y `@phosphor-icons/core`, como SVG en línea.
 - **Tailwind CSS 4.3** como plugin de Vite (`@tailwindcss/vite`), configurado desde CSS
   (`@import "tailwindcss"` + `@theme`), sin `tailwind.config.js`.
 - **TypeScript estricto** (`astro/tsconfigs/strict`).
@@ -79,14 +84,16 @@ Comportamientos de Astro 7 que hay que tener en cuenta al desarrollar:
 
 ```text
 pages/index.astro     ─┐ locale "es"
-pages/en/index.astro  ─┴─▶ layouts/HomePage.astro ─▶ Layout.astro (lang, <title>, meta, global.css)
-                           │ getCollection + buildHomeView     ├─ Header ─▶ LanguageSwitcher
-                           │ (localiza, ordena, formatea)      ├─ sections/intro       ─▶ ProfileAvatar
-                           └──── props localizadas ──────────▶ ├─ sections/experience  ─▶ TimelineItem
-                                                               ├─ sections/projects    ─▶ ProjectCard
-                                                               ├─ sections/skills      ─▶ SkillGroup
-                                                               ├─ sections/education   ─▶ TimelineItem
-                                                               └─ sections/contact
+pages/en/index.astro  ─┴─▶ layouts/HomePage.astro ─▶ Layout.astro (lang, data-skin, fuentes, meta)
+                           │ getCollection + buildHomeView     ├─ Header (popover)     ─▶ LanguageSwitcher
+                           │ (localiza, ordena, calcula XP)    ├─ sections/intro       ─▶ ProfilePhoto (<dialog>)
+                           └──── props localizadas ──────────▶ ├─ sections/experience  ─▶ Timeline ─▶ Window
+                                                               ├─ sections/projects    ─▶ ProjectCard ─▶ Window
+                                                               ├─ sections/skills      ─▶ SkillBuilder ─▶ Icon
+                                                               ├─ sections/education   ─▶ Timeline ─▶ Window
+                                                               ├─ sections/contact
+                                                               └─ Footer
+src/scripts/: nav · lightbox · skill-builder (+ tab-edges) · motion   (mejora progresiva)
 ```
 
 - **Una sola composición.** Las páginas de idioma solo montan `HomePage` con su `locale`.
@@ -96,6 +103,10 @@ pages/en/index.astro  ─┴─▶ layouts/HomePage.astro ─▶ Layout.astro (l
 - **Secciones vacías.** Una sección sin elementos no se renderiza y la navegación no la
   enlaza (`HomeView.sections`).
 - **Componentes** reutilizables que reciben props y no saben de dónde vienen los datos.
+- **Mejora progresiva.** Sin JavaScript o con `prefers-reduced-motion` todo el contenido se
+  ve: el creador de personaje se muestra como lista por categorías y las animaciones solo
+  usan `gsap.from()` dentro de `gsap.matchMedia()`. El script de cliente se mantiene por
+  debajo de 60 KB comprimidos (test de presupuesto).
 - **Alias de importación:** `@layouts`, `@sections`, `@components`, `@styles`, `@assets`,
   `@lib`, `@i18n`.
 
@@ -116,10 +127,19 @@ pages/en/index.astro  ─┴─▶ layouts/HomePage.astro ─▶ Layout.astro (l
 
 ### 3.4 Estilos
 
-- Tokens de diseño en `@theme` dentro de `global.css` (p. ej. `--color-mint-500`), que
-  Tailwind expone como utilidades (`bg-mint-500`).
-- Utilidades de Tailwind para la maquetación; `<style>` con ámbito solo cuando una sección
-  necesite algo que las utilidades no expresen bien.
+Arquitectura de **skins** ([spec](superpowers/specs/2026-10-02-terminal-skin-design.md)):
+
+- `<html data-skin="terminal">`. Cada skin vive en `src/styles/skins/<skin>.css` y define
+  variables `--skin-*` (colores, fuentes, radio) más su decoración bajo
+  `[data-skin="<skin>"]`. El registro está en `src/lib/skins.ts`; un script en `<head>` aplica
+  la preferencia guardada (el selector visible llega con la segunda skin).
+- `global.css` declara los tokens **semánticos** con `@theme inline` (`bg`, `surface`,
+  `line`, `text`, `muted`, `accent`, `warn`, `font-display`, `font-mono`…) apuntando a las
+  variables de la skin, y Tailwind los expone como utilidades (`bg-surface`, `text-accent`).
+- **Regla de componentes:** maquetación con utilidades; aspecto con clases semánticas
+  estables (`window`, `prompt`, `timeline`, `tile`…) que estiliza la skin. Ningún componente
+  usa colores ni fuentes concretos.
+- `base.css` va en `@layer base` para que las utilidades puedan sobrescribir el reset.
 
 ### 3.5 Imágenes
 
@@ -141,16 +161,24 @@ portfolio consume únicamente `wiki/public/`.
 | Contrato | Vitest + Zod | Fixtures válidos/inválidos y toda la wiki pública real | `tests/content/` |
 | Componentes | Vitest + Container API | Secciones y cabecera en ambos idiomas y con listas vacías | `tests/components/` |
 | Privacidad | Vitest | Teléfono, dirección, código postal y nacimiento en `wiki/public/` y `dist/`, más `wiki/private/forbidden-strings.txt` si existe | `tests/privacy/` |
-| E2E | Playwright + axe | `/` y `/en/`: idioma, secciones, enlaces, selector, accesibilidad | `tests/e2e/` |
+| E2E | Playwright + axe | `/` y `/en/` en escritorio (1280) y móvil (390): navegación, menú, visor, creador de personaje, sin JS, movimiento reducido, desbordamiento, CLS, accesibilidad con diálogos abiertos | `tests/e2e/` |
+| Regresión visual | Playwright `toHaveScreenshot` | Portada completa en ambos tamaños e idiomas, con movimiento reducido | `tests/e2e/visual.spec.ts-snapshots/` |
+| Presupuesto | Vitest | JavaScript de la portada ≤ 60 KB comprimido | `tests/perf/` |
 
-Scripts: `pnpm test` (todo salvo E2E), `pnpm test:e2e` (build + preview + Playwright, y después el escaneo de privacidad sobre `dist/`),
-`pnpm check` (`astro check`). Notas de entorno:
+Scripts: `pnpm test` (todo salvo E2E), `pnpm test:e2e` (build + preview + Playwright, y
+después la privacidad y el presupuesto sobre `dist/`), `pnpm test:visual:update` (regenera
+las capturas de referencia tras un cambio de diseño intencionado) y `pnpm check`
+(`astro check`). Notas de entorno:
 
 - La Container API es `experimental_AstroContainer` en Astro 7.3; si cambia en una versión
   menor, E2E hace de red.
 - El preview de Playwright usa `--ignore-lock`: Astro 7 lanza `astro preview` en segundo
   plano cuando detecta un agente de IA, y Playwright lo interpreta como una salida temprana.
 - TypeScript está en la versión 6 porque `@astrojs/check` aún no admite la 7.
+- En desarrollo, la Container API añade atributos `data-astro-source-*`; los tests los
+  quitan con `tests/support/render.ts` antes de comprobar el HTML.
+- Las capturas de referencia dependen del entorno (fuentes, renderizado): hay que
+  generarlas en el mismo sistema que las compara.
 
 ## 4. Capa de contenido
 
@@ -248,7 +276,7 @@ El estado, las fases pendientes, las mejoras aplazadas y las cuestiones abiertas
 | Wiki pública/privada en un solo repo | Plantilla + instancia privada + repo de salida | Mucho más simple. [0001](decisions/0001-public-private-wiki.md) |
 | Esquema repartido entre una regla con ámbito de rutas y las skills | Todo en `CLAUDE.md` o en un `SCHEMA.md` | Contexto solo cuando hace falta, sin indirecciones. [0002](decisions/0002-claude-code-native-schema.md) |
 | Inmutabilidad de `raw/` por permisos | Solo una instrucción | Determinista |
-| Sitio estático sin JS de cliente | SSR o SPA | El contenido cambia poco y GitHub Pages solo sirve estáticos |
+| Sitio estático con mejora progresiva | SSR o SPA | El contenido cambia poco y GitHub Pages solo sirve estáticos; el JS solo añade interacción |
 | Contenido validado con Zod en build | Leer el Markdown sin validar | El agente escribe la wiki; el esquema detecta sus errores antes de publicar |
 | Enlaces Markdown relativos | `[[wikilinks]]` | Funcionan en GitHub, Obsidian y Astro sin plugins |
 | Índice mantenido por el LLM | Búsqueda vectorial / RAG | Volumen pequeño; sin infraestructura extra |
@@ -259,6 +287,10 @@ El estado, las fases pendientes, las mejoras aplazadas y las cuestiones abiertas
 | Diccionario propio para la interfaz | Paraglide JS | Sin JS de cliente que optimizar; ver §3.3 |
 | Secciones con props, datos cargados en `HomePage` | Secciones que leen colecciones | Testeables con la Container API |
 | Fechas `start`/`end` (`AAAA-MM`) | `period` en texto libre | Ordenables y formateables por idioma |
+| Skins por atributo y tokens `--skin-*` | Un único tema fijo | Añadir skins sin tocar el marcado |
+| GSAP + CSS para animaciones | Solo CSS, Motion | Efectos de terminal (ScrambleText) y ScrollTrigger sin framework de UI |
+| Integridad de `skills` con `findBrokenSkillRefs` | `reference()` de Astro | Los esquemas se prueban sin `astro:content`; el build falla igual |
+| XP calculada a partir de los puestos | Niveles escritos a mano | Sin datos inventados |
 
 ## 9. Referencias
 

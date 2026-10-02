@@ -39,7 +39,8 @@ Tests (la primera vez, `pnpm exec playwright install chromium`):
 ```sh
 pnpm check        # tipos (astro check)
 pnpm test         # unitarios, contrato de contenido, componentes y privacidad
-pnpm test:e2e     # build + Playwright en / y /en/, con axe, y escaneo de privacidad de dist/
+pnpm test:e2e     # build + Playwright (escritorio y móvil), axe, regresión visual, privacidad y presupuesto de JS
+pnpm test:visual:update   # regenera las capturas de referencia tras un cambio de diseño intencionado
 ```
 
 pnpm 11 solo ejecuta scripts de instalación de los paquetes aprobados en

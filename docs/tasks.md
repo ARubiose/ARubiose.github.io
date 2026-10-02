@@ -15,16 +15,13 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 | 2026-10-01 | Diseño del sistema y README | `fdfc796`, `1959e03` |
 | 2026-10-02 | Actualización a Astro 7.3, Tailwind 4.3, Node 24 y pnpm 11 | `28f6ddf` |
 | 2026-10-02 | Fuentes web y declaraciones del humano en la wiki | `8ab7eac`; decisión [0003](decisions/0003-web-and-human-sources.md) |
+| 2026-10-02 | Fase 5: arquitectura de skins y skin Terminal (timeline, creador de personaje, foto ampliable, animaciones GSAP, regresión visual) | [spec](superpowers/specs/2026-10-02-terminal-skin-design.md), [plan](superpowers/plans/2026-10-02-terminal-skin.md), [maquetas](design/mockups/) |
 | 2026-10-02 | Fases 1–4: contenido inicial, base del sitio, contrato de contenido y secciones, con tests (unitarios, contrato, componentes, privacidad y E2E con axe) | [spec](superpowers/specs/2026-10-02-portfolio-content-design.md), [plan](superpowers/plans/2026-10-02-portfolio-content.md); `af663b9`..`6384a1b` |
 
 ## Pendiente
 
 ### Fases
 
-- [ ] **5. Diseño visual (en curso).** Arquitectura de skins y skin Terminal: timeline,
-  creador de personaje, foto ampliable y animaciones con GSAP.
-  [Spec](superpowers/specs/2026-10-02-terminal-skin-design.md),
-  [maquetas](design/mockups/).
 - [ ] **5b. Más skins.** Táctico y Menú de juego (ver `design/mockups/hud-directions.html`)
   y selector de skin visible.
 - [ ] **6. Despliegue.** `site` en `astro.config.mjs`, workflow de GitHub Actions a GitHub
