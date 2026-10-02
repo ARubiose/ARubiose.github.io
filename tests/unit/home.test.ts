@@ -43,7 +43,7 @@ const data: HomeData = {
     ],
     projects: [],
     skills: [
-        { ...meta, type: "skill", title: "Python", category: "backend", summary: "s", en: { summary: "s" } },
+        { ...meta, type: "skill", title: "Python", category: "backend", icon: "si:python", summary: "s", en: { summary: "s" } },
     ],
     education: [],
 };
