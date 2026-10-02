@@ -45,6 +45,7 @@ export const ui = {
         "photo.dialog": "Foto de perfil ampliada",
         "hero.contact": "contacto",
         "hero.github": "github",
+        "timeline.current": "EN CURSO",
     },
     en: {
         "nav.label": "Sections",
@@ -88,6 +89,7 @@ export const ui = {
         "photo.dialog": "Enlarged profile photo",
         "hero.contact": "contact",
         "hero.github": "github",
+        "timeline.current": "CURRENT",
     },
 } as const satisfies Record<Locale, Record<string, string>>;
 

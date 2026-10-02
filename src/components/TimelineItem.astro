@@ -1,23 +1,29 @@
 ---
+import type { TimelineView } from "@lib/home";
+import { toDatetime } from "@lib/dates";
+import Window from "./Window.astro";
+
 interface Props {
-    title: string;
-    subtitle: string;
-    period: string;
-    summary: string;
-    highlights?: string[];
-    note?: string;
+    item: TimelineView;
+    side: "left" | "right";
+    currentTag: string;
 }
-const { title, subtitle, period, summary, highlights = [], note } = Astro.props;
+const { item, side, currentTag } = Astro.props;
+const [from, to] = item.period.split(" - ");
 ---
 
-<li class="py-4">
-    <h3 class="text-lg font-semibold">{title}</h3>
-    <p class="text-neutral-700">{subtitle} · <span class="text-neutral-600">{period}</span></p>
-    <p class="mt-2">{summary}</p>
-    {note && <p class="mt-1 text-sm text-neutral-600">{note}</p>}
-    {highlights.length > 0 && (
-        <ul class="mt-2 list-disc pl-5">
-            {highlights.map((h) => <li>{h}</li>)}
-        </ul>
-    )}
+<li class="t-item relative grid grid-cols-[28px_1fr] md:grid-cols-[1fr_56px_1fr]" data-side={side} data-current={item.current || undefined}>
+    <span class="timeline-node relative z-[1] col-start-1 row-start-1 mt-1 md:col-start-2 md:mt-[18px] md:justify-self-center" aria-hidden="true"></span>
+    <p class:list={["t-when col-start-2 row-start-1 md:pt-3.5", side === "left" ? "md:col-start-3 md:pl-1" : "md:col-start-1 md:pr-1 md:text-right"]}>
+        <time datetime={toDatetime(item.start)}>{from}</time>{to && <> - {item.end ? <time datetime={toDatetime(item.end)}>{to}</time> : to}</>}
+    </p>
+    <Window file={item.file} tag={item.current ? currentTag : undefined} meta={item.duration || undefined} class={["t-card col-start-2 row-start-2 mt-1.5 md:row-start-1 md:mt-0", side === "left" ? "md:col-start-1" : "md:col-start-3"].join(" ")}>
+        <div class="p-3 md:px-[18px] md:py-4">
+            <h3 class="font-display text-[17px] leading-tight font-bold md:text-[19px]">{item.title}</h3>
+            <p class="text-[12.5px] text-muted md:text-[13.5px]">@ {item.subtitle}</p>
+            {item.summary && <p class="mt-2 text-[13px] text-body md:text-[14px]">{item.summary}</p>}
+            {item.note && <p class="mt-2 text-[12.5px] text-body">{item.note}</p>}
+            {item.highlights.length > 0 && <ul class="marker-list mt-2 text-[13px] text-body md:text-[14px]">{item.highlights.map((h) => <li>{h}</li>)}</ul>}
+        </div>
+    </Window>
 </li>

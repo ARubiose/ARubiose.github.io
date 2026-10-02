@@ -13,34 +13,36 @@ beforeAll(async () => {
     container = await AstroContainer.create();
 });
 
-const job = {
-    id: "acme",
-    file: "acme.log",
-    title: "Engineer",
-    subtitle: "Acme",
-    start: "2026-06",
-    end: null,
-    period: "Jun 2026 - present",
-    current: true,
-    duration: "",
-    summary: "Python backend.",
-    highlights: ["API design."],
-};
+const item = (over: Partial<import("@lib/home").TimelineView> = {}) => ({
+    id: "acme", file: "acme.log", title: "Engineer", subtitle: "Acme", start: "2026-06", end: null,
+    period: "Jun 2026 - present", current: true, duration: "", summary: "Python backend.", highlights: ["API design."], ...over,
+});
 
 describe("Experience", () => {
-    test("muestra título traducido, puesto, empresa, periodo y logros", async () => {
-        const html = await container.renderToString(Experience, { props: { items: [job], locale: "en" } });
+    test("timeline alterno con fechas en <time> y etiqueta del puesto vigente", async () => {
+        const items = [item(), item({ id: "old", file: "old.log", start: "2020-01", end: "2020-07", period: "Jan 2020 - Jul 2020", current: false, duration: "6 months" })];
+        const html = clean(await container.renderToString(Experience, { props: { items, locale: "en" } }));
         expect(html).toContain('id="experience"');
-        expect(html).toContain("Experience");
-        for (const text of ["Engineer", "Acme", "Jun 2026 - present", "API design."]) {
-            expect(html).toContain(text);
-        }
+        expect(html.match(/data-side="left"/g)).toHaveLength(1);
+        expect(html.match(/data-side="right"/g)).toHaveLength(1);
+        expect(html).toContain('<time datetime="2026-06">');
+        expect(html).toContain("CURRENT");
+        expect(html).toContain("6 months");
+        expect(html).toContain("API design.");
     });
 
     test("sin elementos no renderiza nada", async () => {
-        const html = await container.renderToString(Experience, { props: { items: [], locale: "es" } });
+        const html = clean(await container.renderToString(Experience, { props: { items: [], locale: "es" } }));
         expect(html.trim()).toBe("");
     });
+});
+
+test("Education muestra la nota", async () => {
+    const html = clean(await container.renderToString(Education, {
+        props: { items: [item({ id: "upm", file: "upm.md", end: "2022", current: false, period: "2020 - 2022", note: "Average grade: 8.55", highlights: [] })], locale: "en" },
+    }));
+    expect(html).toContain('id="education"');
+    expect(html).toContain("Average grade: 8.55");
 });
 
 describe("Projects", () => {
@@ -82,12 +84,6 @@ test("Skills agrupa con la etiqueta de cada categoría", async () => {
     expect(html).toContain('id="skills"');
     expect(html).toContain("Backend");
     expect(html).toContain("Python");
-});
-
-test("Education muestra la nota con su etiqueta", async () => {
-    const item = { ...job, id: "uni", file: "uni.md", title: "Double degree", subtitle: "Uni", start: "2015", end: "2020", period: "2015 - 2020", current: false, highlights: [], note: "Average grade: 8.55" };
-    const html = await container.renderToString(Education, { props: { items: [item], locale: "en" } });
-    expect(html).toContain("Average grade: 8.55");
 });
 
 test("Contact enlaza email, LinkedIn y GitHub", async () => {

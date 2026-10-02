@@ -1,0 +1,21 @@
+---
+import type { Locale } from "@i18n/ui";
+import type { TimelineView } from "@lib/home";
+import TimelineItem from "./TimelineItem.astro";
+
+interface Props {
+    items: TimelineView[];
+    locale: Locale;
+    currentTag: string;
+}
+const { items, currentTag } = Astro.props;
+---
+
+<div class="timeline relative py-2">
+    <div class="timeline-rail absolute top-0 bottom-0 left-[6px] w-0.5 md:left-1/2 md:-translate-x-1/2" aria-hidden="true">
+        <div class="timeline-fill absolute inset-0"></div>
+    </div>
+    <ol class="grid gap-[18px] md:gap-7">
+        {items.map((item, i) => <TimelineItem item={item} side={i % 2 === 0 ? "left" : "right"} currentTag={currentTag} />)}
+    </ol>
+</div>

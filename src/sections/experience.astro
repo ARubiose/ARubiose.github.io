@@ -1,5 +1,5 @@
 ---
-import TimelineItem from "@components/TimelineItem.astro";
+import Timeline from "@components/Timeline.astro";
 import type { Locale } from "@i18n/ui";
 import { useTranslations } from "@i18n/utils";
 import type { HomeView } from "@lib/home";
@@ -13,12 +13,8 @@ const t = useTranslations(locale);
 ---
 
 {items.length > 0 && (
-    <section id="experience" class="py-8">
-        <h2 class="text-2xl font-bold">{t("section.experience")}</h2>
-        <ol>
-            {items.map((e) => (
-                <TimelineItem title={e.title} subtitle={e.subtitle} period={e.period} summary={e.summary} highlights={e.highlights} />
-            ))}
-        </ol>
+    <section id="experience" class="mt-11 md:mt-18">
+        <h2 class="section-title mb-4 text-[26px] md:mb-5 md:text-[30px]">{t("section.experience")}</h2>
+        <Timeline items={items} locale={locale} currentTag={t("timeline.current")} />
     </section>
 )}
