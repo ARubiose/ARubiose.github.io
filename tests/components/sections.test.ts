@@ -92,6 +92,7 @@ test("Skills sin JS: todas las categorías, XP, desde y dónde se usó cada habi
     expect(html).toMatch(/data-tabs[^>]*hidden|hidden[^>]*data-tabs/);
     expect(html).toContain('data-cap="6"');
     expect(html).toContain("data-builder-data");
+    expect(html).toMatch(/<aside class="window sheet[^"]*">[\s\S]*?<img[^>]*\salt(="")?[\s>]/);
 });
 
 test("Contact: comandos con enlaces reales y URL visible sin protocolo", async () => {
