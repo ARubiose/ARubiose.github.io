@@ -21,8 +21,12 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 
 ### Fases
 
-- [ ] **5. Diseño visual.** Dirección de arte, tipografía y tokens de color en `@theme`.
-  Hoy la maquetación es sobria y funcional.
+- [ ] **5. Diseño visual (en curso).** Arquitectura de skins y skin Terminal: timeline,
+  creador de personaje, foto ampliable y animaciones con GSAP.
+  [Spec](superpowers/specs/2026-10-02-terminal-skin-design.md),
+  [maquetas](design/mockups/).
+- [ ] **5b. Más skins.** Táctico y Menú de juego (ver `design/mockups/hud-directions.html`)
+  y selector de skin visible.
 - [ ] **6. Despliegue.** `site` en `astro.config.mjs`, workflow de GitHub Actions a GitHub
   Pages con `pnpm check`, `pnpm test` y `pnpm test:e2e`, y etiquetas `hreflang`
   (`getAbsoluteLocaleUrlList()`).

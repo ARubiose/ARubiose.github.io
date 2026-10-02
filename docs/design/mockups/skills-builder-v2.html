@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Habilidades v2: creador de personaje</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --bg:#0c0f0d; --surface:#121714; --surface-2:#18201b; --line:#223228; --text:#e3ece5; --muted:#93a59a; --body:#c4d0c7; --accent:#9fd65a; --accent-ink:#0c0f0d; }
+  body { background:#08090a; color:#cfcfd6; font:14px/1.5 system-ui, sans-serif; padding: 24px 24px 80px; }
+  .intro { max-width: 1120px; margin: 0 auto 18px; }
+  .intro h1 { font-size: 20px; color:#f2f2f6; }
+  .intro p { color:#8e8e9a; margin-top: 6px; max-width: 95ch; }
+  .concept { max-width: 1120px; margin: 0 auto 40px; }
+  .concept .meta { display:flex; align-items:baseline; gap: 12px; margin-bottom: 10px; cursor: pointer; }
+  .concept .meta .letter { font: 700 13px/1 system-ui; background:#26262e; color:#fff; padding: 6px 9px; border-radius: 4px; }
+  .concept .meta h2 { font-size: 17px; color:#f0f0f4; }
+  .concept .meta span { color:#8c8c98; }
+  .concept.selected .site { outline: 3px solid #5b9dff; outline-offset: 4px; }
+
+  .site { background: var(--bg); color: var(--text); font-family:"IBM Plex Mono", monospace; font-size: 14px; border:1px solid #1d1d24; border-radius: 10px; padding: 36px 40px 40px; position: relative; }
+  .site::after { content:""; position:absolute; inset:0; pointer-events:none; border-radius: 10px; background: repeating-linear-gradient(0deg, rgba(255,255,255,.016) 0 1px, transparent 1px 3px); }
+  h3 { font-family:"Space Grotesk"; font-weight:700; font-size: 30px; letter-spacing: -.01em; margin-bottom: 6px; }
+  h3 .hash { color: var(--accent); font-family:"IBM Plex Mono"; font-weight: 500; font-size: 22px; }
+  .lead { color: var(--muted); margin-bottom: 22px; }
+  .win { border: 1px solid var(--line); background: var(--surface); }
+  .win > .bar { display:flex; justify-content:space-between; align-items:center; padding: 7px 14px; border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--muted); }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .ico { width: 26px; height: 26px; display:grid; place-items:center; flex: none; }
+  .ico img { width: 22px; height: 22px; }
+  .ico i { font-size: 24px; color: var(--accent); }
+
+  /* ===== A: creador de personaje ===== */
+  .builder { display:grid; grid-template-columns: 250px 1fr 290px; gap: 18px; align-items: start; }
+  .sheet .pad, .inspect .pad { padding: 16px; }
+  .sheet .avatar { display:flex; gap: 12px; align-items:center; }
+  .sheet .avatar img { width: 64px; height: 64px; object-fit: cover; border: 1px solid var(--line); filter: grayscale(.3); }
+  .sheet .nm { font-family:"Space Grotesk"; font-weight:700; font-size: 16px; line-height: 1.2; }
+  .sheet .cls { color: var(--accent); font-size: 12.5px; margin-top: 2px; }
+  .stats { margin-top: 14px; display:grid; gap: 4px; font-size: 13px; }
+  .stats div { display:flex; justify-content:space-between; }
+  .stats span:first-child { color: var(--muted); }
+  .slots-h { margin-top: 18px; font-size: 12.5px; color: var(--muted); display:flex; justify-content:space-between; }
+  .slots { display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+  .slot { aspect-ratio: 1; border: 1px dashed var(--line); display:grid; place-items:center; position: relative; }
+  .slot.full { border-style: solid; border-color: var(--accent); background: color-mix(in oklab, var(--accent) 8%, var(--surface)); }
+  .slot .x { position:absolute; top: 2px; right: 4px; font-size: 11px; color: var(--muted); }
+  .slot.over { border-color: #e0a63a; background: color-mix(in oklab, #e0a63a 10%, var(--surface)); }
+  .broken { margin-top: 12px; border: 1px solid #e0a63a; color: #f0c06a; padding: 8px 10px; font-size: 12.5px; line-height: 1.45; animation: glitch .35s steps(2) 2; }
+  .broken b { color: #f5cf86; font-weight: 500; }
+  @keyframes glitch { 0% { transform: translateX(-2px); } 50% { transform: translateX(2px); } 100% { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .broken, .tile .eq.pop { animation: none; } }
+  .slots-h .over { color: #f0c06a; }
+  .match { margin-top: 16px; border-top: 1px dashed var(--line); padding-top: 12px; font-size: 13px; }
+  .match .k { color: var(--muted); font-size: 12.5px; }
+  .match .r { display:flex; justify-content:space-between; margin-top: 6px; }
+  .match .r b { font-weight: 500; }
+  .match .r .acc { color: var(--accent); }
+  .match .empty { color: var(--muted); margin-top: 6px; }
+  .tabs { display:flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .tab { padding: 6px 10px; border: 1px solid var(--line); color: var(--muted); font-size: 12.5px; }
+  .tab[aria-selected="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .tile { display:flex; align-items:stretch; border: 1px solid var(--line); background: var(--surface); transition: border-color .15s, transform .15s, background .15s; position: relative; }
+  .tile .main { flex: 1; display:flex; gap: 10px; align-items:center; padding: 12px 6px 12px 12px; text-align: left; min-width: 0; }
+  .tile .eq { width: 34px; flex: none; display:grid; place-items:center; border-left: 1px solid var(--line); color: var(--muted); font-size: 18px; transition: background .15s, color .15s; }
+  .tile .eq:hover { color: var(--accent); background: color-mix(in oklab, var(--accent) 10%, transparent); }
+  .tile .eq[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-left-color: var(--accent); }
+  .tile .eq.pop { animation: pop .25s ease-out; }
+  @keyframes pop { 50% { transform: scale(1.25); } }
+  .tile:hover { border-color: color-mix(in oklab, var(--accent) 50%, var(--line)); transform: translateY(-1px); }
+  .tile.sel { border-color: var(--accent); background: var(--surface-2); }
+  .tile .n { font-size: 13px; line-height: 1.25; }
+  .tile .xp { font-size: 11.5px; color: var(--muted); }
+  .inspect .big { display:flex; gap: 12px; align-items:center; }
+  .inspect .big .ico { width: 44px; height: 44px; border: 1px solid var(--line); }
+  .inspect .big .ico img { width: 28px; height: 28px; } .inspect .big .ico i { font-size: 30px; }
+  .inspect .t { font-family:"Space Grotesk"; font-weight:700; font-size: 19px; line-height: 1.2; }
+  .inspect .cat { color: var(--muted); font-size: 12px; }
+  .inspect .xpbox { margin-top: 14px; display:flex; justify-content: space-between; border: 1px solid var(--line); padding: 8px 10px; font-size: 13px; }
+  .inspect .xpbox b { color: var(--accent); font-weight: 500; }
+  .inspect p { color: var(--body); margin-top: 12px; font-size: 13.5px; }
+  .inspect .used { margin-top: 12px; font-size: 13px; }
+  .inspect .used .k { color: var(--muted); font-size: 12px; }
+  .inspect .used ul { list-style: none; margin-top: 4px; }
+  .inspect .used li::before { content: "> "; color: var(--accent); }
+  .inspect .used li span { color: var(--muted); font-size: 12px; }
+  .equip { margin-top: 16px; width: 100%; padding: 10px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 500; }
+  .equip.off { background: transparent; color: var(--accent); }
+
+  /* ===== B: árbol de talentos ===== */
+  .treewrap { display:grid; grid-template-columns: 1fr 290px; gap: 18px; align-items:start; }
+  .tree { position: relative; display:grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 64px 4px 8px; }
+  .root { position:absolute; top: 0; left: 50%; transform: translateX(-50%); display:flex; align-items:center; gap: 8px; padding: 6px 12px; border: 1px solid var(--accent); background: var(--surface); font-size: 13px; }
+  .root img { width: 26px; height: 26px; object-fit: cover; }
+  .root::after { content:""; position:absolute; left: 50%; top: 100%; width: 1px; height: 14px; background: var(--line); }
+  .bus { position:absolute; top: 44px; left: 10%; right: 10%; height: 1px; background: var(--line); }
+  .branch { position: relative; display:flex; flex-direction: column; align-items: center; gap: 14px; }
+  .branch::before { content:""; position:absolute; top: -20px; height: 20px; width: 1px; background: var(--line); }
+  .branch .line { position:absolute; top: 14px; bottom: 22px; width: 1px; background: var(--line); z-index: 0; }
+  .branch.lit .line, .branch.lit::before { background: var(--accent); }
+  .bh { position: relative; z-index: 1; font-size: 12px; color: var(--muted); background: var(--bg); padding: 2px 6px; border: 1px solid var(--line); }
+  .branch.lit .bh { color: var(--accent); border-color: var(--accent); }
+  .node { position: relative; z-index: 1; width: 64px; height: 64px; display:grid; place-items:center; background: var(--surface); border: 1px solid var(--line); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); transition: background .15s; }
+  .node .ico img { width: 24px; height: 24px; }
+  .node-wrap { position: relative; z-index: 1; display:flex; flex-direction: column; align-items:center; gap: 4px; width: 100%; }
+  .node-wrap .lbl { font-size: 11.5px; text-align:center; color: var(--body); line-height: 1.2; max-width: 120px; }
+  .node-wrap .lv { font-size: 10.5px; color: var(--muted); }
+  .node-wrap:hover .node, .node-wrap[aria-pressed="true"] .node { background: color-mix(in oklab, var(--accent) 22%, var(--surface)); }
+  .node-wrap[aria-pressed="true"] .lbl { color: var(--accent); }
+  .ring { position:absolute; inset: -4px; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); background: var(--accent); z-index: -1; opacity: 0; transition: opacity .15s; }
+  .node-wrap[aria-pressed="true"] .ring { opacity: 1; }
+  .node-holder { position: relative; }
+  .notes { color:#9a9aa6; font-size: 13.5px; margin-top: 12px; max-width: 110ch; }
+</style>
+</head>
+<body>
+  <div class="intro">
+    <h1>Creador de personaje v2</h1>
+    <p>Cambios: al cambiar de categoría se inspecciona su primera habilidad; cada tarjeta tiene su botón para equipar; la build no tiene límite, pero a partir de 6 el personaje queda "roto". Prueba a equipar 7.</p>
+  </div>
+
+  <div class="options">
+  <!-- ============ A ============ -->
+  <div class="concept option" data-choice="a">
+    <div class="meta" onclick="toggleSelect(this.parentElement)"><span class="letter">A</span><h2>Creador de personaje</h2><span>ficha + inventario por categorías + inspector; el visitante equipa habilidades y ve dónde las usé juntas</span></div>
+    <div class="site">
+      <h3><span class="hash">## </span>Habilidades</h3>
+      <p class="lead">Equipa habilidades para ver en qué puestos las he combinado.</p>
+      <div class="builder">
+        <div class="win sheet"><div class="bar"><span>personaje.sav</span><span>nv. 2026</span></div><div class="pad">
+          <div class="avatar"><img src="../../../src/assets/images/profile.jpg" alt=""><div><div class="nm">Álvaro Rubio Segovia</div><div class="cls">Ingeniero de IA y software</div></div></div>
+          <div class="stats" id="a-stats"></div>
+          <div class="slots-h"><span>build</span><span id="a-count">0 / 6</span></div>
+          <div class="slots" id="a-slots"></div>
+          <div class="match" id="a-match"></div>
+        </div></div>
+        <div>
+          <div class="tabs" role="tablist" id="a-tabs"></div>
+          <div class="grid" id="a-grid"></div>
+        </div>
+        <div class="win inspect"><div class="bar"><span>inspeccionar</span><span>i</span></div><div class="pad" id="a-inspect"></div></div>
+      </div>
+    </div>
+    <p class="notes">Pensado para que también sea útil a quien busca un perfil: si equipa "FastAPI + Celery + Docker", la ficha le dice que esa combinación la usé en Zalcu. En móvil: ficha arriba, inventario en medio e inspector como panel desplegable.</p>
+  </div>
+
+  </div>
+
+<script>
+  const NOW = "2026-10";
+  const SRC = {
+    "skin-ai": { name: "SKIN AI", role: "Ingeniero de IA", start: "2026-06", end: null },
+    "zalcu": { name: "Zalcu Technologies", role: "Desarrollador y arquitecto", start: "2022-08", end: "2026-06" },
+    "gofore": { name: "Gofore", role: "Ingeniero de ML", start: "2021-10", end: "2022-06" },
+    "oesia": { name: "Oesia Network", role: "Ciberseguridad (prácticas)", start: "2020-01", end: "2020-07" },
+    "portfolio": { name: "Portfolio con LLM Wiki", role: "Proyecto", start: "2025-01", end: null },
+  };
+  const CATS = [["backend","Backend"],["ai","IA"],["frontend","Frontend y móvil"],["devops","DevOps y calidad"],["security","Ciberseguridad"]];
+  const si = s => ({ img: `https://cdn.simpleicons.org/${s}/9fd65a` });
+  const ph = s => ({ ph: s });
+  const SKILLS = [
+    { id:"python", t:"Python", c:"backend", i:si("python"), s:"Lenguaje principal en backend, investigación de machine learning y herramientas de ciberseguridad.", u:["zalcu","gofore","oesia"] },
+    { id:"fastapi", t:"FastAPI", c:"backend", i:si("fastapi"), s:"Framework de APIs en Python para el procesamiento asíncrono en Zalcu y el backend de SKIN AI.", u:["skin-ai","zalcu"] },
+    { id:"django", t:"Django", c:"backend", i:si("django"), s:"Framework web en Python, usado junto a Celery y Redis para procesar archivos.", u:["zalcu"] },
+    { id:"celery", t:"Celery", c:"backend", i:si("celery"), s:"Colas de tareas para procesar archivos de forma asíncrona con FastAPI y Django.", u:["zalcu"] },
+    { id:"redis", t:"Redis", c:"backend", i:si("redis"), s:"Broker de mensajes para las tareas asíncronas de Celery.", u:["zalcu"] },
+    { id:"arch", t:"Arquitectura de software", c:"backend", i:ph("ph-tree-structure"), s:"Diseño de sistemas escalables y eficientes, con responsabilidades de arquitecto.", u:["zalcu"] },
+    { id:"cv", t:"Deep learning y visión por computador", c:"ai", i:ph("ph-scan"), s:"Modelos de visión con deep learning, como segmentación semántica para tecnologías de apoyo.", u:["skin-ai","gofore"] },
+    { id:"llm", t:"Agentes LLM", c:"ai", i:ph("ph-robot"), s:"Diseño de flujos con agentes LLM, como la wiki mantenida por Claude Code de este portfolio.", u:["portfolio"] },
+    { id:"react", t:"React", c:"frontend", i:si("react"), s:"Interfaces web dinámicas y fáciles de usar.", u:["zalcu"] },
+    { id:"expo", t:"Expo", c:"frontend", i:si("expo"), s:"Aplicaciones web y móviles multiplataforma.", u:["skin-ai"] },
+    { id:"web", t:"HTML, CSS y JavaScript", c:"frontend", i:si("html5"), s:"Fundamentos del desarrollo web.", u:["zalcu"] },
+    { id:"docker", t:"Docker", c:"devops", i:si("docker"), s:"Contenedores para desarrollo, pruebas y despliegue.", u:["zalcu"] },
+    { id:"pytest", t:"pytest", c:"devops", i:si("pytest"), s:"Tests automatizados en Python.", u:["zalcu"] },
+    { id:"gha", t:"GitHub Actions", c:"devops", i:si("githubactions"), s:"Pipelines de CI/CD.", u:["zalcu"] },
+    { id:"osint", t:"OSINT y ciberseguridad", c:"security", i:ph("ph-detective"), s:"Monitorización y análisis de fuentes abiertas, y herramientas de seguridad en Python.", u:["oesia"] },
+  ];
+  const m = ym => { const [y, mo] = ym.split("-").map(Number); return y * 12 + (mo - 1); };
+  function months(ids) {
+    const set = new Set();
+    ids.forEach(id => { const s = SRC[id]; for (let k = m(s.start); k < m(s.end ?? NOW); k++) set.add(k); });
+    return set.size;
+  }
+  const fmtXP = n => { const y = Math.floor(n / 12), mo = n % 12; return [y && `${y} año${y > 1 ? "s" : ""}`, mo && `${mo} mes${mo > 1 ? "es" : ""}`].filter(Boolean).join(" y ") || "0 meses"; };
+  const shortXP = n => n >= 12 ? `${(n / 12).toFixed(1).replace(".", ",")} años` : `${n} meses`;
+  const since = ids => Math.min(...ids.map(id => Number(SRC[id].start.slice(0, 4))));
+  const icon = sk => sk.i.img ? `<span class="ico"><img src="${sk.i.img}" alt=""></span>` : `<span class="ico"><i class="ph ${sk.i.ph}"></i></span>`;
+  const catName = c => CATS.find(x => x[0] === c)[1];
+  const usedList = sk => sk.u.slice().sort((a, b) => m(SRC[b].start) - m(SRC[a].start)).map(id => `<li>${SRC[id].name} <span>${SRC[id].role}</span></li>`).join("");
+  function inspectHTML(sk, extra = "") {
+    const n = months(sk.u);
+    return `<div class="big">${icon(sk)}<div><div class="t">${sk.t}</div><div class="cat">${catName(sk.c)}</div></div></div>
+      <div class="xpbox"><span>XP</span><b>${fmtXP(n)}</b></div>
+      <div class="xpbox" style="margin-top:6px"><span>desde</span><b>${since(sk.u)}</b></div>
+      <p>${sk.s}</p>
+      <div class="used"><div class="k">usada en</div><ul>${usedList(sk)}</ul></div>${extra}`;
+  }
+
+  // ---------- A ----------
+  const A = { tab: "backend", sel: "python", build: [] };
+  const totalMonths = months(Object.keys(SRC).filter(k => k !== "portfolio"));
+  document.getElementById("a-stats").innerHTML =
+    `<div><span>XP profesional</span><span>${shortXP(totalMonths)}</span></div><div><span>habilidades</span><span>${SKILLS.length}</span></div><div><span>clase</span><span>IA + backend</span></div>`;
+  const CAP = 6;
+  let popped = null;
+  function renderA() {
+    document.getElementById("a-tabs").innerHTML = CATS.map(([id, n]) =>
+      `<button class="tab" role="tab" aria-selected="${A.tab === id}" data-tab="${id}">${n}</button>`).join("");
+    document.getElementById("a-grid").innerHTML = SKILLS.filter(s => s.c === A.tab).map(s => {
+      const on = A.build.includes(s.id);
+      return `<div class="tile ${A.sel === s.id ? "sel" : ""}">
+        <button class="main" data-sk="${s.id}" aria-label="Inspeccionar ${s.t}">${icon(s)}<span><span class="n">${s.t}</span><br><span class="xp">XP ${shortXP(months(s.u))}</span></span></button>
+        <button class="eq ${popped === s.id ? "pop" : ""}" data-toggle="${s.id}" aria-pressed="${on}" aria-label="${on ? "Quitar" : "Equipar"} ${s.t}" title="${on ? "Quitar" : "Equipar"}">${on ? "✓" : "+"}</button>
+      </div>`;
+    }).join("");
+    const sk = SKILLS.find(s => s.id === A.sel); const on = A.build.includes(sk.id);
+    document.getElementById("a-inspect").innerHTML = inspectHTML(sk,
+      `<button class="equip ${on ? "off" : ""}" data-toggle="${sk.id}">${on ? "quitar de la build" : "equipar"}</button>`);
+    const n = A.build.length, over = n > CAP;
+    document.getElementById("a-count").innerHTML = over ? `<span class="over">${n} / ${CAP}</span>` : `${n} / ${CAP}`;
+    const total = Math.max(CAP, n);
+    document.getElementById("a-slots").innerHTML = Array.from({ length: total }, (_, i) => {
+      const s = SKILLS.find(x => x.id === A.build[i]);
+      return s ? `<button class="slot full ${i >= CAP ? "over" : ""}" title="Quitar ${s.t}" data-toggle="${s.id}">${icon(s)}<span class="x">×</span></button>` : `<div class="slot"></div>`;
+    }).join("") ;
+    const box = document.getElementById("a-match");
+    const warn = over ? `<div class="broken" role="status"><b>Personaje roto.</b> Con ${n} habilidades equipadas, el equipo de balanceo ya está preparando un nerf.</div>` : "";
+    if (!n) { box.innerHTML = `<div class="k">combinación usada en</div><div class="empty">Equipa habilidades para verlo.</div>`; return; }
+    const rows = Object.keys(SRC).map(id => ({ id, k: A.build.filter(b => SKILLS.find(s => s.id === b).u.includes(id)).length }))
+      .filter(r => r.k).sort((a, b) => b.k - a.k);
+    box.innerHTML = warn + `<div class="k" style="margin-top:${over ? 12 : 0}px">combinación usada en</div>` + rows.map(r =>
+      `<div class="r"><b>${SRC[r.id].name}</b><span class="${r.k === n ? "acc" : ""}">${r.k}/${n}</span></div>`).join("");
+  }
+  document.querySelector('[data-choice="a"] .site').addEventListener("click", e => {
+    const t = e.target.closest("[data-tab],[data-sk],[data-toggle]"); if (!t) return;
+    popped = null;
+    if (t.dataset.tab) { A.tab = t.dataset.tab; A.sel = SKILLS.find(s => s.c === A.tab).id; }
+    if (t.dataset.sk) A.sel = t.dataset.sk;
+    if (t.dataset.toggle) {
+      const id = t.dataset.toggle;
+      A.build = A.build.includes(id) ? A.build.filter(x => x !== id) : [...A.build, id];
+      popped = id;
+    }
+    renderA();
+  });
+  renderA();
+</script>
+</body>
+</html>

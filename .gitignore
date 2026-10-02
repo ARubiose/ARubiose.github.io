@@ -38,3 +38,6 @@ wiki/private/**
 # tests
 test-results/
 playwright-report/
+
+# herramientas locales de agentes (brainstorming, ledgers)
+.superpowers/
