@@ -6,6 +6,7 @@ status: active
 start: 2026-10
 summary: Portfolio generado desde una wiki.
 highlights: []
+skills: []
 tags: [astro]
 en:
   title: This portfolio

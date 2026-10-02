@@ -8,6 +8,7 @@ export const projectStatuses = ["active", "paused", "done"] as const;
 
 const text = z.string().trim().min(1);
 const highlights = z.array(text).default([]);
+const skillRefs = z.array(z.string().regex(/^[a-z0-9-]+$/, "id de habilidad en minúsculas con guiones")).optional();
 const icon = z
     .string()
     .regex(/^(si|ph):[a-z0-9-]+$/, "Formato esperado: si:<slug> o ph:<nombre>")
@@ -51,6 +52,7 @@ export const experienceSchema = z
         start: yearMonth,
         end: yearMonth.nullable(),
         highlights,
+        skills: skillRefs,
         en: z.object({ role: text, summary: text, highlights }),
     })
     .refine(endAfterStart, endAfterStartIssue)
@@ -65,6 +67,7 @@ export const projectSchema = z
         status: z.enum(projectStatuses),
         start: yearMonth,
         highlights,
+        skills: skillRefs,
         en: z.object({ title: text, summary: text, highlights }),
     })
     .refine(sameHighlights, sameHighlightsIssue);

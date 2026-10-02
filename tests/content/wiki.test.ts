@@ -2,6 +2,7 @@ import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 import { schemasByType } from "@lib/schemas";
+import { findBrokenSkillRefs } from "@lib/skills";
 import { readFrontmatter } from "../support/frontmatter";
 
 const WIKI = join(import.meta.dirname, "../../wiki/public");
@@ -41,4 +42,15 @@ test("hay al menos un puesto, un proyecto, una habilidad y un estudio", () => {
         const files = readdirSync(join(WIKI, folder)).filter((f) => f.endsWith(".md"));
         expect(files.length, folder).toBeGreaterThan(0);
     }
+});
+
+test("cada habilidad citada por un puesto o proyecto existe", () => {
+    const ids = (folder: string) =>
+        readdirSync(join(WIKI, folder))
+            .filter((f) => f.endsWith(".md"))
+            .map((f) => f.replace(/\.md$/, ""));
+    const entries = ["experience", "projects"].flatMap((folder) =>
+        ids(folder).map((id) => ({ id, skills: readFrontmatter(join(WIKI, folder, `${id}.md`)).skills as string[] | undefined })),
+    );
+    expect(findBrokenSkillRefs(entries, ids("skills"))).toEqual([]);
 });

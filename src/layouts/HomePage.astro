@@ -3,6 +3,7 @@ import { getCollection, getEntry } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { locales, type Locale } from "@i18n/ui";
 import { buildHomeView } from "@lib/home";
+import { findBrokenSkillRefs } from "@lib/skills";
 import Layout from "./Layout.astro";
 import Header from "@components/Header.astro";
 import Intro from "@sections/intro.astro";
@@ -20,13 +21,24 @@ const { locale } = Astro.props;
 const profile = await getEntry("profile", "profile");
 if (!profile) throw new Error("Falta wiki/public/profile.md");
 
+const experienceEntries = await getCollection("experience");
+const projectEntries = await getCollection("projects");
+const skillEntries = await getCollection("skills");
+const educationEntries = await getCollection("education");
+
+const broken = findBrokenSkillRefs(
+    [...experienceEntries, ...projectEntries].map((e) => ({ id: e.id, skills: e.data.skills })),
+    skillEntries.map((e) => e.id),
+);
+if (broken.length) throw new Error(`Habilidades inexistentes en la wiki: ${broken.map((b) => `${b.entry} → ${b.skill}`).join(", ")}`);
+
 const view = buildHomeView(
     {
         profile: profile.data,
-        experience: (await getCollection("experience")).map((e) => e.data),
-        projects: (await getCollection("projects")).map((e) => e.data),
-        skills: (await getCollection("skills")).map((e) => e.data),
-        education: (await getCollection("education")).map((e) => e.data),
+        experience: experienceEntries.map((e) => e.data),
+        projects: projectEntries.map((e) => e.data),
+        skills: skillEntries.map((e) => e.data),
+        education: educationEntries.map((e) => e.data),
     },
     locale,
 );

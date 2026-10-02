@@ -8,7 +8,7 @@ end: null
 summary: Backend en Python.
 highlights:
   - Diseño de la API.
-skills: [python]
+skills: python
 tags: [backend]
 en:
   role: Software engineer
