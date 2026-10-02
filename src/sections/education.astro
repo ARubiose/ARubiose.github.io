@@ -1,23 +1,30 @@
 ---
-// Education section of the website
+import TimelineItem from "@components/TimelineItem.astro";
+import type { Locale } from "@i18n/ui";
+import { useTranslations } from "@i18n/utils";
+import type { HomeView } from "@lib/home";
+
+interface Props {
+    items: HomeView["education"];
+    locale: Locale;
+}
+const { items, locale } = Astro.props;
+const t = useTranslations(locale);
 ---
 
-<style>
-    section {
-        height: 100vh;
-        background-color: aqua;
-    }
-</style>
-
-<section>
-    <!-- <div>
-        <img src={profileImage.src} alt="A hero image" />
-    </div>
-    <div>
-        <h1>Hi, I'm Álvaro Rubio</h1>
-        <p>
-            I'm a software engineer based in New York City. I specialize in
-            building websites and web applications using modern technologies.
-        </p>
-    </div> -->
-</section>
+{items.length > 0 && (
+    <section id="education" class="py-8">
+        <h2 class="text-2xl font-bold">{t("section.education")}</h2>
+        <ol>
+            {items.map((e) => (
+                <TimelineItem
+                    title={e.degree}
+                    subtitle={e.institution}
+                    period={e.period}
+                    summary={e.summary}
+                    note={e.grade ? `${t("education.grade")}: ${e.grade}` : undefined}
+                />
+            ))}
+        </ol>
+    </section>
+)}

@@ -1,0 +1,28 @@
+---
+interface Props {
+    title: string;
+    summary: string;
+    highlights: string[];
+    repo: string;
+    url?: string;
+    statusLabel: string;
+    repoLabel: string;
+    visitLabel: string;
+}
+const { title, summary, highlights, repo, url, statusLabel, repoLabel, visitLabel } = Astro.props;
+---
+
+<article class="rounded border border-neutral-200 p-4">
+    <h3 class="text-lg font-semibold">{title}</h3>
+    <p class="text-sm text-neutral-600">{statusLabel}</p>
+    <p class="mt-2">{summary}</p>
+    {highlights.length > 0 && (
+        <ul class="mt-2 list-disc pl-5">
+            {highlights.map((h) => <li>{h}</li>)}
+        </ul>
+    )}
+    <p class="mt-3 flex gap-4">
+        <a href={repo} class="underline">{repoLabel}</a>
+        {url && <a href={url} class="underline">{visitLabel}</a>}
+    </p>
+</article>

@@ -5,6 +5,12 @@ import { locales, type Locale } from "@i18n/ui";
 import { buildHomeView } from "@lib/home";
 import Layout from "./Layout.astro";
 import Header from "@components/Header.astro";
+import Intro from "@sections/intro.astro";
+import Experience from "@sections/experience.astro";
+import Projects from "@sections/projects.astro";
+import Skills from "@sections/skills.astro";
+import Education from "@sections/education.astro";
+import Contact from "@sections/contact.astro";
 
 interface Props {
     locale: Locale;
@@ -30,5 +36,12 @@ const urls = Object.fromEntries(locales.map((l) => [l, getRelativeLocaleUrl(l, "
 
 <Layout locale={locale} title={`${view.profile.name} · ${view.profile.headline}`} description={view.profile.summary}>
     <Header locale={locale} sections={view.sections} urls={urls} />
-    <main class="mx-auto max-w-3xl px-6"></main>
+    <main class="mx-auto max-w-3xl px-6">
+        <Intro profile={view.profile} />
+        <Experience items={view.experience} locale={locale} />
+        <Projects items={view.projects} locale={locale} />
+        <Skills groups={view.skillGroups} locale={locale} />
+        <Education items={view.education} locale={locale} />
+        <Contact links={view.profile.links} locale={locale} />
+    </main>
 </Layout>

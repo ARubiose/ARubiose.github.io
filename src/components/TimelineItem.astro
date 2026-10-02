@@ -1,0 +1,23 @@
+---
+interface Props {
+    title: string;
+    subtitle: string;
+    period: string;
+    summary: string;
+    highlights?: string[];
+    note?: string;
+}
+const { title, subtitle, period, summary, highlights = [], note } = Astro.props;
+---
+
+<li class="py-4">
+    <h3 class="text-lg font-semibold">{title}</h3>
+    <p class="text-neutral-700">{subtitle} · <span class="text-neutral-600">{period}</span></p>
+    <p class="mt-2">{summary}</p>
+    {note && <p class="mt-1 text-sm text-neutral-600">{note}</p>}
+    {highlights.length > 0 && (
+        <ul class="mt-2 list-disc pl-5">
+            {highlights.map((h) => <li>{h}</li>)}
+        </ul>
+    )}
+</li>

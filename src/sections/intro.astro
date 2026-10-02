@@ -1,24 +1,19 @@
 ---
-// Introductory section of the website
-import profileImage from "@assets/images/profile.jpg";
+import ProfileAvatar from "@components/ProfileAvatar.astro";
+import type { HomeView } from "@lib/home";
+
+interface Props {
+    profile: HomeView["profile"];
+}
+const { profile } = Astro.props;
 ---
 
-<style>
-    section {
-        height: 100vh;
-        background-color: blueviolet;
-    }
-</style>
-
-<section>
-    <!-- <div>
-        <img src={profileImage.src} alt="A hero image" />
-    </div>
+<section id="about" class="flex flex-col items-start gap-6 py-12 sm:flex-row sm:items-center">
+    <ProfileAvatar alt={profile.name} />
     <div>
-        <h1>Hi, I'm Álvaro Rubio</h1>
-        <p>
-            I'm a software engineer based in New York City. I specialize in
-            building websites and web applications using modern technologies.
-        </p>
-    </div> -->
+        <h1 class="text-3xl font-bold">{profile.name}</h1>
+        <p class="text-xl text-neutral-700">{profile.headline}</p>
+        <p class="text-neutral-600">{profile.location}</p>
+        <p class="mt-4">{profile.summary}</p>
+    </div>
 </section>

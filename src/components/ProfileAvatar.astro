@@ -1,0 +1,11 @@
+---
+import { Image } from "astro:assets";
+import profileImage from "@assets/images/profile.jpg";
+
+interface Props {
+    alt: string;
+}
+const { alt } = Astro.props;
+---
+
+<Image src={profileImage} alt={alt} width={240} height={240} class="size-40 rounded-full object-cover" />
