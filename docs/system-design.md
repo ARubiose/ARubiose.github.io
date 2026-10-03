@@ -160,7 +160,7 @@ portfolio consume únicamente `wiki/public/`.
 | Unitario | Vitest | `localize`, `formatPeriod`, `useTranslations`, ordenación, vista | `tests/unit/` |
 | Contrato | Vitest + Zod | Fixtures válidos/inválidos y toda la wiki pública real | `tests/content/` |
 | Componentes | Vitest + Container API | Secciones y cabecera en ambos idiomas y con listas vacías | `tests/components/` |
-| Privacidad | Vitest | Teléfono, dirección, código postal y nacimiento en `wiki/public/` y `dist/`, más `wiki/private/forbidden-strings.txt` si existe | `tests/privacy/` |
+| Privacidad | Vitest | Teléfono, dirección, código postal y nacimiento en `wiki/public/` y `dist/`; credenciales y rutas personales en todos los archivos versionados, los mensajes de commit y las líneas añadidas del historial; en ambos, `wiki/private/forbidden-strings.txt` si existe | `tests/privacy/` |
 | E2E | Playwright + axe | `/` y `/en/` en escritorio (1280) y móvil (390): navegación, menú, visor, creador de personaje, sin JS, movimiento reducido, desbordamiento, CLS, accesibilidad con diálogos abiertos | `tests/e2e/` |
 | Regresión visual | Playwright `toHaveScreenshot` | Portada completa en ambos tamaños e idiomas, con movimiento reducido | `tests/e2e/visual.spec.ts-snapshots/` |
 | Presupuesto | Vitest | JavaScript de la portada ≤ 60 KB comprimido | `tests/perf/` |
