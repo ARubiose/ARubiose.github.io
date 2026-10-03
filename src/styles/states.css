@@ -32,9 +32,15 @@
     .menu-toggle {
         display: none;
     }
-    .site-nav,
-    .header-lang {
+    .site-nav {
         display: block;
+    }
+    .header-lang {
+        display: flex;
+    }
+    /* En la cabecera móvil no cabe también el selector: sin Popover API se queda la skin predeterminada. */
+    .header-lang [data-skin-switcher] {
+        display: none;
     }
     .site-nav {
         min-width: 0;

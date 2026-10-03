@@ -357,3 +357,25 @@
 [data-skin="tactical"] .sheet-dialog {
     border-top: 2px solid var(--skin-accent);
 }
+
+/* Selector de skin */
+[data-skin="tactical"] .skin-option {
+    font-family: var(--skin-font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 11.5px;
+    color: var(--skin-muted);
+    box-shadow: inset 0 0 0 1px var(--skin-line);
+}
+[data-skin="tactical"] .skin-option[aria-pressed="true"] {
+    background: var(--skin-accent);
+    color: var(--skin-accent-ink);
+    box-shadow: none;
+}
+[data-skin="tactical"] .skin-swatch {
+    background: var(--swatch);
+    transform: rotate(45deg);
+}
+[data-skin="tactical"] .skin-option[aria-pressed="true"] .skin-swatch {
+    background: var(--skin-accent-ink);
+}

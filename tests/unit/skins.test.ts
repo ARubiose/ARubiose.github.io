@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
-import { defaultSkin, resolveSkin, SKIN_STORAGE_KEY, skinBootScript, skinRegistry, skins, timelineOf } from "@lib/skins";
+import { applySkin, defaultSkin, resolveSkin, SKIN_STORAGE_KEY, skinBootScript, skinRegistry, skins, timelineOf } from "@lib/skins";
 
 test("la skin por defecto es terminal y está registrada", () => {
     expect(defaultSkin).toBe("terminal");
@@ -68,4 +68,26 @@ test("states.css oculta los adornos de las demás skins para cada skin registrad
 
 test("Táctico está registrada con su muestra y modo single", () => {
     expect(skinRegistry.find((s) => s.id === "tactical")).toEqual({ id: "tactical", swatch: "#f0a83a", timeline: "single" });
+});
+
+describe("applySkin", () => {
+    test("escribe la skin y su modo, la guarda y la devuelve", () => {
+        const root = { dataset: {} as DOMStringMap };
+        const saved: Record<string, string> = {};
+        expect(applySkin(root, "tactical", { setItem: (k, v) => (saved[k] = v) })).toBe("tactical");
+        expect(root.dataset).toEqual({ skin: "tactical", timeline: "single" });
+        expect(saved[SKIN_STORAGE_KEY]).toBe("tactical");
+    });
+
+    test("una skin desconocida aplica la predeterminada", () => {
+        const root = { dataset: {} as DOMStringMap };
+        expect(applySkin(root, "foo")).toBe(defaultSkin);
+    });
+
+    test("si guardar falla, la skin se aplica igualmente", () => {
+        const root = { dataset: {} as DOMStringMap };
+        const blocked = { setItem: () => { throw new Error("QuotaExceededError"); } };
+        expect(() => applySkin(root, "tactical", blocked)).not.toThrow();
+        expect(root.dataset.skin).toBe("tactical");
+    });
 });

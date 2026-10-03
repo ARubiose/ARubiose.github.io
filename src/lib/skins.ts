@@ -28,3 +28,14 @@ export function skinBootScript(): string {
     const args = [`localStorage.getItem(${JSON.stringify(SKIN_STORAGE_KEY)})`, JSON.stringify(skins), JSON.stringify(defaultSkin)];
     return `try { var r = document.documentElement, s = (${resolveSkin.toString()})(${args.join(", ")}); r.dataset.skin = s; r.dataset.timeline = ${JSON.stringify(modes)}[s]; } catch {}`;
 }
+
+/** Aplica una skin a <html> y la guarda; si guardar falla (modo privado), se aplica igualmente. */
+export function applySkin(root: { dataset: DOMStringMap }, skin: string, storage?: Pick<Storage, "setItem">): Skin {
+    const resolved = resolveSkin(skin);
+    root.dataset.skin = resolved;
+    root.dataset.timeline = timelineOf(resolved);
+    try {
+        storage?.setItem(SKIN_STORAGE_KEY, resolved);
+    } catch {}
+    return resolved;
+}

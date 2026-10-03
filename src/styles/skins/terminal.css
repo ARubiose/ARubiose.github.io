@@ -289,3 +289,21 @@
 .tabbar[data-more-r] .edge-r {
     background: linear-gradient(270deg, var(--skin-bg) 45%, transparent);
 }
+
+/* Selector de skin */
+[data-skin="terminal"] .skin-switcher {
+    border: 1px solid var(--skin-line);
+}
+[data-skin="terminal"] .skin-option {
+    color: var(--skin-muted);
+}
+[data-skin="terminal"] .skin-option[aria-pressed="true"] {
+    background: var(--skin-accent);
+    color: var(--skin-accent-ink);
+}
+[data-skin="terminal"] .skin-swatch {
+    background: var(--swatch);
+}
+[data-skin="terminal"] .skin-option[aria-pressed="true"] .skin-swatch {
+    background: var(--skin-accent-ink);
+}

@@ -31,6 +31,7 @@ test.describe("sin JavaScript", () => {
         await expect(page.locator(".panel-title")).toHaveCount(5);
         await expect(page.locator(".skill-detail").first()).toBeVisible();
         await expect(page.locator("[data-tabs]")).toBeHidden();
+        await expect(page.locator("[data-skin-switcher]").first()).toBeHidden();
         await expect(page.locator(".t-card").first()).toBeVisible();
     });
 });
