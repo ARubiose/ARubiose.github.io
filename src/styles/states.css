@@ -24,3 +24,10 @@
 .tabbar[data-more-r] .edge-r {
     display: flex;
 }
+
+/* Sin Popover API el atributo popover no oculta nada y el menú móvil quedaría siempre abierto. */
+@supports not selector(:popover-open) {
+    .site-menu {
+        display: none;
+    }
+}

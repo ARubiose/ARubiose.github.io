@@ -42,3 +42,16 @@ test("sin desbordamiento horizontal", async ({ page }) => {
     });
     expect(offenders).toEqual([]);
 });
+
+test("sin Popover API el menú móvil queda oculto (regla de respaldo en la hoja final)", async ({ page }) => {
+    await page.goto("/");
+    const fallback = await page.evaluate(() =>
+        [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules]).some(
+            (rule) =>
+                rule instanceof CSSSupportsRule &&
+                rule.conditionText.includes(":popover-open") &&
+                [...rule.cssRules].some((r) => r instanceof CSSStyleRule && r.selectorText === ".site-menu" && r.style.display === "none"),
+        ),
+    );
+    expect(fallback).toBe(true);
+});
