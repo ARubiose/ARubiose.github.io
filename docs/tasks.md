@@ -16,6 +16,7 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 | 2026-10-02 | Actualización a Astro 7.3, Tailwind 4.3, Node 24 y pnpm 11 | `28f6ddf` |
 | 2026-10-02 | Fuentes web y declaraciones del humano en la wiki | `8ab7eac`; decisión [0003](decisions/0003-web-and-human-sources.md) |
 | 2026-10-02 | Fase 5: arquitectura de skins y skin Terminal (timeline, creador de personaje, foto ampliable, animaciones GSAP, regresión visual) | [spec](superpowers/specs/2026-10-02-terminal-skin-design.md), [plan](superpowers/plans/2026-10-02-terminal-skin.md), [maquetas](design/mockups/) |
+| 2026-10-03 | Test de privacidad ampliado: credenciales y rutas personales en todo el repo y en el historial de git (patrones del agente `opensource-sanitizer` de ECC) | rama `test/privacy-scan-scope` |
 | 2026-10-03 | Fixes pendientes: alineación del menú móvil, sección activa y saltos del menú fiables (fallaban 1 de cada 40 ejecuciones), JSON Schema del editor alineado con la build. Descartado: respaldo para navegadores sin `@supports selector()` (Tailwind 4 ya exige navegadores posteriores) | `f31f3cb` |
 | 2026-10-03 | Mejoras menores de las revisiones de las fases 1–5: contrato (URLs solo http(s), fechas YAML completas, `url: null`, orden total), skin en `@layer components`, respaldo sin Popover API, intro del hero estable al cambiar de ancho, JSON del creador escapado, tests más estrictos | `85ba009` |
 | 2026-10-02 | Fases 1–4: contenido inicial, base del sitio, contrato de contenido y secciones, con tests (unitarios, contrato, componentes, privacidad y E2E con axe) | [spec](superpowers/specs/2026-10-02-portfolio-content-design.md), [plan](superpowers/plans/2026-10-02-portfolio-content.md); `af663b9`..`6384a1b` |
@@ -31,6 +32,8 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
   (`getAbsoluteLocaleUrlList()`).
   Al crear el CI, añadir `github-actions` a `skills` de `wiki/public/projects/portfolio-llm-wiki.md`
   (decisión del humano, 2026-10-02).
+  SEO a incluir en el plan: `sitemap.xml`, `robots.txt`, `canonical`, JSON-LD `Person` e imagen
+  Open Graph (checklist de la skill `seo` de ECC, sin instalarla).
 
 ### Cuestiones abiertas
 
