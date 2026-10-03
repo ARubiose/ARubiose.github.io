@@ -38,7 +38,7 @@ test.describe("sin JavaScript", () => {
 test("cruzar 768 px durante la intro no la repite ni corta el prompt", async ({ page }, info) => {
     test.skip(info.project.name !== "desktop");
     await page.goto("/");
-    const prompt = page.locator(".hero .prompt");
+    const prompt = page.locator('.hero .prompt [data-for-skin="terminal"]');
     // A mitad de la escritura: el prompt ya empezó, pero aún no está completo.
     await expect.poll(() => prompt.textContent(), { intervals: [10] }).toMatch(/^w[a-z]{0,4}$/);
     await page.setViewportSize({ width: 600, height: 800 });

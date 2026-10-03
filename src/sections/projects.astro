@@ -1,4 +1,5 @@
 ---
+import Adorn from "@components/Adorn.astro";
 import ProjectCard from "@components/ProjectCard.astro";
 import type { Locale } from "@i18n/ui";
 import { useTranslations } from "@i18n/utils";
@@ -14,7 +15,7 @@ const t = useTranslations(locale);
 
 {items.length > 0 && (
     <section id="projects" class="mt-11 md:mt-18">
-        <h2 class="section-title mb-4 text-[26px] md:mb-5 md:text-[30px]">{t("section.projects")}</h2>
+        <h2 class="section-title mb-4 text-[26px] md:mb-5 md:text-[30px]">{t("section.projects")}<Adorn name="sectionSub.projects" locale={locale} class="section-sub" /></h2>
         <div class="grid gap-4">
             {items.map((p) => <ProjectCard project={p} repoLabel={t("projects.repo")} visitLabel={t("projects.visit")} />)}
         </div>

@@ -1,0 +1,14 @@
+---
+import type { AdornKey, Locale } from "@i18n/ui";
+import { adornTexts } from "@lib/adorns";
+
+interface Props {
+    name: AdornKey;
+    locale: Locale;
+    vars?: Record<string, string>;
+    class?: string;
+}
+const { name, locale, vars, class: className } = Astro.props;
+---
+
+{adornTexts(name, locale, vars).map(({ skin, text }) => <span aria-hidden="true" data-for-skin={skin} class={className}>{text}</span>)}

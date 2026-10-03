@@ -27,7 +27,7 @@ test("el selector marca el idioma actual y enlaza al otro", async () => {
 
 test("el prompt usa el handle recibido, no un nombre fijo", async () => {
     const container = await AstroContainer.create();
-    const html = clean(await container.renderToString(Header, { props: { locale: "es", urls, sections: [], handle: "ada" } }));
-    expect(html).toContain("ada@portfolio:~$");
+    const html = clean(await container.renderToString(Header, { props: { locale: "es", urls, sections: [], handle: "ada", callsign: "ADA" } }));
+    expect(html).toMatch(/data-for-skin="terminal"[^>]*>ada@portfolio:~\$</);
     expect(html).not.toContain("alvaro@");
 });

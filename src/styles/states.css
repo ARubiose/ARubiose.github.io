@@ -41,3 +41,9 @@
         overflow-x: auto;
     }
 }
+
+/* Adornos por skin: cada skin muestra solo los suyos. Una regla por skin del registro
+   (tests/unit/skins.test.ts comprueba que no falte ninguna). */
+:root[data-skin="terminal"] [data-for-skin]:not([data-for-skin="terminal"]) {
+    display: none;
+}

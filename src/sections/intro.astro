@@ -1,4 +1,5 @@
 ---
+import Adorn from "@components/Adorn.astro";
 import ProfilePhoto from "@components/ProfilePhoto.astro";
 import type { Locale } from "@i18n/ui";
 import { useTranslations } from "@i18n/utils";
@@ -15,7 +16,7 @@ const t = useTranslations(locale);
 <section id="about" class="hero grid gap-6 pt-6 md:grid-cols-[340px_1fr] md:items-center md:gap-13 md:pt-14">
     <ProfilePhoto name={profile.name} locale={locale} />
     <div>
-        <p class="prompt text-[13px]" aria-hidden="true">whoami</p>
+        <p class="prompt text-[13px]" aria-hidden="true"><Adorn name="heroKicker" locale={locale} /></p>
         <h1 class="mt-2 font-display text-[38px] leading-[1.04] font-bold tracking-tight md:text-[58px]">
             <span class="hero-name">{profile.name}</span><span class="cursor" aria-hidden="true"></span>
         </h1>

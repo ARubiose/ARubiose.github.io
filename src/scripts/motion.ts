@@ -8,7 +8,7 @@ export function initMotion(): void {
 
     // Intro del hero, en su propio contexto: si dependiera del ancho, cruzar 768 px la
     // revertiría y repetiría, dejando el prompt cortado. Su dirección se fija al cargar.
-    const prompt = document.querySelector<HTMLElement>(".hero .prompt");
+    const prompt = document.querySelector<HTMLElement>('.hero .prompt [data-for-skin="terminal"]');
     const full = prompt?.textContent ?? "";
     mm.add("(prefers-reduced-motion: no-preference)", () => {
         const wide = matchMedia("(min-width: 768px)").matches;

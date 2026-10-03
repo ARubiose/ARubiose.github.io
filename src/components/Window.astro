@@ -11,7 +11,7 @@ const { file, meta, tag, class: className = "", as: Tag = "div" } = Astro.props;
 
 <Tag class={`window ${className}`}>
     <div class="window-bar">
-        <span aria-hidden="true">{file}</span>
+        <span aria-hidden="true" class="window-file">{file}</span>
         {tag ? <span class="window-tag">{tag}</span> : meta ? <span>{meta}</span> : null}
     </div>
     <slot />

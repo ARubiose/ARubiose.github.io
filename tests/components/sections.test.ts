@@ -58,7 +58,7 @@ describe("Projects", () => {
     test("README con archivo, estado y enlace al repo", async () => {
         const html = clean(await container.renderToString(Projects, { props: { items: [project], locale: "es" } }));
         expect(html).toContain('id="projects"');
-        expect(html).toMatch(/aria-hidden="true">my-site\/README\.md</);
+        expect(html).toMatch(/aria-hidden="true" class="window-file">my-site\/README\.md</);
         expect(html).toContain("En desarrollo");
         expect(html).toContain('href="https://github.com/ada/my-site"');
     });
@@ -131,7 +131,7 @@ test("Intro: nombre como h1, adorno whoami oculto a lectores y botón de foto et
     };
     const html = clean(await container.renderToString(Intro, { props: { profile, locale: "en" } }));
     expect(html).toMatch(/<h1[^>]*>[\s\S]*Ada Lovelace[\s\S]*<\/h1>/);
-    expect(html).toMatch(/<p class="prompt[^"]*" aria-hidden="true">whoami<\/p>/);
+    expect(html).toMatch(/<p class="prompt[^"]*" aria-hidden="true"><span aria-hidden="true" data-for-skin="terminal"[^>]*>whoami<\/span>/);
     expect(html).toMatch(/<button[^>]*id="photo-open"[^>]*aria-label="Enlarge the photo of Ada Lovelace"/);
     expect(html).toContain('<dialog id="photo-dialog"');
 });

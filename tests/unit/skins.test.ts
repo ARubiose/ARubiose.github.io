@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 import { defaultSkin, resolveSkin, SKIN_STORAGE_KEY, skinBootScript, skinRegistry, skins, timelineOf } from "@lib/skins";
 
@@ -55,4 +57,11 @@ describe("skinBootScript", () => {
     test("sin acceso a localStorage no rompe la página", () => {
         expect(() => boot(new Error("SecurityError"))).not.toThrow();
     });
+});
+
+test("states.css oculta los adornos de las demás skins para cada skin registrada", () => {
+    const css = readFileSync(join(import.meta.dirname, "../../src/styles/states.css"), "utf8");
+    for (const skin of skins) {
+        expect(css, skin).toContain(`:root[data-skin="${skin}"] [data-for-skin]:not([data-for-skin="${skin}"])`);
+    }
 });

@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { buildHomeView, displayUrl, handleFromName, type HomeData } from "@lib/home";
+import { buildHomeView, callsignFromName, displayUrl, handleFromName, type HomeData } from "@lib/home";
 
 const meta = { tags: [], sources: ["x"], updated: new Date("2026-10-02") };
 const NOW = "2026-10";
@@ -95,4 +95,9 @@ test("handle del prompt: primer nombre en minúsculas y sin tildes", () => {
     expect(handleFromName("Álvaro Rubio Segovia")).toBe("alvaro");
     expect(handleFromName("Ada Lovelace")).toBe("ada");
     expect(handleFromName("  Zoë  ")).toBe("zoe");
+});
+
+test("indicativo de Táctico: dos primeras palabras en mayúsculas", () => {
+    expect(callsignFromName("Álvaro Rubio Segovia")).toBe("ÁLVARO // RUBIO");
+    expect(callsignFromName("  Ada  ")).toBe("ADA");
 });
