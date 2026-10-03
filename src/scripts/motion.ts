@@ -92,7 +92,12 @@ export function initMotion(): void {
             gsap.from(el, { opacity: 0, y: 24, duration: 0.6, ease: "power2.out", scrollTrigger: { trigger: el, start: "top 85%" } }),
         );
     });
-    // Cambiar de skin cambia la distribución: se recalculan las posiciones, sin repetir la intro.
-    document.addEventListener("skinchange", () => ScrollTrigger.refresh());
+    // Cambiar de skin cambia la distribución: se recalculan las posiciones, sin repetir la intro. Las
+    // fuentes de la skin nueva no se precargan y, al llegar, vuelven a cambiar las alturas: se recalcula
+    // otra vez. Se espera un fotograma para que sus descargas hayan empezado y fonts.ready las incluya.
+    document.addEventListener("skinchange", () => {
+        ScrollTrigger.refresh();
+        requestAnimationFrame(() => document.fonts.ready.then(() => ScrollTrigger.refresh()));
+    });
     document.documentElement.setAttribute("data-motion-ready", "");
 }

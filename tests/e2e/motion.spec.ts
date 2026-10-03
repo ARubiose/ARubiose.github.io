@@ -167,3 +167,23 @@ test("tras cambiar a una skin de una columna, las tarjetas aún ocultas entran d
     expect(xs.find((x) => x !== 0)).toBeGreaterThan(0);
 });
 
+// Las fuentes de la skin nueva no se precargan: llegan después del refresco del cambio de skin y
+// cambian la altura de la página. Si no se vuelve a refrescar, los disparadores quedan desplazados.
+test("tras cambiar de skin y cargar sus fuentes, una tarjeta bien dentro de la pantalla ya ha entrado", async ({ page }, info) => {
+    test.skip(skinOf(info.project.name) !== "terminal");
+    const mobile = info.project.name.startsWith("mobile");
+    await page.goto("/");
+    if (mobile) await page.locator('[popovertarget="site-menu"]').click();
+    await page.locator(`${mobile ? "#site-menu" : ".header-lang"} [data-skin-option="game"]`).click();
+    if (mobile) await page.keyboard.press("Escape");
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForTimeout(300);
+    for (const card of await page.locator("#education .t-card").all()) {
+        await card.evaluate((el) => {
+            const item = el.closest(".t-item")!;
+            scrollTo({ top: scrollY + item.getBoundingClientRect().top - innerHeight * 0.6, behavior: "instant" });
+        });
+        await expect(card).toHaveCSS("opacity", "1");
+    }
+});
+
