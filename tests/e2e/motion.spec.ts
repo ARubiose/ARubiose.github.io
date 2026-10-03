@@ -47,8 +47,85 @@ test("cruzar 768 px durante la intro no la repite ni corta el prompt", async ({ 
     await expect(prompt).toHaveText("whoami");
 });
 
-test("con animaciones, la intro termina con el nombre completo", async ({ page }, info) => {
-    test.skip(info.project.name.endsWith("-tactical"), "intro de Táctico: tarea 6");
+test("con animaciones, la intro termina con el nombre completo", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+});
+
+test("Táctico: la intro termina con el nombre completo, las esquinas dibujadas y sin prompt escrito", async ({ page }, info) => {
+    test.skip(!info.project.name.endsWith("-tactical"));
+    await page.goto("/");
+    await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+    await expect.poll(() => page.locator(".photo-window").evaluate((el) => getComputedStyle(el, "::before").width), { timeout: 6000 }).toBe("38px");
+    await expect(page.locator('.hero .prompt [data-for-skin="terminal"]')).toHaveText("whoami");
+});
+
+test("Táctico: las esquinas de la foto se dibujan desde cero", async ({ page }, info) => {
+    test.skip(!info.project.name.endsWith("-tactical"));
+    await page.goto("/");
+    const sizes = new Set<string>();
+    await expect.poll(async () => {
+        sizes.add(await page.locator(".photo-window").evaluate((el) => getComputedStyle(el, "::before").width));
+        return getComputedStyleDone(sizes);
+    }, { intervals: [16], timeout: 4000 }).toBe(true);
+});
+
+function getComputedStyleDone(sizes: Set<string>) {
+    // Se ha visto al menos un tamaño intermedio (animación) y el final.
+    return sizes.has("38px") && [...sizes].some((s) => s !== "38px");
+}
+
+test("una skin sin preset de intro usa la de Terminal sin escribir el prompt", async ({ page }, info) => {
+    test.skip(info.project.name.endsWith("-tactical"));
+    // Tras el script de arranque y antes de los módulos: simula una skin futura sin preset.
+    await page.addInitScript(() => {
+        const obs = new MutationObserver(() => {
+            if (document.body) {
+                document.documentElement.dataset.skin = "sin-preset";
+                obs.disconnect();
+            }
+        });
+        obs.observe(document, { childList: true, subtree: true });
+    });
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto("/");
+    await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+    await expect(page.locator('.hero .prompt [data-for-skin="terminal"]')).toHaveText("whoami");
+    expect(errors).toEqual([]);
+});
+
+test("cambiar de skin a mitad de página no deja contenido revelado invisible", async ({ page }, info) => {
+    test.skip(info.project.name.endsWith("-tactical"));
+    const mobile = info.project.name.startsWith("mobile");
+    await page.goto("/");
+    for (const card of await page.locator(".t-card").all()) {
+        await card.scrollIntoViewIfNeeded();
+        await expect(card).toHaveCSS("opacity", "1");
+    }
+    if (mobile) await page.locator('[popovertarget="site-menu"]').click();
+    await page.locator(`${mobile ? "#site-menu" : ".header-lang"} [data-skin-option="tactical"]`).click();
+    if (mobile) await page.keyboard.press("Escape");
+    for (const card of await page.locator(".t-card").all()) {
+        await card.scrollIntoViewIfNeeded();
+        await expect(card).toHaveCSS("opacity", "1");
+    }
+});
+
+test("al cambiar de skin se recalculan las posiciones: la línea de tiempo se completa al final de su sección", async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop");
+    await page.goto("/");
+    await page.locator('.header-lang [data-skin-option="tactical"]').click();
+    // Final de la línea de tiempo por debajo de su punto de fin ("bottom 60%"): la línea debe estar completa.
+    await page.evaluate(() => {
+        const t = document.querySelector<HTMLElement>("#experience .timeline")!;
+        scrollTo({ top: scrollY + t.getBoundingClientRect().bottom - innerHeight * 0.5, behavior: "instant" });
+    });
+    await expect.poll(() => page.locator("#experience .timeline-fill").evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).d), { timeout: 3000 }).toBeCloseTo(1, 2);
+    // Inicio por debajo de su punto de comienzo ("top 70%"): la línea aún no ha empezado.
+    await page.evaluate(() => {
+        const t = document.querySelector<HTMLElement>("#experience .timeline")!;
+        scrollTo({ top: scrollY + t.getBoundingClientRect().top - innerHeight * 0.95, behavior: "instant" });
+    });
+    await expect.poll(() => page.locator("#experience .timeline-fill").evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).d), { timeout: 3000 }).toBeCloseTo(0, 2);
 });

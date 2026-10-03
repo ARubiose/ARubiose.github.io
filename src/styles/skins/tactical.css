@@ -1,3 +1,16 @@
+/* Variables animables de la intro (motion.ts): registradas para que se interpolen como longitudes.
+   Heredables: las leen los pseudoelementos ::before/::after del elemento animado. */
+@property --corner-size {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 38px;
+}
+@property --kicker-line {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 26px;
+}
+
 [data-skin="tactical"] {
     --skin-bg: #0b0e12;
     --skin-surface: #11161d;
