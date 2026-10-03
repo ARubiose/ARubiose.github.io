@@ -1,5 +1,12 @@
 /* Skin Juego: pantalla de selección de un juego moderno (dirección C de hud-directions.html).
    Saira Condensed enorme en mayúsculas, paralelogramos y rojo como único acento. */
+/* Variable animable de la intro (motion.ts): escala horizontal del panel diagonal del hero. */
+@property --panel-reveal {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 1;
+}
+
 [data-skin="game"] {
     --skin-bg: #0f0f13;
     --skin-surface: #17171d;
@@ -18,6 +25,8 @@
     /* Paralelogramos: inclinación de unos 12° en elementos de ~36 px de alto. */
     --skin-slant: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
     --skin-slant-lg: polygon(14% 0, 100% 0, 86% 100%, 0 100%);
+    /* Desplazamiento horizontal del borde inclinado del panel del hero (unos 10°). */
+    --panel-slant: 60px;
 
     /* Distribución: texto a la izquierda y foto a la derecha, nombre enorme. */
     --hero-cols: 1.3fr 1fr;
@@ -29,4 +38,384 @@
     --hero-name-weight: 800;
     --section-title-size: 32px;
     --section-title-size-md: 40px;
+}
+
+/* Rótulos en Saira Condensed, mayúsculas: el lenguaje de los menús. */
+[data-skin="game"] :is(.site-handle, .site-nav .nav-link, .site-menu .nav-link, .tab, .btn, .badge, .window-tag, .section-title, .section-sub, .prompt, .slot, .menu-toggle, .menu-label, .inspector-equip, .sheet-equip, .skin-option, .window-bar, .readme-title, .hero-name, .hero-role) {
+    font-family: var(--skin-font-display);
+    text-transform: uppercase;
+}
+[data-skin="game"] :is(.t-when, .hero-loc) {
+    font-family: var(--skin-font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* Foco: el contorno de base va por fuera y el clip-path lo recortaría; aquí va por dentro y en
+   color de texto (visible también sobre el rojo). */
+[data-skin="game"] :is(.btn, .tab, .slot, .skin-option, .site-nav .nav-link, .site-menu .nav-link, .menu-toggle, .inspector-equip, .sheet-equip):focus-visible {
+    outline: 2px solid var(--skin-text);
+    outline-offset: -4px;
+}
+
+/* Cabecera */
+[data-skin="game"] .site-handle {
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 0.04em;
+    color: var(--skin-text);
+}
+[data-skin="game"] .site-nav .nav-link {
+    display: inline-block;
+    padding: 4px 13px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+[data-skin="game"] .site-nav .nav-link[aria-current="true"] {
+    color: var(--skin-accent-ink);
+    background: var(--skin-accent);
+    clip-path: var(--skin-slant);
+}
+[data-skin="game"] .menu-toggle {
+    border-color: var(--skin-line);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+}
+
+/* Menú móvil: menú de pausa */
+[data-skin="game"] .menu-label {
+    color: var(--skin-accent);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+}
+[data-skin="game"] .site-menu .nav-link {
+    color: var(--skin-muted);
+    letter-spacing: 0.02em;
+}
+[data-skin="game"] .site-menu .nav-link[aria-current="true"] {
+    color: var(--skin-accent-ink);
+    background: var(--skin-accent);
+    clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+[data-skin="game"] .site-menu .nav-link[aria-current="true"]::before {
+    content: "▶";
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+/* Paneles y barras */
+[data-skin="game"] .window {
+    background: var(--skin-surface);
+}
+[data-skin="game"] .window-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 7px 14px;
+    background: var(--skin-surface-2);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+}
+[data-skin="game"] .window-file {
+    display: none;
+}
+[data-skin="game"] .window-bar:has(> .window-file:only-child) {
+    display: none;
+}
+[data-skin="game"] :is(.window-tag, .badge) {
+    color: var(--skin-accent-ink);
+    background: var(--skin-accent);
+    padding: 1px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    clip-path: var(--skin-slant);
+}
+
+/* Hero */
+[data-skin="game"] .prompt {
+    color: var(--skin-accent);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.18em;
+}
+[data-skin="game"] .cursor,
+[data-skin="game"] body::after {
+    display: none;
+}
+[data-skin="game"] .photo-hint,
+[data-skin="game"] .photo-window > .window-bar .icon {
+    position: absolute;
+    visibility: hidden;
+}
+[data-skin="game"] .hero-role {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 2px 18px;
+    background: var(--skin-text);
+    color: var(--skin-bg);
+    font-weight: 700;
+    clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+[data-skin="game"] .hero-loc {
+    margin-top: 12px;
+    color: var(--skin-muted);
+}
+
+/* Foto: carta de personaje con panel diagonal y filo rojo detrás. En móvil ocupa tres cuartos del
+   ancho, alineada a la derecha (las utilidades md: fijan el ancho y el margen en escritorio). */
+[data-skin="game"] .photo-window {
+    position: relative;
+    isolation: isolate;
+    width: 76%;
+    margin-left: auto;
+    margin-block: 12px;
+    background: none;
+}
+[data-skin="game"] .photo-window::before,
+[data-skin="game"] .photo-window::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: -28px;
+    bottom: -28px;
+    transform: scaleX(var(--panel-reveal, 1));
+    transform-origin: right;
+    pointer-events: none;
+}
+/* El panel llega hasta el borde derecho de la ventana: el margen de <main> (16 px en móvil; en
+   escritorio, 40 px más lo que sobra a los lados del ancho máximo de 72rem). Su borde izquierdo se
+   inclina con clip-path, que no se sale de la caja (un skewX desbordaría la página). */
+[data-skin="game"] .photo-window::before {
+    left: -18%;
+    right: -16px;
+    background: var(--skin-surface);
+    clip-path: polygon(var(--panel-slant) 0, 100% 0, 100% 100%, 0 100%);
+}
+/* Filo rojo: paralelogramo paralelo al borde del panel. */
+[data-skin="game"] .photo-window::after {
+    left: calc(-18% - 14px);
+    width: calc(var(--panel-slant) + 6px);
+    background: var(--skin-accent);
+    clip-path: polygon(calc(100% - 6px) 0, 100% 0, 6px 100%, 0 100%);
+    transform-origin: left;
+}
+[data-skin="game"] .photo-window img {
+    clip-path: var(--skin-slant-lg);
+    filter: none;
+}
+[data-skin="game"] .photo-window > .window-bar {
+    position: absolute;
+    left: 0;
+    bottom: 14px;
+    z-index: 2;
+    padding: 2px 12px;
+    color: var(--skin-accent-ink);
+    background: var(--skin-accent);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    clip-path: var(--skin-slant);
+}
+@media (min-width: 768px) {
+    [data-skin="game"] .photo-window::before,
+    [data-skin="game"] .photo-window::after {
+        top: -56px;
+        bottom: -60px;
+        --panel-slant: 110px;
+    }
+    [data-skin="game"] .photo-window::before {
+        right: calc((min(100vw, 72rem) - 100vw) / 2 - 40px);
+    }
+}
+
+/* Titulares de sección: Saira 800, subtítulo rojo y línea que se desvanece */
+[data-skin="game"] .section-title {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    column-gap: 14px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.01em;
+}
+[data-skin="game"] .section-title::after {
+    content: "";
+    flex: 1;
+    min-width: 40px;
+    height: 2px;
+    align-self: center;
+    background: linear-gradient(90deg, var(--skin-line), transparent);
+}
+[data-skin="game"] .section-sub {
+    color: var(--skin-accent);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+}
+
+/* Listas: viñeta «▸» roja */
+[data-skin="game"] .marker-list {
+    list-style: none;
+}
+[data-skin="game"] .marker-list li {
+    position: relative;
+    padding-left: 18px;
+}
+[data-skin="game"] .marker-list li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: var(--skin-accent);
+}
+
+/* Botones */
+[data-skin="game"] .btn {
+    display: inline-flex;
+    justify-content: center;
+    padding: 9px 24px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+    transition: background 0.2s, color 0.2s;
+}
+[data-skin="game"] .btn-primary {
+    background: var(--skin-accent);
+    color: var(--skin-accent-ink);
+}
+[data-skin="game"] .btn-primary:hover {
+    background: color-mix(in oklab, var(--skin-accent) 85%, white);
+}
+[data-skin="game"] .btn-secondary {
+    background: var(--skin-surface);
+    color: var(--skin-text);
+    box-shadow: inset 0 0 0 2px var(--skin-line);
+}
+[data-skin="game"] .btn-secondary:hover {
+    box-shadow: inset 0 0 0 2px var(--skin-accent);
+}
+
+/* Línea de tiempo: sin eje ni nodos; borde izquierdo rojo en el puesto vigente */
+[data-skin="game"] :is(.timeline-rail, .timeline-node) {
+    visibility: hidden;
+}
+[data-skin="game"] .t-card {
+    border-left: 4px solid var(--skin-line);
+}
+[data-skin="game"] .t-item[data-current] .t-card {
+    border-left-color: var(--skin-accent);
+    background: linear-gradient(90deg, color-mix(in oklab, var(--skin-accent) 12%, var(--skin-surface)), var(--skin-surface) 45%);
+}
+[data-skin="game"] .t-card h3 {
+    font-family: var(--skin-font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+}
+[data-skin="game"] .t-when {
+    color: var(--skin-muted);
+    font-size: 12.5px;
+}
+
+/* Proyectos */
+[data-skin="game"] .readme-title {
+    font-weight: 800;
+    letter-spacing: 0.01em;
+}
+
+/* Creador de personaje: lista de menú */
+[data-skin="game"] .tile {
+    background: none;
+    border-bottom: 1px solid var(--skin-line);
+    transition: background 0.15s;
+}
+[data-skin="game"] .tile:hover,
+[data-skin="game"] .tile[data-selected] {
+    background: linear-gradient(90deg, color-mix(in oklab, var(--skin-accent) 20%, transparent), transparent);
+}
+/* El nombre es un bloque: la marca va delante del icono, como primer elemento de la fila. */
+[data-skin="game"] .tile[data-selected] .tile-main::before {
+    content: "▶";
+    color: var(--skin-accent);
+    font-size: 11px;
+}
+[data-skin="game"] .tile-name {
+    font-weight: 500;
+}
+[data-skin="game"] .tile-equip {
+    color: var(--skin-muted);
+    font-family: var(--skin-font-display);
+    font-weight: 700;
+}
+[data-skin="game"] .tile-equip[aria-pressed="true"] {
+    color: var(--skin-accent);
+}
+[data-skin="game"] .tab {
+    padding: 4px 14px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--skin-muted);
+    background: var(--skin-surface);
+    clip-path: var(--skin-slant);
+}
+[data-skin="game"] .tab[aria-selected="true"] {
+    color: var(--skin-bg);
+    background: var(--skin-text);
+}
+[data-skin="game"] .slot {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--skin-muted);
+    background: var(--skin-surface-2);
+    clip-path: var(--skin-slant);
+}
+/* Lleno: tinte rojo (el icono clonado del inventario ya es rojo, una utilidad fija su color). */
+[data-skin="game"] .slot[data-filled] {
+    background: color-mix(in oklab, var(--skin-accent) 24%, var(--skin-surface));
+}
+[data-skin="game"] .slot[data-over] {
+    background: var(--skin-warn);
+    color: var(--skin-bg);
+}
+[data-skin="game"] .broken {
+    border-left: 4px solid var(--skin-warn);
+    background: color-mix(in oklab, var(--skin-warn) 10%, var(--skin-surface));
+    color: var(--skin-text);
+    padding: 8px 10px;
+    font-size: 13px;
+}
+[data-skin="game"] .edge-btn {
+    color: var(--skin-accent);
+    background: var(--skin-bg);
+    box-shadow: inset 0 0 0 1px var(--skin-accent);
+}
+[data-skin="game"] :is(.inspector-equip, .sheet-equip) {
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+
+/* Selector de skin */
+[data-skin="game"] .skin-switcher {
+    gap: 4px;
+}
+[data-skin="game"] .skin-option {
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--skin-muted);
+    background: var(--skin-surface);
+    clip-path: var(--skin-slant);
+}
+[data-skin="game"] .skin-option[aria-pressed="true"] {
+    background: var(--skin-text);
+    color: var(--skin-bg);
+}
+[data-skin="game"] .skin-swatch {
+    background: var(--swatch);
 }
