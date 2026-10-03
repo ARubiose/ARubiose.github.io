@@ -29,7 +29,8 @@
     --panel-slant: 60px;
 
     /* Distribución: texto a la izquierda y foto a la derecha, nombre enorme. */
-    --hero-cols: 1.3fr 1fr;
+    /* minmax(0, …): una palabra larga del nombre no puede ensanchar la columna y aplastar la foto. */
+    --hero-cols: minmax(0, 1.3fr) minmax(0, 1fr);
     --hero-photo-order: 1;
     --hero-photo-max: 380px;
     --hero-name-size: 50px;
@@ -156,6 +157,11 @@
 [data-skin="game"] .photo-window > .window-bar .icon {
     position: absolute;
     visibility: hidden;
+}
+/* El nombre va enorme y en mayúsculas: una palabra larga se parte antes que desbordar. */
+[data-skin="game"] .hero-name {
+    overflow-wrap: anywhere;
+    hyphens: auto;
 }
 [data-skin="game"] .hero-role {
     display: inline-block;

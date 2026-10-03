@@ -89,6 +89,15 @@ test("el foco se distingue del fondo en la pestaña seleccionada y en la skin ac
     expect(o.outline).not.toBe(o.background);
 });
 
+// Plantilla: el nombre puede traer palabras muy largas, que a 50-84 px en mayúsculas no caben.
+test("un nombre con una palabra muy larga no desborda ni aplasta la foto", async ({ page }, info) => {
+    await page.goto("/");
+    await page.locator(".hero-name").evaluate((el) => { el.textContent = "Supercalifragilisticoexpialidoso Rubio"; });
+    const [name, hero, photo] = await Promise.all([".hero-name", "#about", ".photo-window"].map((s) => page.locator(s).boundingBox()));
+    expect(name!.x + name!.width).toBeLessThanOrEqual(hero!.x + hero!.width + 1);
+    if (info.project.name.startsWith("desktop")) expect(photo!.width).toBeGreaterThan(250);
+});
+
 test("el panel diagonal del hero no ensancha la página", async ({ page }) => {
     await page.goto("/");
     const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
