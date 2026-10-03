@@ -55,7 +55,6 @@ export function initSkillBuilder(): void {
             tile.toggleAttribute("data-selected", id === state.selected);
             const btn = tile.querySelector<HTMLButtonElement>("[data-equip]")!;
             btn.setAttribute("aria-pressed", String(on));
-            btn.setAttribute("aria-label", `${on ? root.dataset.unequipLabel : root.dataset.equipLabel} ${titleOf(id)}`);
             btn.textContent = on ? "✓" : "+";
             btn.classList.toggle("is-popping", id === popped);
         });
@@ -103,9 +102,12 @@ export function initSkillBuilder(): void {
 
         const combo = root.querySelector<HTMLElement>("[data-combo]")!;
         const rows = rankCombination(state.build, data.usage);
-        if (!n) combo.innerHTML = combo.dataset.empty ?? combo.innerHTML;
-        else {
-            combo.dataset.empty ??= combo.innerHTML;
+        if (!n || !rows.length) {
+            const message = document.createElement("p");
+            message.className = "text-muted";
+            message.textContent = (n ? combo.dataset.none : combo.dataset.empty) ?? "";
+            combo.replaceChildren(message);
+        } else {
             combo.replaceChildren(
                 ...rows.map((r) => {
                     const row = document.createElement("p");

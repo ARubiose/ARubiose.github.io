@@ -27,7 +27,6 @@ const builderData = JSON.stringify({ usage, entryNames }).replace(/</g, "\\u003c
     data-builder
     data-cap={BUILD_CAP}
     data-broken-template={t("skills.broken")}
-    data-equip-label={t("skills.equip")}
     data-unequip-label={t("skills.unequip")}
     data-equip-action={t("skills.equipAction")}
     data-unequip-action={t("skills.unequipAction")}
@@ -55,7 +54,7 @@ const builderData = JSON.stringify({ usage, entryNames }).replace(/</g, "\\u003c
                 <div data-broken role="status" class="mt-2.5"></div>
                 <details class="mt-2.5 text-[12.5px] lg:mt-4" open>
                     <summary class="flex cursor-pointer justify-between text-muted">{t("skills.combo")}</summary>
-                    <div data-combo><p class="text-muted">{t("skills.comboEmpty")}</p></div>
+                    <div data-combo data-empty={t("skills.comboEmpty")} data-none={t("skills.comboNone")}><p class="text-muted">{t("skills.comboEmpty")}</p></div>
                 </details>
             </div>
         </div>

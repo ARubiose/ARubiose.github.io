@@ -36,7 +36,6 @@ export const ui = {
         "skills.noUse": "sin uso registrado",
         "projects.kind": "Proyecto",
         "nav.menu": "menu",
-        "nav.close": "cerrar",
         "nav.prompt": "@portfolio:~$",
         "nav.list": "ls secciones/",
         "photo.open": "Ampliar la foto de",
@@ -59,6 +58,7 @@ export const ui = {
         "skills.build": "build",
         "skills.combo": "combinación usada en",
         "skills.comboEmpty": "Equipa habilidades con + para verlo.",
+        "skills.comboNone": "Ninguna entrada usa estas habilidades.",
         "skills.equip": "Equipar",
         "skills.unequip": "Quitar",
         "skills.equipAction": "equipar",
@@ -68,7 +68,6 @@ export const ui = {
         "skills.usedIn": "usada en",
         "skills.close": "cerrar",
         "skills.broken": "Personaje roto. Con {n} habilidades equipadas, el equipo de balanceo ya está preparando un nerf.",
-        "skills.brokenTitle": "Personaje roto.",
     },
     en: {
         "nav.label": "Sections",
@@ -103,7 +102,6 @@ export const ui = {
         "skills.noUse": "no recorded use",
         "projects.kind": "Project",
         "nav.menu": "menu",
-        "nav.close": "close",
         "nav.prompt": "@portfolio:~$",
         "nav.list": "ls sections/",
         "photo.open": "Enlarge the photo of",
@@ -126,6 +124,7 @@ export const ui = {
         "skills.build": "build",
         "skills.combo": "combination used at",
         "skills.comboEmpty": "Equip skills with + to see it.",
+        "skills.comboNone": "No entry uses these skills.",
         "skills.equip": "Equip",
         "skills.unequip": "Remove",
         "skills.equipAction": "equip",
@@ -135,7 +134,6 @@ export const ui = {
         "skills.usedIn": "used at",
         "skills.close": "close",
         "skills.broken": "Broken character. With {n} skills equipped, the balance team is already preparing a nerf.",
-        "skills.brokenTitle": "Broken character.",
     },
 } as const satisfies Record<Locale, Record<string, string>>;
 
