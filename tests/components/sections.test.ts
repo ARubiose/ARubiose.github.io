@@ -37,6 +37,7 @@ describe("Experience", () => {
         expect(html).toContain("CURRENT");
         expect(html).toContain("6 months");
         expect(html).toContain("API design.");
+        expect(html).toMatch(/class="t-item[^"]*timeline-single:md:grid-cols-\[28px_1fr\]/);
     });
 
     test("sin elementos no renderiza nada", async () => {
@@ -134,6 +135,8 @@ test("Intro: nombre como h1, adorno whoami oculto a lectores y botón de foto et
     expect(html).toMatch(/<p class="prompt[^"]*" aria-hidden="true"><span aria-hidden="true" data-for-skin="terminal"[^>]*>whoami<\/span>/);
     expect(html).toMatch(/<button[^>]*id="photo-open"[^>]*aria-label="Enlarge the photo of Ada Lovelace"/);
     expect(html).toContain('<dialog id="photo-dialog"');
+    expect(html).toMatch(/<section id="about" class="[^"]*md:grid-cols-\(--hero-cols\)/);
+    expect(html).toMatch(/class="window photo-window[^"]*md:order-\(--hero-photo-order\)/);
 });
 
 describe.each<Locale>(["es", "en"])("en %s", (locale) => {

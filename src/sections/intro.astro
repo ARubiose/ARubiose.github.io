@@ -13,7 +13,7 @@ const { profile, locale } = Astro.props;
 const t = useTranslations(locale);
 ---
 
-<section id="about" class="hero grid gap-6 pt-6 md:grid-cols-[340px_1fr] md:items-center md:gap-13 md:pt-14">
+<section id="about" class="hero grid gap-6 pt-6 md:grid-cols-(--hero-cols) md:items-center md:gap-13 md:pt-14">
     <ProfilePhoto name={profile.name} locale={locale} />
     <div>
         <p class="prompt text-[13px]" aria-hidden="true"><Adorn name="heroKicker" locale={locale} /></p>

@@ -18,5 +18,10 @@
     --color-warn: var(--skin-warn);
     --font-display: var(--skin-font-display);
     --font-mono: var(--skin-font-mono);
+    --font-body: var(--skin-font-body, var(--skin-font-mono));
     --radius-skin: var(--skin-radius);
 }
+
+/* Modo de línea de tiempo de la skin (data-timeline en <html>): en "single", eje a la izquierda
+   y tarjetas en una columna también en escritorio. */
+@custom-variant timeline-single (&:where([data-timeline="single"] *));

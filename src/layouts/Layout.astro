@@ -28,7 +28,7 @@ const { locale, title, description } = Astro.props;
         <Font cssVariable="--font-ibm-plex-mono" preload />
         <script is:inline set:html={skinBootScript()} />
     </head>
-    <body class="bg-bg text-text font-mono">
+    <body class="bg-bg text-text font-body">
         <slot />
     </body>
 </html>
