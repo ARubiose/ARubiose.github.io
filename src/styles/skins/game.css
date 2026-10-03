@@ -57,6 +57,10 @@
     outline: 2px solid var(--skin-text);
     outline-offset: -4px;
 }
+/* Donde el fondo ya es el color de texto, el contorno va en el color de fondo. */
+[data-skin="game"] :is(.tab[aria-selected="true"], .skin-option[aria-pressed="true"]):focus-visible {
+    outline-color: var(--skin-bg);
+}
 
 /* Cabecera */
 [data-skin="game"] .site-handle {

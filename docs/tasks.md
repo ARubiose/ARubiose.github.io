@@ -51,6 +51,18 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 - [ ] El menú móvil conserva el tamaño (24 px) y los separadores del marcado
   (`src/components/Header.astro`, enlaces de `#site-menu`); la maqueta los lleva a ~34 px sin separadores.
 
+- [ ] Una palabra muy larga en el nombre del hero (17 letras o más) desborda a 390 px en Juego y, a
+  1280, aplasta la columna de la foto: `overflow-wrap: anywhere` en `.hero-name` y
+  `minmax(0, 1.3fr)` en `--hero-cols` (`src/styles/skins/game.css`). El nombre real cabe.
+- [ ] Con barras de desplazamiento clásicas, el panel del hero (calculado con `100vw`) ensancha la
+  página 8 px; no se puede desplazar con la rueda (`src/styles/skins/game.css`, `.photo-window::before`).
+- [ ] Declaraciones de `game.css` que las utilidades anulan: `font-size` de `.site-handle` y de
+  `.sheet-equip`. Borrarlas o convertirlas en tokens.
+- [ ] Los botones de equipar del inspector y del panel inferior mezclan borde (`border border-accent`,
+  `src/scripts/skill-builder.ts:66,73`) y `clip-path`: en estado equipado se cortan las esquinas.
+- [ ] Prueba e2e de cambiar de Terminal a Juego tras hacer scroll (hoy solo Juego → Táctico; se
+  comprobó a mano que funciona).
+
 ### Mejoras menores (revisión final de la fase 5b, skin Táctico)
 
 - [ ] Táctico en móvil pone la foto antes del texto (orden de Terminal); la maqueta la pone entre

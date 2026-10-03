@@ -45,7 +45,7 @@ el selector móvil). Muestra de color `#ec4c56`; línea de tiempo `single`.
 | `body` | `#cfcfd8` | Texto de párrafos |
 | `muted` | `#9a9aa8` | Texto secundario |
 | `accent` | `#ec4c56` | Acento único (rojo) |
-| `accent-ink` | `#ffffff` | Texto sobre acento |
+| `accent-ink` | `#0f0f13` | Texto sobre acento (el blanco de la maqueta da 3,66:1 sobre el rojo; casi negro, 5,22:1) |
 | `warn` | `#f0a83a` | Solo el aviso de personaje roto (el rojo ya es el acento) |
 
 - **Tipografía:** Saira Condensed 600/700/800 (`--skin-font-display`: titulares, navegación,
@@ -53,9 +53,12 @@ el selector móvil). Muestra de color `#ec4c56`; línea de tiempo `single`.
   Mono 400/500 (`--skin-font-mono`: fechas, duraciones y metadatos).
 - **Forma:** paralelogramos con `clip-path` (inclinación de unos 12°) en el enlace activo de la
   navegación, los botones, las pestañas, los huecos de equipamiento, el rol, las etiquetas
-  (`badge`, etiqueta de la foto), el botón del menú y el selector de skin. Se usa `clip-path` y no
-  `skewX` para que el texto no se incline sin añadir spans al marcado. El foco visible se resuelve
-  como en Táctico (el `clip-path` no debe recortar el indicador de foco). Radio 0.
+  (`badge`, etiqueta de la foto) y el selector de skin (el botón del menú no: su borde lo fijan
+  utilidades y la inclinación lo cortaría). Se usa `clip-path` y no `skewX` para que el texto no se
+  incline sin añadir spans al marcado; los paralelogramos llevan fondo, no borde interior, que el
+  `clip-path` recortaría por los lados. El contorno de foco va por dentro del elemento
+  (`outline-offset` negativo), en color de texto, o de fondo donde el fondo ya es el color de texto.
+  Radio 0.
 - **Decoración:**
   - `h2` en Saira 800 grande, con el subtítulo (adorno `sectionSub`) en rojo y espaciado ancho, y
     una línea que se desvanece detrás.
@@ -67,7 +70,7 @@ el selector móvil). Muestra de color `#ec4c56`; línea de tiempo `single`.
     la columna del nodo). La fecha va encima de la tarjeta, como en Táctico.
   - Creador de personaje: los elementos como lista de menú (filas separadas por líneas, la fila
     seleccionada con degradado rojo y «▶», el equipado con «✓» rojo); pestaña activa en bloque
-    `text`; huecos llenos en rojo; panel de detalles con el nombre en Saira grande.
+    `text`; huecos llenos con tinte rojo (el icono, rojo por una utilidad, no se vería sobre rojo sólido); panel de detalles con el nombre en Saira grande.
   - Menú móvil como menú de pausa: secciones en Saira y mayúsculas, la activa en bloque rojo
     inclinado con «▶». El tamaño (24 px) y los separadores son los del marcado, que fijan
     utilidades; la maqueta los llevaba a ~34 px sin separadores.
@@ -147,8 +150,8 @@ Preset `game` en `src/scripts/motion.ts`:
 2. La foto se desliza desde la derecha tras el panel.
 3. El nombre entra «de golpe» desde la izquierda (desplazamiento corto, opacidad y un desenfoque de
    movimiento breve), sin descifrado.
-4. El bloque del rol se estira desde la izquierda y el resto aparece con `revealRest` (la foto ya ha
-   entrado, así que no se anima dos veces).
+4. El bloque del rol se estira desde la izquierda y la ubicación, el resumen y los botones aparecen
+   como en las otras skins, sin `revealRest`, que animaría otra vez la foto.
 
 Las animaciones con el scroll son las comunes (modo `single`). Con `skinchange` no se repite la
 intro. Con `prefers-reduced-motion` no se ejecuta nada.

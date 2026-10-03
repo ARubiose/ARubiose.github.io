@@ -62,6 +62,33 @@ test("el foco de teclado se ve dentro de los botones recortados", async ({ page 
 });
 
 // El panel diagonal del hero es un pseudoelemento: la prueba común de desbordamiento no lo ve.
+// En la pestaña seleccionada y en la skin activa el fondo es el color de texto: el contorno de foco
+// no puede ser de ese mismo color.
+test("el foco se distingue del fondo en la pestaña seleccionada y en la skin activa", async ({ page }, info) => {
+    test.skip(!info.project.name.startsWith("desktop"), "el selector de la cabecera es de escritorio");
+    await page.goto("/");
+    const contrast = (sel: string) => page.locator(sel).first().evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return { outline: cs.outlineColor, background: cs.backgroundColor, style: cs.outlineStyle };
+    });
+    const tab = page.locator('#skills .tab[aria-selected="true"]');
+    await tab.focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(page.locator('#skills .tab[aria-selected="true"]')).toBeFocused();
+    const t = await contrast('#skills .tab[aria-selected="true"]');
+    expect(t.style).toBe("solid");
+    expect(t.outline).not.toBe(t.background);
+    const option = page.locator('.header-lang [data-skin-option="game"]');
+    await page.locator('.header-lang [data-skin-option="tactical"]').focus();
+    await page.keyboard.press("Shift+Tab");
+    await page.keyboard.press("Tab");
+    await page.keyboard.press("Tab");
+    await expect(option).toBeFocused();
+    const o = await contrast('.header-lang [data-skin-option="game"]');
+    expect(o.style).toBe("solid");
+    expect(o.outline).not.toBe(o.background);
+});
+
 test("el panel diagonal del hero no ensancha la página", async ({ page }) => {
     await page.goto("/");
     const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
