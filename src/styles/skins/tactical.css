@@ -42,6 +42,15 @@
     letter-spacing: 0.1em;
 }
 
+/* Foco: el contorno de base va por fuera y el clip-path de las esquinas cortadas lo recortaría; aquí
+   va por dentro, en el color de texto sobre acento donde el fondo ya es el acento. */
+[data-skin="tactical"] :is(.btn, .tab, .inspector-equip, .sheet-equip):focus-visible {
+    outline-offset: -4px;
+}
+[data-skin="tactical"] :is(.btn-primary, .tab[aria-selected="true"]):focus-visible {
+    outline-color: var(--skin-accent-ink);
+}
+
 /* Cabecera */
 [data-skin="tactical"] .site-handle {
     font-family: var(--skin-font-display);

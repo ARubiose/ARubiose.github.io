@@ -48,3 +48,30 @@ test("ninguna barra de ventana visible queda vacía", async ({ page }) => {
     );
     expect(empty).toEqual([]);
 });
+
+// El clip-path de las esquinas cortadas recorta un contorno exterior: el foco va por dentro y de un
+// color distinto del fondo del elemento.
+test("el foco de teclado se ve en botones y pestañas recortados", async ({ page }, info) => {
+    test.skip(!info.project.name.startsWith("desktop"));
+    await page.goto("/");
+    const ring = (sel: string) => page.locator(sel).first().evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return { offset: parseFloat(cs.outlineOffset), color: cs.outlineColor, background: cs.backgroundColor, style: cs.outlineStyle };
+    });
+    const cta = page.locator(".hero-cta .btn-primary");
+    await cta.focus();
+    await page.keyboard.press("Shift+Tab");
+    await page.keyboard.press("Tab");
+    await expect(cta).toBeFocused();
+    await expect.poll(async () => (await ring(".hero-cta .btn-primary")).offset).toBeLessThan(0);
+    const c = await ring(".hero-cta .btn-primary");
+    expect(c.style).toBe("solid");
+    expect(c.color).not.toBe(c.background);
+    await page.locator('#skills .tab[aria-selected="true"]').focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(page.locator('#skills .tab[aria-selected="true"]')).toBeFocused();
+    // Movimiento reducido deja transiciones de 0,01 ms (base.css): se espera al valor final.
+    await expect.poll(async () => (await ring('#skills .tab[aria-selected="true"]')).offset).toBeLessThan(0);
+    const t = await ring('#skills .tab[aria-selected="true"]');
+    expect(t.color).not.toBe(t.background);
+});
