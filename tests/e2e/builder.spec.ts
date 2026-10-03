@@ -42,6 +42,28 @@ test.describe("creador de personaje", () => {
         await expect(page.locator("[data-combo] .combo-row").first()).toContainText("3/3");
     });
 
+    test("el botón de equipar mantiene su etiqueta y solo cambia aria-pressed", async ({ page }) => {
+        const button = page.locator('[data-equip="fastapi"]');
+        const label = await button.getAttribute("aria-label");
+        await equip(page, "fastapi");
+        await expect(button).toHaveAttribute("aria-pressed", "true");
+        await expect(button).toHaveAttribute("aria-label", label!);
+    });
+
+    test("una build sin entradas en común lo dice en vez de quedar vacía", async ({ page }) => {
+        // Sirve la portada con Python sin usos registrados.
+        await page.route("/", async (route) => {
+            const response = await route.fetch();
+            const body = (await response.text()).replace('"python":[', '"python-unused":[');
+            await route.fulfill({ response, body });
+        });
+        await page.goto("/");
+        await page.locator("#skills").scrollIntoViewIfNeeded();
+        await equip(page, "python");
+        await expect(page.locator("[data-combo] .combo-row")).toHaveCount(0);
+        await expect(page.locator("[data-combo]")).toContainText("Ninguna entrada");
+    });
+
     test("con 7 habilidades el personaje está roto; con 6 no", async ({ page }) => {
         for (const id of ["python", "fastapi", "django", "celery", "redis", "software-architecture"]) await equip(page, id);
         await expect(page.locator("[data-broken] .broken")).toHaveCount(0);

@@ -18,6 +18,12 @@ describe("yearMonth", () => {
     });
 });
 
+test("sin valor da el error por defecto, no el de formato", () => {
+    const message = yearMonth.safeParse(undefined).error?.issues[0].message;
+    expect(message).toBeDefined();
+    expect(message).not.toMatch(/AAAA/);
+});
+
 describe("compareYearMonth", () => {
     test("ordena por año y mes", () => {
         expect(compareYearMonth("2022-08", "2026-06")).toBeLessThan(0);

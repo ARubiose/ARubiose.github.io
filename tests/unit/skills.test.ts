@@ -29,6 +29,13 @@ describe("monthsCovered", () => {
         expect(monthsCovered(spans, NOW)).toBe(monthsCovered([{ start: "2022-08", end: null }], NOW));
     });
 
+    test("un fin solo con año cuenta como diciembre", () => {
+        expect(monthsCovered([{ start: "2020-06", end: "2020" }], NOW)).toBe(
+            monthsCovered([{ start: "2020-06", end: "2020-12" }], NOW),
+        );
+        expect(monthsCovered([{ start: "2020-06", end: "2020" }], NOW)).toBeGreaterThan(0);
+    });
+
     test("sin periodos son 0 meses", () => {
         expect(monthsCovered([], NOW)).toBe(0);
     });

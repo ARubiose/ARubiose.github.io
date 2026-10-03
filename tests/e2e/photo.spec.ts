@@ -22,6 +22,13 @@ test.describe("foto ampliable", () => {
         await expect(open).toBeFocused();
     });
 
+    test("la barra del visor no dibuja una línea doble sobre la imagen", async ({ page }) => {
+        await page.goto("/");
+        await page.locator("#photo-open").click();
+        const bar = page.locator("#photo-dialog .window-bar");
+        await expect(bar).toHaveCSS("border-bottom-width", "0px");
+    });
+
     test("cierra al pulsar fuera de la imagen", async ({ page }) => {
         await page.goto("/");
         await page.locator("#photo-open").click();

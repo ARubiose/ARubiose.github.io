@@ -18,6 +18,8 @@ interface Props {
 const { locale, groups, profile, professionalXp, usage, entryNames } = Astro.props;
 const t = useTranslations(locale);
 const total = groups.reduce((n, g) => n + g.items.length, 0);
+// `<` escapado: un nombre con «</script>» cerraría la etiqueta. Sigue siendo JSON válido.
+const builderData = JSON.stringify({ usage, entryNames }).replace(/</g, "\\u003c");
 ---
 
 <div
@@ -25,12 +27,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     data-builder
     data-cap={BUILD_CAP}
     data-broken-template={t("skills.broken")}
-    data-equip-label={t("skills.equip")}
     data-unequip-label={t("skills.unequip")}
     data-equip-action={t("skills.equipAction")}
     data-unequip-action={t("skills.unequipAction")}
 >
-    <script type="application/json" data-builder-data set:html={JSON.stringify({ usage, entryNames })} />
+    <script type="application/json" data-builder-data set:html={builderData} />
 
     <aside class="window sheet">
         <div class="window-bar"><span aria-hidden="true">{t("skills.sheet")}</span><span aria-hidden="true">{t("skills.level")} {new Date().getFullYear()}</span></div>
@@ -53,7 +54,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                 <div data-broken role="status" class="mt-2.5"></div>
                 <details class="mt-2.5 text-[12.5px] lg:mt-4" open>
                     <summary class="flex cursor-pointer justify-between text-muted">{t("skills.combo")}</summary>
-                    <div data-combo><p class="text-muted">{t("skills.comboEmpty")}</p></div>
+                    <div data-combo data-empty={t("skills.comboEmpty")} data-none={t("skills.comboNone")}><p class="text-muted">{t("skills.comboEmpty")}</p></div>
                 </details>
             </div>
         </div>

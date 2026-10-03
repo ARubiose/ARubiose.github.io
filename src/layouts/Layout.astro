@@ -2,7 +2,7 @@
 import "@styles/global.css";
 import { Font } from "astro:assets";
 import type { Locale } from "@i18n/ui";
-import { defaultSkin, SKIN_STORAGE_KEY, skins } from "@lib/skins";
+import { defaultSkin, skinBootScript } from "@lib/skins";
 
 interface Props {
     locale: Locale;
@@ -26,12 +26,7 @@ const { locale, title, description } = Astro.props;
         <meta property="og:locale" content={locale === "es" ? "es_ES" : "en_US"} />
         <Font cssVariable="--font-space-grotesk" preload />
         <Font cssVariable="--font-ibm-plex-mono" preload />
-        <script is:inline define:vars={{ skins, key: SKIN_STORAGE_KEY }}>
-            try {
-                const stored = localStorage.getItem(key);
-                if (stored && skins.includes(stored)) document.documentElement.dataset.skin = stored;
-            } catch {}
-        </script>
+        <script is:inline set:html={skinBootScript()} />
     </head>
     <body class="bg-bg text-text font-mono">
         <slot />

@@ -1,0 +1,43 @@
+/* Reglas de estado de los componentes mejorados con JS. Van fuera de capas a propósito:
+   tienen que ganar a utilidades como `hidden`. No dependen de la skin. */
+
+[data-builder].is-enhanced .panel-title,
+[data-builder].is-enhanced .skill-detail {
+    display: none;
+}
+[data-builder].is-enhanced .skill-panel:not([data-active]) {
+    display: none;
+}
+/* Más específico que la regla que oculta los detalles dentro del inventario mejorado */
+[data-builder].is-enhanced [data-inspector-body] .skill-detail,
+[data-builder].is-enhanced [data-sheet-body] .skill-detail {
+    display: block;
+    border: 0;
+    padding: 0;
+}
+[data-inspector-body] .detail-head,
+[data-sheet-body] .detail-head {
+    display: flex;
+    margin-bottom: 14px;
+}
+.tabbar[data-more-l] .edge-l,
+.tabbar[data-more-r] .edge-r {
+    display: flex;
+}
+
+/* Sin Popover API el atributo popover no oculta nada y el menú móvil quedaría siempre abierto:
+   se oculta junto con su botón y la cabecera muestra la navegación y el idioma en línea. */
+@supports not selector(:popover-open) {
+    .site-menu,
+    .menu-toggle {
+        display: none;
+    }
+    .site-nav,
+    .header-lang {
+        display: block;
+    }
+    .site-nav {
+        min-width: 0;
+        overflow-x: auto;
+    }
+}

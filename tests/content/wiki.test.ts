@@ -37,16 +37,10 @@ for (const [folder, type] of Object.entries(folders)) {
     });
 }
 
-test("hay al menos un puesto, un proyecto, una habilidad y un estudio", () => {
-    for (const folder of Object.keys(folders)) {
-        const files = readdirSync(join(WIKI, folder)).filter((f) => f.endsWith(".md"));
-        expect(files.length, folder).toBeGreaterThan(0);
-    }
-});
-
 test("cada habilidad citada por un puesto o proyecto existe", () => {
+    // Las colecciones pueden estar vacías o no existir: el sitio oculta esas secciones.
     const ids = (folder: string) =>
-        readdirSync(join(WIKI, folder))
+        (existsSync(join(WIKI, folder)) ? readdirSync(join(WIKI, folder)) : [])
             .filter((f) => f.endsWith(".md"))
             .map((f) => f.replace(/\.md$/, ""));
     const entries = ["experience", "projects"].flatMap((folder) =>

@@ -36,6 +36,11 @@ test("proyectos: archivo README a partir del repo", () => {
     expect(buildHomeView(data, "es", NOW).projects[0]).toMatchObject({ file: "my-site/README.md", statusLabel: "En desarrollo" });
 });
 
+test.each(["https://github.com/ada/my-site.git", "https://github.com/ada/my-site/"])("el README ignora .git y la barra final: %s", (repo) => {
+    const project = { ...data.projects[0], data: { ...data.projects[0].data, repo } };
+    expect(buildHomeView({ ...data, projects: [project] }, "es", NOW).projects[0].file).toBe("my-site/README.md");
+});
+
 test("habilidades: XP por unión de usos, desde y dónde se usó", () => {
     const view = buildHomeView(data, "es", NOW);
     const python = view.skillGroups.flatMap((g) => g.items).find((s) => s.id === "python")!;

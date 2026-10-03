@@ -1,6 +1,8 @@
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { beforeAll, describe, expect, test } from "vitest";
 import { clean } from "../support/render";
+import { useTranslations } from "@i18n/utils";
+import type { Locale } from "@i18n/ui";
 import Experience from "@sections/experience.astro";
 import Projects from "@sections/projects.astro";
 import Skills from "@sections/skills.astro";
@@ -17,6 +19,12 @@ const item = (over: Partial<import("@lib/home").TimelineView> = {}) => ({
     id: "acme", file: "acme.log", title: "Engineer", subtitle: "Acme", start: "2026-06", end: null,
     period: "Jun 2026 - present", current: true, duration: "", summary: "Python backend.", highlights: ["API design."], ...over,
 });
+
+const project = {
+    id: "site", file: "my-site/README.md", statusLabel: "En desarrollo",
+    type: "project" as const, title: "Este portfolio", repo: "https://github.com/ada/my-site", status: "active" as const,
+    start: "2026-10", summary: "Portfolio desde una wiki.", highlights: ["Uno."], tags: [], sources: ["x"], updated: new Date(),
+};
 
 describe("Experience", () => {
     test("timeline alterno con fechas en <time> y etiqueta del puesto vigente", async () => {
@@ -46,11 +54,6 @@ test("Education muestra la nota", async () => {
 });
 
 describe("Projects", () => {
-    const project = {
-        id: "site", file: "my-site/README.md", statusLabel: "En desarrollo",
-        type: "project" as const, title: "Este portfolio", repo: "https://github.com/ada/my-site", status: "active" as const,
-        start: "2026-10", summary: "Portfolio desde una wiki.", highlights: ["Uno."], tags: [], sources: ["x"], updated: new Date(),
-    };
 
     test("README con archivo, estado y enlace al repo", async () => {
         const html = clean(await container.renderToString(Projects, { props: { items: [project], locale: "es" } }));
@@ -66,11 +69,26 @@ describe("Projects", () => {
     });
 });
 
+const skill = (id: string, title: string, category: "backend" | "ai", over = {}) => ({
+    id, title, category, summary: `${title} summary.`, icon: "si:python", months: 46, xp: "3 years 10 months",
+    xpShort: "3.8 years", since: 2022, usedIn: [{ id: "zalcu", name: "Zalcu Technologies", role: "Developer" }], ...over,
+});
+
+test("Skills: los datos del creador no pueden cerrar su <script>", async () => {
+    const name = "Evil </script><img src=x onerror=alert(1)>";
+    const props = {
+        locale: "en",
+        groups: [{ category: "backend", label: "Backend", items: [skill("python", "Python", "backend")] }],
+        profile: { name: "Ada", headline: "Engineer" },
+        professionalXp: "1 year", usage: { python: ["evil"] }, entryNames: { evil: name },
+    };
+    const html = clean(await container.renderToString(Skills, { props }));
+    expect(html).not.toContain("</script><img");
+    const json = html.match(/<script type="application\/json" data-builder-data>([\s\S]*?)<\/script>/)?.[1];
+    expect(JSON.parse(json ?? "null")).toEqual({ usage: { python: ["evil"] }, entryNames: { evil: name } });
+});
+
 test("Skills sin JS: todas las categorías, XP, desde y dónde se usó cada habilidad", async () => {
-    const skill = (id: string, title: string, category: "backend" | "ai", over = {}) => ({
-        id, title, category, summary: `${title} summary.`, icon: "si:python", months: 46, xp: "3 years 10 months",
-        xpShort: "3.8 years", since: 2022, usedIn: [{ id: "zalcu", name: "Zalcu Technologies", role: "Developer" }], ...over,
-    });
     const props = {
         locale: "en",
         groups: [
@@ -116,4 +134,36 @@ test("Intro: nombre como h1, adorno whoami oculto a lectores y botón de foto et
     expect(html).toMatch(/<p class="prompt[^"]*" aria-hidden="true">whoami<\/p>/);
     expect(html).toMatch(/<button[^>]*id="photo-open"[^>]*aria-label="Enlarge the photo of Ada Lovelace"/);
     expect(html).toContain('<dialog id="photo-dialog"');
+});
+
+describe.each<Locale>(["es", "en"])("en %s", (locale) => {
+    const t = useTranslations(locale);
+    const profile = { name: "Ada", headline: "Engineer" };
+    const skillsProps = (groups: unknown[]) => ({ locale, groups, profile, professionalXp: "1", usage: {}, entryNames: {} });
+    const sections = [
+        { name: "Experience", component: Experience, title: t("section.experience"), full: { items: [item()] }, empty: { items: [] } },
+        { name: "Projects", component: Projects, title: t("section.projects"), full: { items: [project] }, empty: { items: [] } },
+        { name: "Education", component: Education, title: t("section.education"), full: { items: [item({ id: "upm", file: "upm.md" })] }, empty: { items: [] } },
+        {
+            name: "Skills", component: Skills, title: t("section.skills"),
+            full: skillsProps([{ category: "backend", label: "Backend", items: [skill("python", "Python", "backend")] }]),
+            empty: skillsProps([]),
+        },
+    ];
+
+    test.each(sections)("$name muestra su título traducido", async ({ component, title, full }) => {
+        const html = clean(await container.renderToString(component, { props: { locale, ...full } }));
+        expect(html).toMatch(new RegExp(`<h2[^>]*>${title}</h2>`));
+    });
+
+    test.each(sections)("$name sin elementos no renderiza nada", async ({ component, empty }) => {
+        const html = clean(await container.renderToString(component, { props: { locale, ...empty } }));
+        expect(html.trim()).toBe("");
+    });
+
+    test("Contact muestra su título traducido", async () => {
+        const links = { email: "a@example.com", linkedin: "https://www.linkedin.com/in/a/", github: "https://github.com/a" };
+        const html = clean(await container.renderToString(Contact, { props: { links, locale } }));
+        expect(html).toMatch(new RegExp(`<h2[^>]*>${t("section.contact")}</h2>`));
+    });
 });

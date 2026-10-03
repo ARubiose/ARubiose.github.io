@@ -48,7 +48,7 @@ export function displayUrl(url: string): string {
 }
 
 const byStart = <T extends { data: { start: string; end?: string | null } }>(entries: T[]) =>
-    sortByStartDesc(entries.map((e) => ({ ...e, start: e.data.start, end: e.data.end ?? null }))).map(({ start: _s, end: _e, ...e }) => e as unknown as T);
+    sortByStartDesc(entries, (e) => ({ start: e.data.start, end: e.data.end ?? null }));
 
 export function buildHomeView(data: HomeData, locale: Locale, now: string): HomeView {
     const t = useTranslations(locale);
@@ -75,7 +75,7 @@ export function buildHomeView(data: HomeData, locale: Locale, now: string): Home
 
     const projects = byStart(data.projects).map(({ id, data: d }): ProjectView => {
         const l = localize(d, locale);
-        return { ...l, id, file: `${l.repo.split("/").filter(Boolean).pop()}/README.md`, statusLabel: t(`projects.status.${l.status}`) };
+        return { ...l, id, file: `${l.repo.split("/").filter(Boolean).pop()?.replace(/\.git$/, "")}/README.md`, statusLabel: t(`projects.status.${l.status}`) };
     });
 
     // Ids con prefijo por tipo: un puesto y un proyecto pueden compartir nombre de archivo.

@@ -6,22 +6,35 @@ export const PERIOD_SEPARATOR = " - ";
 
 const YEAR_MONTH = /^\d{4}(-(0[1-9]|1[0-2]))?$/;
 
+const FORMAT_MESSAGE = "Formato esperado: AAAA o AAAA-MM";
+
+// YAML convierte 2026-06-01 en Date: se rechaza con el mismo mensaje en vez de perder el día.
 export const yearMonth = z
-    .union([z.string(), z.number()])
+    .union([z.string(), z.number(), z.date().transform(() => "")], {
+        // Sin valor, el mensaje por defecto («Required»); con otro tipo, el de formato.
+        error: (issue) => (issue.input === undefined ? undefined : FORMAT_MESSAGE),
+    })
     .transform(String)
-    .pipe(z.string().regex(YEAR_MONTH, "Formato esperado: AAAA o AAAA-MM"));
+    .pipe(z.string().regex(YEAR_MONTH, FORMAT_MESSAGE));
 
 function parts(value: string): { year: number; month?: number } {
     const [year, month] = value.split("-").map(Number);
     return month ? { year, month } : { year };
 }
 
+/** Solo para validar rangos: con un mes ausente, el mismo año cuenta como igual. No es un orden total. */
 export function compareYearMonth(a: string, b: string): number {
     const pa = parts(a);
     const pb = parts(b);
     if (pa.year !== pb.year) return pa.year - pb.year;
     if (pa.month === undefined || pb.month === undefined) return 0;
     return pa.month - pb.month;
+}
+
+/** Clave de orden total: el mes ausente cuenta como 0, antes de enero. */
+export function sortKey(value: string): number {
+    const { year, month } = parts(value);
+    return year * 13 + (month ?? 0);
 }
 
 function formatOne(value: string, locale: Locale): string {

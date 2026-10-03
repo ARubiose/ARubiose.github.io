@@ -8,28 +8,27 @@
         "dist"
     ],
     "compilerOptions": {
-        "baseUrl": ".",
         "paths": {
             "@components/*": [
-                "src/components/*"
+                "./src/components/*"
             ],
             "@styles/*": [
-                "src/styles/*"
+                "./src/styles/*"
             ],
             "@layouts/*": [
-                "src/layouts/*"
+                "./src/layouts/*"
             ],
             "@assets/*": [
-                "src/assets/*"
+                "./src/assets/*"
             ],
             "@sections/*": [
-                "src/sections/*"
+                "./src/sections/*"
             ],
             "@lib/*": [
-                "src/lib/*"
+                "./src/lib/*"
             ],
             "@i18n/*": [
-                "src/i18n/*"
+                "./src/i18n/*"
             ]
         }
     }
