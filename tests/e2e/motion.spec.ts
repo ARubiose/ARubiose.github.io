@@ -103,22 +103,32 @@ test("una skin sin preset de intro usa la de Terminal sin escribir el prompt", a
     expect(errors).toEqual([]);
 });
 
-test("cambiar de skin a mitad de página no deja contenido revelado invisible", async ({ page }, info) => {
-    test.skip(skinOf(info.project.name) !== "terminal");
-    const mobile = info.project.name.startsWith("mobile");
-    await page.goto("/");
-    for (const card of await page.locator(".t-card").all()) {
-        await card.scrollIntoViewIfNeeded();
-        await expect(card).toHaveCSS("opacity", "1");
-    }
-    if (mobile) await page.locator('[popovertarget="site-menu"]').click();
-    await page.locator(`${mobile ? "#site-menu" : ".header-lang"} [data-skin-option="tactical"]`).click();
-    if (mobile) await page.keyboard.press("Escape");
-    for (const card of await page.locator(".t-card").all()) {
-        await card.scrollIntoViewIfNeeded();
-        await expect(card).toHaveCSS("opacity", "1");
-    }
-});
+for (const target of ["tactical", "game"]) {
+    test(`cambiar de Terminal a ${target} a mitad de página no deja contenido invisible ni repite la intro`, async ({ page }, info) => {
+        test.skip(skinOf(info.project.name) !== "terminal");
+        const mobile = info.project.name.startsWith("mobile");
+        // Centrada: con scrollIntoViewIfNeeded una tarjeta puede quedar visible pero bajo la línea de disparo.
+        const center = (el: Element) => el.scrollIntoView({ block: "center", behavior: "instant" });
+        await page.goto("/");
+        await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+        for (const card of await page.locator(".t-card").all()) {
+            await card.evaluate(center);
+            await expect(card).toHaveCSS("opacity", "1");
+        }
+        if (mobile) await page.locator('[popovertarget="site-menu"]').click();
+        await page.locator(`${mobile ? "#site-menu" : ".header-lang"} [data-skin-option="${target}"]`).click();
+        if (mobile) await page.keyboard.press("Escape");
+        await expect(page.locator("html")).toHaveAttribute("data-skin", target);
+        for (const card of await page.locator(".t-card").all()) {
+            await card.evaluate(center);
+            await expect(card).toHaveCSS("opacity", "1");
+        }
+        // La intro no se repite: el nombre y la foto del hero siguen enteros.
+        await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
+        await expect(page.locator(".hero-name")).toHaveCSS("opacity", "1");
+        await expect(page.locator(".photo-window img")).toHaveCSS("opacity", "1");
+    });
+}
 
 test("al cambiar de skin se recalculan las posiciones: la línea de tiempo se completa al final de su sección", async ({ page }, info) => {
     test.skip(info.project.name !== "desktop");
