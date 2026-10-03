@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { skinOf } from "./support";
 
 test.describe("sin animaciones", () => {
     test.use({ reducedMotion: "reduce" });
@@ -53,7 +54,7 @@ test("con animaciones, la intro termina con el nombre completo", async ({ page }
 });
 
 test("Táctico: la intro termina con el nombre completo, las esquinas dibujadas y sin prompt escrito", async ({ page }, info) => {
-    test.skip(!info.project.name.endsWith("-tactical"));
+    test.skip(skinOf(info.project.name) !== "tactical");
     await page.goto("/");
     await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
     await expect.poll(() => page.locator(".photo-window").evaluate((el) => getComputedStyle(el, "::before").width), { timeout: 6000 }).toBe("38px");
@@ -61,7 +62,7 @@ test("Táctico: la intro termina con el nombre completo, las esquinas dibujadas 
 });
 
 test("Táctico: las esquinas de la foto se dibujan desde cero", async ({ page }, info) => {
-    test.skip(!info.project.name.endsWith("-tactical"));
+    test.skip(skinOf(info.project.name) !== "tactical");
     await page.goto("/");
     const sizes = new Set<string>();
     await expect.poll(async () => {
@@ -76,7 +77,7 @@ function getComputedStyleDone(sizes: Set<string>) {
 }
 
 test("una skin sin preset de intro usa la de Terminal sin escribir el prompt", async ({ page }, info) => {
-    test.skip(info.project.name.endsWith("-tactical"));
+    test.skip(skinOf(info.project.name) !== "terminal");
     // Tras el script de arranque y antes de los módulos: simula una skin futura sin preset.
     await page.addInitScript(() => {
         const obs = new MutationObserver(() => {
@@ -96,7 +97,7 @@ test("una skin sin preset de intro usa la de Terminal sin escribir el prompt", a
 });
 
 test("cambiar de skin a mitad de página no deja contenido revelado invisible", async ({ page }, info) => {
-    test.skip(info.project.name.endsWith("-tactical"));
+    test.skip(skinOf(info.project.name) !== "terminal");
     const mobile = info.project.name.startsWith("mobile");
     await page.goto("/");
     for (const card of await page.locator(".t-card").all()) {
@@ -128,4 +129,17 @@ test("al cambiar de skin se recalculan las posiciones: la línea de tiempo se co
         scrollTo({ top: scrollY + t.getBoundingClientRect().top - innerHeight * 0.95, behavior: "instant" });
     });
     await expect.poll(() => page.locator("#experience .timeline-fill").evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).d), { timeout: 3000 }).toBeCloseTo(0, 2);
+});
+
+test("Juego: el panel del hero barre, el nombre queda completo y el prompt sin escribir", async ({ page }, info) => {
+    test.skip(skinOf(info.project.name) !== "game");
+    await page.goto("/");
+    const reveals = new Set<string>();
+    await expect.poll(async () => {
+        reveals.add(await page.locator(".photo-window").evaluate((el) => getComputedStyle(el).getPropertyValue("--panel-reveal").trim()));
+        return reveals.has("1") && [...reveals].some((v) => v !== "1");
+    }, { intervals: [16], timeout: 4000 }).toBe(true);
+    await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+    await expect(page.locator(".hero-name")).toHaveCSS("opacity", "1");
+    await expect(page.locator('.hero .prompt [data-for-skin="terminal"]')).toHaveText("whoami");
 });
