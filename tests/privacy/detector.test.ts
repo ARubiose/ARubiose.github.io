@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { findLeaks, visibleText } from "../support/privacy";
+import { findLeaks, findSecrets, visibleText } from "../support/privacy";
 
 describe("findLeaks", () => {
     test.each([
@@ -25,6 +25,38 @@ describe("findLeaks", () => {
 
     test("añade cadenas prohibidas extra sin distinguir mayúsculas", () => {
         expect(findLeaks("Vivo en VILLA SECRETA", ["villa secreta"])).toHaveLength(1);
+    });
+});
+
+describe("findSecrets", () => {
+    // Los ejemplos se montan en ejecución: escritos tal cual, este archivo dispararía el escaneo del repo.
+    const j = (...parts: string[]) => parts.join("");
+    test.each([
+        ["token de GitHub", j("gh", "p_", "a".repeat(36))],
+        ["token de GitHub", j("github", "_pat_", "A1".repeat(12))],
+        ["clave privada", j("-----BEGIN ", "OPENSSH PRIVATE", " KEY-----")],
+        ["clave de AWS", j("AK", "IA", "ABCDEFGHIJKLMNOP")],
+        ["clave de Anthropic", j("sk-", "ant-", "api03-", "x".repeat(20))],
+        ["URL con credenciales", j("postgres", "://admin:", "hunter2@db.example.com/app")],
+        ["JWT", j("ey", "J", "a".repeat(20), ".ey", "J", "b".repeat(20), ".sig")],
+        ["ruta personal", j("/ho", "me/", "ada/proyectos/app")],
+        ["ruta personal", j("/Us", "ers/", "Ada/Documents")],
+        ["ruta personal", j("C:\\", "Users\\", "Ada")],
+    ])("detecta %s", (_rule, text) => {
+        expect(findSecrets(text)).not.toEqual([]);
+    });
+
+    test.each([
+        "/home/user/app (marcador genérico)",
+        "~/.claude/projects y ./wiki/public",
+        "https://github.com/ada/repo",
+        "Llámame al +34 600 111 222",
+    ])("no da falsos positivos: %s", (text) => {
+        expect(findSecrets(text)).toEqual([]);
+    });
+
+    test("incluye las cadenas prohibidas", () => {
+        expect(findSecrets("Vivo en VILLA SECRETA", ["villa secreta"])).toHaveLength(1);
     });
 });
 
