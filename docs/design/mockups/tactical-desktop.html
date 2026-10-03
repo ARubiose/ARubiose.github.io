@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skin Táctico · escritorio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>body{margin:0;padding:28px;background:#08090b;color:#d6d9de;font-family:system-ui,sans-serif} h2{font-size:22px;margin:0 0 6px} .subtitle{color:#8c8c98;margin:0 0 22px;max-width:95ch} .options{display:grid;gap:28px} .letter{display:none} .option h3{margin:0 0 4px} .option p{color:#9a9aa6;margin:0 0 12px} *{box-sizing:border-box} p,h1,ul{margin:0}</style>
+</head>
+<body>
+
+<h2>Skin Táctico — escritorio, con contenido real</h2>
+<p class="subtitle">HUD sci-fi de shooter/mecha: frío, preciso, ámbar como único acento. Mismo marcado que Terminal: solo cambia el CSS. Los adornos de consola (<code>~$</code>, <code>.log</code>, <code>whoami</code>) se ocultan; la skin pone los suyos (esquinas cortadas, rombos, corchetes, etiquetas en mayúsculas).</p>
+
+<style>
+  .k { --bg:#0b0e12; --surface:#11161d; --surface-2:#18202a; --line:#263140; --text:#e7eaef; --body:#c6cdd6; --muted:#93a0b0; --accent:#f0a83a; --ink:#17110a;
+       background: var(--bg); color: var(--text); font-family: Barlow, system-ui, sans-serif; font-size: 15px; border: 1px solid #1b222c; overflow: hidden; }
+  .k .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  .k .disp { font-family: "Chakra Petch", system-ui, sans-serif; }
+  .k .cut { clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); }
+  .k .cut2 { clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
+
+  /* cabecera */
+  .k .hdr { display:flex; align-items:center; gap: 26px; padding: 14px 40px; border-bottom: 1px solid var(--line); background: linear-gradient(180deg, #0e131a, var(--bg)); }
+  .k .hdr .id { font-family:"Chakra Petch"; font-weight:700; letter-spacing:.08em; font-size: 15px; white-space: nowrap; }
+  .k .hdr .id b { color: var(--accent); }
+  .k .hdr nav { display:flex; gap: 22px; margin-right:auto; font-family:"JetBrains Mono"; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing:.1em; }
+  .k .hdr nav .on { color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); padding-bottom: 5px; }
+  .k .seg { display:inline-flex; font-family:"JetBrains Mono"; font-size: 11.5px; text-transform: uppercase; letter-spacing:.08em; }
+  .k .seg span { padding: 5px 10px; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); display:flex; align-items:center; gap: 6px; }
+  .k .seg span.on { background: var(--accent); color: var(--ink); box-shadow: none; }
+  .k .seg i { width: 7px; height: 7px; display:inline-block; transform: rotate(45deg); }
+  .k .lang { font-family:"JetBrains Mono"; font-size: 12px; color: var(--muted); } .k .lang b { color: var(--text); font-weight: 500; }
+
+  /* hero */
+  .k .hero { display:grid; grid-template-columns: 1.35fr 1fr; gap: 56px; padding: 60px 40px 52px; align-items:center; }
+  .k .tagline { font-family:"JetBrains Mono"; font-size: 12px; color: var(--muted); letter-spacing:.14em; text-transform: uppercase; display:flex; align-items:center; gap: 10px; }
+  .k .tagline::before { content:""; width: 26px; height: 2px; background: var(--accent); }
+  .k h1 { font-family:"Chakra Petch"; font-weight:700; font-size: 58px; line-height:1.0; letter-spacing:-.01em; margin-top: 14px; }
+  .k .role { font-family:"Chakra Petch"; font-size: 22px; color: var(--accent); margin-top: 12px; font-weight:600; }
+  .k .loc { font-family:"JetBrains Mono"; font-size: 12.5px; color: var(--muted); margin-top: 6px; letter-spacing:.06em; }
+  .k .sum { color: var(--body); margin-top: 18px; max-width: 54ch; font-size: 16.5px; line-height: 1.6; }
+  .k .cta { display:flex; gap: 12px; margin-top: 28px; }
+  .k .btn { font-family:"JetBrains Mono"; font-size: 12.5px; text-transform:uppercase; letter-spacing:.1em; padding: 12px 20px; }
+  .k .btn.p { background: var(--accent); color: var(--ink); font-weight:500; }
+  .k .btn.s { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--line); }
+  .k .frame { position:relative; aspect-ratio: 1; padding: 14px; max-width: 400px; justify-self: end; width: 100%; }
+  .k .frame::before, .k .frame::after { content:""; position:absolute; width: 38px; height: 38px; border: 2px solid var(--accent); }
+  .k .frame::before { top:0; left:0; border-right:0; border-bottom:0; }
+  .k .frame::after { bottom:0; right:0; border-left:0; border-top:0; }
+  .k .frame img { width:100%; height:100%; object-fit: cover; display:block; clip-path: polygon(24px 0,100% 0,100% calc(100% - 24px),calc(100% - 24px) 100%,0 100%,0 24px); filter: saturate(.8) contrast(1.05); }
+  .k .frame .tag { position:absolute; left: 22px; bottom: -9px; background: var(--bg); padding: 0 8px; font-family:"JetBrains Mono"; font-size: 11px; color: var(--muted); letter-spacing:.1em; }
+
+  /* titular de sección */
+  .k .sec { padding: 8px 40px 44px; }
+  .k .h2 { display:flex; align-items:center; gap: 14px; font-family:"Chakra Petch"; font-weight:700; font-size: 30px; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 22px; }
+  .k .h2::before { content:""; width: 11px; height: 11px; background: var(--accent); transform: rotate(45deg); flex:none; }
+  .k .h2 small { font-family:"JetBrains Mono"; font-size: 11.5px; color: var(--muted); letter-spacing:.14em; font-weight: 400; }
+  .k .h2::after { content:""; flex:1; height:1px; background: linear-gradient(90deg, var(--line), transparent); }
+
+  /* timeline */
+  .k .tl { position: relative; display:grid; gap: 18px; padding-left: 34px; }
+  .k .tl::before { content:""; position:absolute; left: 9px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--accent) 0 40%, var(--line) 40%); }
+  .k .job { position: relative; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); padding: 18px 22px; }
+  .k .job::before { content:""; position:absolute; left: -31px; top: 22px; width: 12px; height: 12px; background: var(--bg); border: 2px solid var(--accent); transform: rotate(45deg); }
+  .k .job.cur::before { background: var(--accent); }
+  .k .job .top { display:flex; justify-content:space-between; gap: 16px; align-items: baseline; }
+  .k .job .t { font-family:"Chakra Petch"; font-size: 20px; font-weight:600; }
+  .k .job .when { font-family:"JetBrains Mono"; font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .k .job .c { color: var(--accent); font-family:"JetBrains Mono"; font-size: 12.5px; margin-top: 2px; letter-spacing:.06em; text-transform: uppercase; }
+  .k .job p { color: var(--body); margin-top: 10px; font-size: 15px; }
+  .k .job ul { margin-top: 8px; color: var(--body); font-size: 14.5px; list-style: none; }
+  .k .job li { padding-left: 18px; position: relative; margin-top: 4px; }
+  .k .job li::before { content:""; position:absolute; left: 2px; top: .6em; width: 6px; height: 6px; border: 1px solid var(--accent); transform: rotate(45deg); }
+  .k .badge { font-family:"JetBrains Mono"; font-size: 10.5px; letter-spacing: .12em; color: var(--ink); background: var(--accent); padding: 2px 7px; margin-left: 10px; vertical-align: 3px; }
+  .k .dur { font-family:"JetBrains Mono"; font-size: 11.5px; color: var(--muted); }
+
+  /* creador */
+  .k .builder { display:grid; grid-template-columns: 250px 1fr 270px; gap: 18px; align-items: start; }
+  .k .panel { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+  .k .panel .bar { display:flex; justify-content:space-between; padding: 9px 14px; border-bottom: 1px solid var(--line); font-family:"JetBrains Mono"; font-size: 11px; color: var(--muted); letter-spacing:.14em; text-transform: uppercase; }
+  .k .panel .bar b { color: var(--accent); font-weight: 500; }
+  .k .stats { padding: 12px 14px; display:grid; gap: 6px; font-size: 14px; }
+  .k .stats div { display:flex; justify-content:space-between; } .k .stats dt { color: var(--muted); }
+  .k .slots { display:grid; grid-template-columns: repeat(3,1fr); gap: 8px; padding: 0 14px 14px; }
+  .k .slot { aspect-ratio: 1; box-shadow: inset 0 0 0 1px var(--line); display:grid; place-items:center; color: var(--muted); font-family:"JetBrains Mono"; font-size: 11px; }
+  .k .slot.f { box-shadow: inset 0 0 0 1px var(--accent); background: rgba(240,168,58,.08); color: var(--accent); font-size: 13px; }
+  .k .tabs { display:flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .k .tab { font-family:"JetBrains Mono"; font-size: 11.5px; letter-spacing:.1em; text-transform: uppercase; padding: 7px 12px; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); }
+  .k .tab.on { color: var(--ink); background: var(--accent); box-shadow:none; }
+  .k .tiles { display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .k .tile { display:flex; align-items:center; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+  .k .tile.sel { box-shadow: inset 0 0 0 1px var(--accent); }
+  .k .tile .m { flex:1; padding: 11px 12px; }
+  .k .tile .n { font-family:"Chakra Petch"; font-weight: 600; font-size: 15px; }
+  .k .tile .x { font-family:"JetBrains Mono"; font-size: 11px; color: var(--muted); letter-spacing:.04em; }
+  .k .tile .e { width: 40px; align-self: stretch; display:grid; place-items:center; border-left: 1px solid var(--line); color: var(--accent); font-size: 18px; }
+  .k .tile.eq .e { background: var(--accent); color: var(--ink); border-left-color: var(--accent); }
+  .k .insp { padding: 14px; font-size: 14px; }
+  .k .insp .n { font-family:"Chakra Petch"; font-weight: 700; font-size: 21px; }
+  .k .insp dl { margin-top: 10px; display:grid; gap: 6px; }
+  .k .insp dl div { display:flex; justify-content:space-between; box-shadow: inset 0 0 0 1px var(--line); padding: 7px 10px; }
+  .k .insp dd { color: var(--accent); font-family:"JetBrains Mono"; font-size: 12.5px; }
+  .k .insp .act { margin-top: 14px; background: var(--accent); color: var(--ink); text-align:center; padding: 10px; font-family:"JetBrains Mono"; font-size: 12px; letter-spacing:.12em; text-transform: uppercase; }
+</style>
+
+<div class="k">
+  <div class="hdr">
+    <span class="id">ÁLVARO <b>//</b> RUBIO</span>
+    <nav><span>Experiencia</span><span>Proyectos</span><span class="on">Habilidades</span><span>Formación</span><span>Contacto</span></nav>
+    <span class="seg"><span><i style="background:#9fd65a"></i>Terminal</span><span class="on"><i style="background:#17110a"></i>Táctico</span></span>
+    <span class="lang"><b>ES</b> / EN</span>
+  </div>
+
+  <div class="hero">
+    <div>
+      <p class="tagline">Perfil de operador</p>
+      <h1>Álvaro Rubio Segovia</h1>
+      <p class="role">Ingeniero de IA y software</p>
+      <p class="loc">◇ MADRID</p>
+      <p class="sum">Ingeniero de software que hoy aplica inteligencia artificial a la salud capilar en SKIN AI, con una base sólida en backend con Python, arquitectura de sistemas y visión por computador.</p>
+      <div class="cta"><span class="btn p cut2">Ver experiencia</span><span class="btn s cut2">Contacto</span></div>
+    </div>
+    <div class="frame"><img src="../../../src/assets/images/profile.jpg" alt=""><span class="tag">ID-01 · AMPLIAR</span></div>
+  </div>
+
+  <div class="sec">
+    <div class="h2">Experiencia <small>REGISTRO DE MISIONES</small></div>
+    <div class="tl">
+      <div class="job cur cut">
+        <div class="top"><span class="t">Ingeniero de Inteligencia Artificial<span class="badge">EN CURSO</span></span><span class="when">Jun 2026 — actualidad</span></div>
+        <p class="c">SKIN AI</p>
+        <p>Desarrollo de una aplicación web y móvil que reconoce enfermedades capilares con inteligencia artificial.</p>
+      </div>
+      <div class="job cut">
+        <div class="top"><span class="t">Desarrollador y arquitecto de software</span><span class="when">Ago 2022 — Jun 2026 · <span class="dur">3 años y 10 meses</span></span></div>
+        <p class="c">Zalcu Technologies</p>
+        <p>Diseño e implementación de sistemas backend escalables y eficientes, con responsabilidades propias de un arquitecto de software.</p>
+        <ul><li>Procesamiento asíncrono de archivos con FastAPI y Django, Celery y Redis.</li><li>Diseño de sistemas escalables, asumiendo funciones de arquitecto de software.</li><li>Desarrollo, pruebas y despliegue con Docker, pytest y CI/CD en GitHub Actions.</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="h2">Habilidades <small>LOADOUT</small></div>
+    <div class="builder">
+      <div class="panel cut">
+        <div class="bar"><span>Ficha de operador</span><b>NV 2026</b></div>
+        <dl class="stats"><div><dt>XP profesional</dt><dd>5,3 años</dd></div><div><dt>Habilidades</dt><dd>15</dd></div><div><dt>Categorías</dt><dd>5</dd></div></dl>
+        <div class="bar" style="border-top:1px solid var(--line)"><span>Equipamiento</span><b>2 / 6</b></div>
+        <div class="slots" style="padding-top:12px"><span class="slot f">PY</span><span class="slot f">FA</span><span class="slot">—</span><span class="slot">—</span><span class="slot">—</span><span class="slot">—</span></div>
+      </div>
+      <div>
+        <div class="tabs"><span class="tab on cut2">Backend</span><span class="tab cut2">Inteligencia artificial</span><span class="tab cut2">Frontend y móvil</span><span class="tab cut2">DevOps y calidad</span><span class="tab cut2">Ciberseguridad</span></div>
+        <div class="tiles">
+          <div class="tile"><div class="m"><div class="n">Arquitectura de software</div><div class="x">XP 3,8 AÑOS</div></div><span class="e">+</span></div>
+          <div class="tile"><div class="m"><div class="n">Celery</div><div class="x">XP 3,8 AÑOS</div></div><span class="e">+</span></div>
+          <div class="tile"><div class="m"><div class="n">Django</div><div class="x">XP 3,8 AÑOS</div></div><span class="e">+</span></div>
+          <div class="tile eq sel"><div class="m"><div class="n">FastAPI</div><div class="x">XP 4,2 AÑOS</div></div><span class="e">✓</span></div>
+          <div class="tile eq"><div class="m"><div class="n">Python</div><div class="x">XP 5,3 AÑOS</div></div><span class="e">✓</span></div>
+          <div class="tile"><div class="m"><div class="n">Redis</div><div class="x">XP 3,8 AÑOS</div></div><span class="e">+</span></div>
+        </div>
+      </div>
+      <div class="panel cut">
+        <div class="bar"><span>Análisis</span><b>◆</b></div>
+        <div class="insp">
+          <div class="n">FastAPI</div><div class="x mono" style="color:var(--muted);font-size:11.5px;letter-spacing:.1em">BACKEND</div>
+          <dl><div><dt>XP</dt><dd>4 años y 2 meses</dd></div><div><dt>Desde</dt><dd>2022</dd></div></dl>
+          <p style="margin-top:12px;color:var(--body)">APIs asíncronas de alto rendimiento.</p>
+          <div class="act cut2">Quitar del equipamiento</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

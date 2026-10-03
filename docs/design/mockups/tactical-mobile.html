@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skin Táctico · móvil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>body{margin:0;padding:28px;background:#08090b;color:#d6d9de;font-family:system-ui,sans-serif} h2{font-size:22px;margin:0 0 6px} .subtitle{color:#8c8c98;margin:0 0 22px;max-width:95ch} .options{display:grid;gap:28px} .letter{display:none} .option h3{margin:0 0 4px} .option p{color:#9a9aa6;margin:0 0 12px} *{box-sizing:border-box} p,h1,ul{margin:0}</style>
+</head>
+<body>
+
+<h2>Skin Táctico — móvil (390 px)</h2>
+<p class="subtitle">Mismo marcado que Terminal en móvil: menú en popover, línea de tiempo a una columna, creador con pestañas desplazables y panel inferior. Los textos de adorno son los de Táctico (opción A).</p>
+
+<style>
+  .phones { display:flex; gap: 22px; flex-wrap: wrap; align-items:flex-start; }
+  .ph { width: 390px; height: 780px; overflow: hidden; position: relative; border: 1px solid #1b222c; border-radius: 6px;
+        --bg:#0b0e12; --surface:#11161d; --line:#263140; --text:#e7eaef; --body:#c6cdd6; --muted:#93a0b0; --accent:#f0a83a; --ink:#17110a;
+        background: var(--bg); color: var(--text); font-family: Barlow, system-ui, sans-serif; font-size: 15px; }
+  .ph .cap { position:absolute; left: 0; right: 0; bottom: 0; padding: 6px; text-align:center; font: 11px ui-monospace, monospace; color: #6c7684; background: #07090c; }
+  .cut { clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%); }
+  .cut2 { clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
+  .hdr { height: 52px; display:flex; align-items:center; justify-content:space-between; padding: 0 16px; border-bottom: 1px solid var(--line); }
+  .hdr .id { font-family:"Chakra Petch"; font-weight:700; letter-spacing:.08em; font-size: 14px; } .hdr .id b { color: var(--accent); }
+  .mbtn { font-family:"JetBrains Mono"; font-size: 11.5px; letter-spacing:.12em; text-transform: uppercase; padding: 6px 10px; box-shadow: inset 0 0 0 1px var(--line); display:flex; gap: 8px; align-items:center; }
+  .mbtn i { width: 7px; height: 7px; background: var(--accent); transform: rotate(45deg); display:inline-block; }
+  .pad { padding: 22px 16px; }
+  .tagline { font-family:"JetBrains Mono"; font-size: 11px; color: var(--muted); letter-spacing:.14em; text-transform: uppercase; display:flex; align-items:center; gap: 8px; }
+  .tagline::before { content:""; width: 20px; height: 2px; background: var(--accent); }
+  h1.n { font-family:"Chakra Petch"; font-weight:700; font-size: 38px; line-height:1.02; margin-top: 10px; }
+  .role { font-family:"Chakra Petch"; font-size: 18px; color: var(--accent); margin-top: 8px; font-weight:600; }
+  .loc { font-family:"JetBrains Mono"; font-size: 11.5px; color: var(--muted); margin-top: 4px; letter-spacing:.06em; }
+  .frame { position:relative; padding: 10px; margin-top: 18px; aspect-ratio: 1; }
+  .frame::before, .frame::after { content:""; position:absolute; width: 30px; height: 30px; border: 2px solid var(--accent); }
+  .frame::before { top:0; left:0; border-right:0; border-bottom:0; } .frame::after { bottom:0; right:0; border-left:0; border-top:0; }
+  .frame img { width:100%; height:100%; object-fit: cover; display:block; clip-path: polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px); filter: saturate(.8) contrast(1.05); }
+  .frame .tag { position:absolute; left: 18px; bottom: -8px; background: var(--bg); padding: 0 6px; font-family:"JetBrains Mono"; font-size: 10.5px; color: var(--muted); letter-spacing:.1em; }
+  .sum { color: var(--body); margin-top: 18px; font-size: 15px; line-height: 1.55; }
+  .cta { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+  .btn { font-family:"JetBrains Mono"; font-size: 11.5px; text-transform:uppercase; letter-spacing:.1em; padding: 12px 10px; text-align:center; }
+  .btn.p { background: var(--accent); color: var(--ink); } .btn.s { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+
+  .menu { padding: 18px 16px; }
+  .menu .lbl { font-family:"JetBrains Mono"; font-size: 11px; color: var(--muted); letter-spacing:.14em; text-transform: uppercase; }
+  .menu a { display:flex; align-items:center; gap: 12px; padding: 14px 4px; border-bottom: 1px solid var(--line); font-family:"Chakra Petch"; font-weight: 700; font-size: 24px; text-transform: uppercase; letter-spacing: .04em; }
+  .menu a::before { content:""; width: 8px; height: 8px; border: 1px solid var(--muted); transform: rotate(45deg); }
+  .menu a.on { color: var(--accent); } .menu a.on::before { background: var(--accent); border-color: var(--accent); }
+  .menu a span { margin-left:auto; font-family:"JetBrains Mono"; font-size: 11px; color: var(--muted); font-weight: 400; letter-spacing:.1em; }
+  .row { margin-top: 14px; display:flex; justify-content:space-between; align-items:center; padding: 10px 12px; box-shadow: inset 0 0 0 1px var(--line); }
+  .seg { display:inline-flex; font-family:"JetBrains Mono"; font-size: 11px; text-transform: uppercase; letter-spacing:.08em; }
+  .seg span { padding: 6px 10px; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); } .seg span.on { background: var(--accent); color: var(--ink); box-shadow: none; }
+  .lang { font-family:"JetBrains Mono"; font-size: 12px; color: var(--muted); } .lang b { color: var(--text); font-weight: 500; }
+
+  .h2 { display:flex; align-items:center; gap: 10px; font-family:"Chakra Petch"; font-weight:700; font-size: 24px; text-transform: uppercase; letter-spacing: .04em; }
+  .h2::before { content:""; width: 9px; height: 9px; background: var(--accent); transform: rotate(45deg); }
+  .sub { font-family:"JetBrains Mono"; font-size: 10.5px; color: var(--muted); letter-spacing:.14em; margin-top: 2px; }
+  .sheet { margin-top: 14px; box-shadow: inset 0 0 0 1px var(--line); background: var(--surface); }
+  .sheet .bar { display:flex; justify-content:space-between; padding: 8px 12px; border-bottom: 1px solid var(--line); font-family:"JetBrains Mono"; font-size: 10.5px; color: var(--muted); letter-spacing:.14em; text-transform: uppercase; }
+  .sheet .bar b { color: var(--accent); font-weight: 500; }
+  .stats { display:grid; grid-template-columns: repeat(3,1fr); gap: 6px; padding: 10px 12px; text-align:center; }
+  .stats div { box-shadow: inset 0 0 0 1px var(--line); padding: 6px; } .stats dt { font-size: 10.5px; color: var(--muted); } .stats dd { font-size: 14px; }
+  .slots { display:flex; gap: 6px; padding: 0 12px 12px; } .slot { width: 42px; height: 42px; box-shadow: inset 0 0 0 1px var(--line); display:grid; place-items:center; font-family:"JetBrains Mono"; font-size: 11px; color: var(--muted); }
+  .slot.f { box-shadow: inset 0 0 0 1px var(--accent); color: var(--accent); background: rgba(240,168,58,.08); }
+  .tabs { display:flex; gap: 6px; margin: 14px -16px 10px; padding: 8px 16px; overflow: hidden; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .tab { font-family:"JetBrains Mono"; font-size: 11px; letter-spacing:.1em; text-transform: uppercase; padding: 7px 11px; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); flex: none; }
+  .tab.on { color: var(--ink); background: var(--accent); box-shadow:none; }
+  .tile { display:flex; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); margin-bottom: 8px; }
+  .tile .m { flex:1; padding: 11px 12px; } .tile .n { font-family:"Chakra Petch"; font-weight: 600; font-size: 15px; } .tile .x { font-family:"JetBrains Mono"; font-size: 10.5px; color: var(--muted); }
+  .tile .e { width: 48px; display:grid; place-items:center; border-left: 1px solid var(--line); color: var(--accent); font-size: 18px; }
+  .tile.eq .e { background: var(--accent); color: var(--ink); }
+  .bsheet { position:absolute; left:0; right:0; bottom: 26px; background: var(--surface); border-top: 2px solid var(--accent); padding: 10px 16px 16px; box-shadow: 0 -20px 40px rgba(0,0,0,.6); }
+  .bsheet .grab { width: 40px; height: 4px; background: var(--line); margin: 0 auto 12px; }
+  .bsheet .n { font-family:"Chakra Petch"; font-weight: 700; font-size: 21px; }
+  .bsheet dl { margin-top: 10px; display:grid; gap: 6px; } .bsheet dl div { display:flex; justify-content:space-between; box-shadow: inset 0 0 0 1px var(--line); padding: 7px 10px; }
+  .bsheet dd { color: var(--accent); font-family:"JetBrains Mono"; font-size: 12px; }
+  .bsheet .acts { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .dim { position:absolute; inset: 52px 0 0 0; background: rgba(5,7,9,.55); }
+</style>
+
+<div class="phones">
+  <div class="ph">
+    <div class="hdr"><span class="id">ÁLVARO <b>//</b> RUBIO</span><span class="mbtn"><i></i>Menú</span></div>
+    <div class="pad">
+      <p class="tagline">Perfil de operador</p>
+      <h1 class="n">Álvaro Rubio Segovia</h1>
+      <p class="role">Ingeniero de IA y software</p>
+      <p class="loc">◇ MADRID</p>
+      <div class="frame"><img src="../../../src/assets/images/profile.jpg" alt=""><span class="tag">ID-01 · AMPLIAR</span></div>
+      <p class="sum">Ingeniero de software que hoy aplica inteligencia artificial a la salud capilar en SKIN AI…</p>
+      <div class="cta"><span class="btn p cut2">Experiencia</span><span class="btn s cut2">Contacto</span></div>
+    </div>
+    <div class="cap">inicio</div>
+  </div>
+
+  <div class="ph">
+    <div class="hdr"><span class="id">ÁLVARO <b>//</b> RUBIO</span><span class="mbtn"><i></i>Cerrar</span></div>
+    <div class="menu">
+      <p class="lbl">Navegación</p>
+      <a>Experiencia <span>01</span></a>
+      <a>Proyectos <span>02</span></a>
+      <a class="on">Habilidades <span>03</span></a>
+      <a>Formación <span>04</span></a>
+      <a>Contacto <span>05</span></a>
+      <div class="row"><span class="lang"><b>ES</b> / EN</span></div>
+      <div class="row"><span class="lbl">Skin</span><span class="seg"><span>Terminal</span><span class="on">Táctico</span></span></div>
+    </div>
+    <div class="cap">menú abierto</div>
+  </div>
+
+  <div class="ph">
+    <div class="hdr"><span class="id">ÁLVARO <b>//</b> RUBIO</span><span class="mbtn"><i></i>Menú</span></div>
+    <div class="pad" style="padding-top:18px">
+      <div class="h2">Habilidades</div><p class="sub">LOADOUT</p>
+      <div class="sheet cut">
+        <div class="bar"><span>Ficha de operador</span><b>NV 2026</b></div>
+        <dl class="stats"><div><dt>XP pro</dt><dd>5,3 años</dd></div><div><dt>Habilid.</dt><dd>15</dd></div><div><dt>Categ.</dt><dd>5</dd></div></dl>
+        <div class="slots"><span class="slot f">PY</span><span class="slot f">FA</span><span class="slot">—</span><span class="slot">—</span><span class="slot">—</span><span class="slot">—</span></div>
+      </div>
+      <div class="tabs"><span class="tab on cut2">Backend</span><span class="tab cut2">Inteligencia artificial</span><span class="tab cut2">Frontend</span></div>
+      <div class="tile"><div class="m"><div class="n">Arquitectura de software</div><div class="x">XP 3,8 AÑOS</div></div><span class="e">+</span></div>
+      <div class="tile eq"><div class="m"><div class="n">FastAPI</div><div class="x">XP 4,2 AÑOS</div></div><span class="e">✓</span></div>
+    </div>
+    <div class="dim"></div>
+    <div class="bsheet">
+      <div class="grab"></div>
+      <div class="n">FastAPI</div><div style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted);letter-spacing:.1em">BACKEND</div>
+      <dl><div><dt>XP</dt><dd>4 años y 2 meses</dd></div><div><dt>Desde</dt><dd>2022</dd></div></dl>
+      <div class="acts"><span class="btn s cut2">Cerrar</span><span class="btn p cut2">Quitar</span></div>
+    </div>
+    <div class="cap">creador + panel inferior</div>
+  </div>
+</div>
+
+</body>
+</html>
