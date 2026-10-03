@@ -80,3 +80,11 @@ test("el «//» del indicativo va en el acento", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator('.site-handle [data-for-skin="tactical"] .adorn-mark')).toHaveCSS("color", "rgb(240, 168, 58)");
 });
+
+test("móvil: la foto va entre la ubicación y el resumen", async ({ page }, info) => {
+    test.skip(!info.project.name.startsWith("mobile"));
+    await page.goto("/");
+    const [loc, photo, sum] = await Promise.all([".hero-loc", ".photo-window", ".hero-sum"].map((s) => page.locator(s).boundingBox()));
+    expect(photo!.y).toBeGreaterThan(loc!.y + loc!.height);
+    expect(sum!.y).toBeGreaterThan(photo!.y + photo!.height);
+});

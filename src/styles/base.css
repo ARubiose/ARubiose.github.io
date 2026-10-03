@@ -6,6 +6,8 @@
         --hero-cols: 340px 1fr;
         --hero-photo-order: 0;
         --hero-photo-max: none;
+        /* Separación entre la foto y el texto del hero en móvil. */
+        --hero-gap: 1.5rem;
         /* Tipografía del nombre del hero y de los titulares de sección (valores de Terminal). */
         --hero-name-size: 38px;
         --hero-name-size-md: 58px;

@@ -162,6 +162,24 @@
     color: var(--skin-accent);
 }
 
+/* Móvil: la foto va entre la ubicación y el resumen. El bloque de texto se disuelve en la rejilla
+   del hero (display: contents) para que sus párrafos y la foto se ordenen juntos. */
+@media (max-width: 767px) {
+    [data-skin="tactical"] .hero {
+        --hero-gap: 0;
+    }
+    [data-skin="tactical"] .hero-text {
+        display: contents;
+    }
+    [data-skin="tactical"] .photo-window {
+        order: 1;
+        margin-block: 18px 2px;
+    }
+    [data-skin="tactical"] :is(.hero-sum, .hero-cta) {
+        order: 2;
+    }
+}
+
 /* Foto: dos esquinas en ángulo en lugar de ventana */
 [data-skin="tactical"] .photo-window {
     position: relative;
