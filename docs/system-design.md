@@ -45,7 +45,7 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 | i18n | `src/i18n/` | Diccionario de interfaz (`ui.ts`) y `useTranslations`/`localize` | Sí |
 | Colecciones | `src/content.config.ts` | Colecciones de Astro sobre `wiki/public/` | Sí |
 | Tests | `tests/` | Unitarios, contrato, componentes, privacidad y E2E (§3.7) | Sí |
-| Estilos | `src/styles/` | `global.css` (Tailwind y tokens semánticos), `base.css` (reset en `@layer base`) y `skins/` (una hoja por skin) | Sí |
+| Estilos | `src/styles/` | `global.css` (Tailwind, tokens semánticos y variante `timeline-single`), `base.css` (reset y tokens de distribución en `@layer base`), `states.css` (reglas de estado sin capa) y `skins/` (una hoja por skin, en `@layer components`) | Sí |
 | Assets | `src/assets/`, `public/` | Imágenes que Astro optimiza / archivos que se sirven tal cual | Sí |
 | Configuración | `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`, `playwright.config.ts` | i18n, plugin de Tailwind, alias de importación, tests | Sí |
 | Wiki pública | `wiki/public/` | Contenido publicable; fuente de datos del portfolio | Sí |
@@ -61,8 +61,9 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 - **Astro 7.3** (Vite 8, compilador en Rust) con salida estática (`output: "static"`, el
   valor por defecto). Sin framework de UI: el HTML se genera completo en build y unos
   módulos pequeños de `src/scripts/` lo mejoran en el cliente.
-- **Fuentes** con la API de fuentes de Astro (Space Grotesk e IBM Plex Mono vía Fontsource),
-  descargadas en el build y servidas desde `/_astro/fonts/`. El build necesita red.
+- **Fuentes** con la API de fuentes de Astro vía Fontsource (Terminal: Space Grotesk e IBM Plex
+  Mono, precargadas; Táctico: Chakra Petch, Barlow y JetBrains Mono, sin precarga), descargadas
+  en el build y servidas desde `/_astro/fonts/`. El build necesita red.
 - **GSAP 3.15** (licencia gratuita, también comercial) con ScrollTrigger y ScrambleTextPlugin.
 - **Iconos:** `simple-icons` y `@phosphor-icons/core`, como SVG en línea.
 - **Tailwind CSS 4.3** como plugin de Vite (`@tailwindcss/vite`), configurado desde CSS
@@ -93,7 +94,7 @@ pages/en/index.astro  ─┴─▶ layouts/HomePage.astro ─▶ Layout.astro (l
                                                                ├─ sections/education   ─▶ Timeline ─▶ Window
                                                                ├─ sections/contact
                                                                └─ Footer
-src/scripts/: nav · lightbox · skill-builder (+ tab-edges) · motion   (mejora progresiva)
+src/scripts/: nav · lightbox · skill-builder (+ tab-edges) · skin-switcher · motion   (mejora progresiva)
 ```
 
 - **Una sola composición.** Las páginas de idioma solo montan `HomePage` con su `locale`.
@@ -127,12 +128,37 @@ src/scripts/: nav · lightbox · skill-builder (+ tab-edges) · motion   (mejora
 
 ### 3.4 Estilos
 
-Arquitectura de **skins** ([spec](superpowers/specs/2026-10-02-terminal-skin-design.md)):
+Arquitectura de **skins** ([fase 5](superpowers/specs/2026-10-02-terminal-skin-design.md),
+[fase 5b](superpowers/specs/2026-10-03-tactical-skin-design.md)). Skins: **Terminal**
+(predeterminada) y **Táctico**.
 
-- `<html data-skin="terminal">`. Cada skin vive en `src/styles/skins/<skin>.css` y define
-  variables `--skin-*` (colores, fuentes, radio) más su decoración bajo
-  `[data-skin="<skin>"]`. El registro está en `src/lib/skins.ts`; un script en `<head>` aplica
-  la preferencia guardada (el selector visible llega con la segunda skin).
+- **Registro** (`src/lib/skins.ts`): `skinRegistry` lista cada skin con su muestra de color y su
+  modo de línea de tiempo (`alternate` o `single`). Un script en línea en `<head>`
+  (`skinBootScript`, generado a partir de `resolveSkin`) aplica `data-skin` y `data-timeline` en
+  `<html>` antes de pintar; `Layout` escribe los de la predeterminada para cuando no hay JS.
+- **Hoja por skin** en `src/styles/skins/<skin>.css`, dentro de `@layer components`: variables
+  `--skin-*` (colores, fuentes, radio), tokens de distribución y decoración bajo
+  `[data-skin="<skin>"]`. Las utilidades ganan siempre a la skin; lo que la skin oculta y una
+  utilidad muestra se oculta con propiedades que ninguna utilidad toca (`visibility`).
+- **Distribución por skin:** tokens `--hero-cols`, `--hero-photo-order` y `--hero-photo-max`
+  (valores de Terminal en `base.css`) que los componentes leen con `md:grid-cols-(--hero-cols)`;
+  y la variante `timeline-single:` (lee `data-timeline="single"`) para la línea de tiempo de
+  una columna.
+- **Adornos por skin:** los textos decorativos (`whoami`, `personaje.sav`, `Registro de
+  misiones`…) están en `adorns` de `src/i18n/ui.ts`, con un texto por skin. `Adorn.astro` pinta
+  un `<span aria-hidden data-for-skin>` por skin y `states.css` muestra solo los de la activa (un
+  test exige la regla de cada skin registrada). Una skin sin adorno no pinta nada.
+- **Selector** (`SkinSwitcher.astro`, en la cabecera y en el menú móvil): oculto sin JS;
+  `skin-switcher.ts` aplica la skin con `applySkin`, la guarda, sincroniza `aria-pressed`, la
+  anuncia por `aria-live` y emite `skinchange` (que `motion.ts` usa para recalcular
+  ScrollTrigger).
+- **Intro por skin:** `motion.ts` elige un preset según `data-skin` al cargar; una skin sin
+  preset usa el de Terminal sin la escritura del prompt.
+
+**Añadir una skin:** entrada en `skinRegistry`; hoja en `src/styles/skins/` importada en
+`global.css`; regla de adornos en `states.css`; nombre `skin.<id>` en `ui.ts`; adornos y preset
+de intro opcionales; fuentes en `astro.config.mjs` (`<Font>` sin precarga en `Layout`); proyectos
+`desktop-<id>`/`mobile-<id>` en `playwright.config.ts` y capturas con `pnpm test:visual:update`.
 - `global.css` declara los tokens **semánticos** con `@theme inline` (`bg`, `surface`,
   `line`, `text`, `muted`, `accent`, `warn`, `font-display`, `font-mono`…) apuntando a las
   variables de la skin, y Tailwind los expone como utilidades (`bg-surface`, `text-accent`).
@@ -288,6 +314,8 @@ El estado, las fases pendientes, las mejoras aplazadas y las cuestiones abiertas
 | Secciones con props, datos cargados en `HomePage` | Secciones que leen colecciones | Testeables con la Container API |
 | Fechas `start`/`end` (`AAAA-MM`) | `period` en texto libre | Ordenables y formateables por idioma |
 | Skins por atributo y tokens `--skin-*` | Un único tema fijo | Añadir skins sin tocar el marcado |
+| Distribución por tokens y variante `timeline-single` | Reglas de skin que pisan utilidades | Cada skin decide la distribución sin romper el orden de capas |
+| Adornos por skin en el diccionario, un span por skin | Textos neutros; cambiarlos con JS | Personalidad por skin, cambio instantáneo y sin depender de JS |
 | GSAP + CSS para animaciones | Solo CSS, Motion | Efectos de terminal (ScrambleText) y ScrollTrigger sin framework de UI |
 | Integridad de `skills` con `findBrokenSkillRefs` | `reference()` de Astro | Los esquemas se prueban sin `astro:content`; el build falla igual |
 | XP calculada a partir de los puestos | Niveles escritos a mano | Sin datos inventados |
