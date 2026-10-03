@@ -136,7 +136,7 @@ export const ui = {
 export type UiKey = keyof (typeof ui)["es"];
 
 // Adornos decorativos (siempre aria-hidden): un texto por skin. Una skin sin entrada no pinta nada.
-// Variables: {handle} (prompt de Terminal), {callsign} (indicativo de Táctico), {year}.
+// Variables: {handle} (prompt de Terminal), {callsign} (indicativo de Táctico), {shortName} (nombre corto de Juego), {year}.
 type AdornVariants = Partial<Record<string, string>>;
 export const adorns = {
     es: {

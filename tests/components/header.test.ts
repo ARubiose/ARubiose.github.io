@@ -41,3 +41,10 @@ test("selector de skin en la cabecera y en el menú: oculto sin JS, un botón po
     expect(html).toMatch(/role="group"[^>]*aria-label="Skin"/);
     expect(html.match(/data-skin-status/g)).toHaveLength(1);
 });
+
+test("la cabecera pasa el nombre corto a los adornos", async () => {
+    const container = await AstroContainer.create();
+    const html = clean(await container.renderToString(Header, { props: { locale: "es", urls, sections: [], handle: "ada", callsign: "ADA // L", shortName: "ADA L" } }));
+    // Todavía ninguna skin usa {shortName}: basta con que la prop exista y no rompa el render.
+    expect(html).toContain('data-for-skin="terminal"');
+});
