@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("escritorio: el menú lleva a cada sección y la marca como activa", async ({ page }, info) => {
-    test.skip(info.project.name !== "desktop");
+    test.skip(!info.project.name.startsWith("desktop"));
     await page.goto("/");
     for (const id of ["experience", "projects", "skills", "education", "contact"]) {
         await page.locator(`.site-nav a[href="#${id}"]`).click();
@@ -11,7 +11,7 @@ test("escritorio: el menú lleva a cada sección y la marca como activa", async 
 });
 
 test("móvil: el popover abre, navega, se cierra al elegir y con Esc", async ({ page }, info) => {
-    test.skip(info.project.name !== "mobile");
+    test.skip(!info.project.name.startsWith("mobile"));
     await page.goto("/");
     const menu = page.locator("#site-menu");
     await page.locator('[popovertarget="site-menu"]').click();
@@ -25,7 +25,7 @@ test("móvil: el popover abre, navega, se cierra al elegir y con Esc", async ({ 
 });
 
 test("móvil: el texto de cada enlace del menú empieza en su margen, sin que el marcador lo desplace", async ({ page }, info) => {
-    test.skip(info.project.name !== "mobile");
+    test.skip(!info.project.name.startsWith("mobile"));
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     await page.locator('[popovertarget="site-menu"]').click();
@@ -38,7 +38,13 @@ test("móvil: el texto de cada enlace del menú empieza en su margen, sin que el
         }),
     );
     expect(offsets.length).toBeGreaterThan(0);
-    for (const offset of offsets) expect(Math.abs(offset)).toBeLessThanOrEqual(1);
+    // En Terminal el marcador «>» no ocupa sitio; en Táctico el rombo va delante del texto a propósito,
+    // pero el texto nunca debe salirse a la izquierda del margen.
+    const tactical = info.project.name.endsWith("-tactical");
+    for (const offset of offsets) {
+        if (tactical) expect(offset).toBeGreaterThanOrEqual(-1);
+        else expect(Math.abs(offset)).toBeLessThanOrEqual(1);
+    }
 });
 
 test("sin desbordamiento horizontal", async ({ page }) => {
@@ -61,7 +67,7 @@ test("sin desbordamiento horizontal", async ({ page }) => {
 });
 
 test("sin Popover API el móvil sigue teniendo navegación e idioma", async ({ page }, info) => {
-    test.skip(info.project.name !== "mobile");
+    test.skip(!info.project.name.startsWith("mobile"));
     await page.goto("/");
     // Chromium soporta popover: se aplica el bloque @supports de respaldo como si no lo hiciera.
     const applied = await page.evaluate(() => {

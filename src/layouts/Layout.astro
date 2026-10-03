@@ -26,6 +26,10 @@ const { locale, title, description } = Astro.props;
         <meta property="og:locale" content={locale === "es" ? "es_ES" : "en_US"} />
         <Font cssVariable="--font-space-grotesk" preload />
         <Font cssVariable="--font-ibm-plex-mono" preload />
+        {/* Fuentes de Táctico, sin precarga: solo se descargan si la skin activa las usa. */}
+        <Font cssVariable="--font-chakra-petch" />
+        <Font cssVariable="--font-barlow" />
+        <Font cssVariable="--font-jetbrains-mono" />
         <script is:inline set:html={skinBootScript()} />
     </head>
     <body class="bg-bg text-text font-body">

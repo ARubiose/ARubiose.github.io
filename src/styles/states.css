@@ -47,3 +47,6 @@
 :root[data-skin="terminal"] [data-for-skin]:not([data-for-skin="terminal"]) {
     display: none;
 }
+:root[data-skin="tactical"] [data-for-skin]:not([data-for-skin="tactical"]) {
+    display: none;
+}

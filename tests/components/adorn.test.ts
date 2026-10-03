@@ -12,7 +12,7 @@ test("sustituye variables", async () => {
     expect(html).toContain(">ada@portfolio:~$<");
 });
 
-test("si ninguna skin lo define, no pinta nada", async () => {
-    const html = await render(Adorn, { props: { name: "sectionSub.experience", locale: "es" } });
-    expect(html.replace(/<!--.*?-->/g, "").trim()).toBe("");
+test("solo pinta las skins que definen el adorno", async () => {
+    const html = await render(Adorn, { props: { name: "menuMark", locale: "es" } });
+    expect(html.match(/data-for-skin="[^"]+"/g)).toEqual(['data-for-skin="terminal"']);
 });

@@ -37,9 +37,9 @@ test.describe("foto ampliable", () => {
     });
 
     test("en móvil la foto ocupa el ancho de la pantalla", async ({ page }, info) => {
-        test.skip(info.project.name !== "mobile");
+        test.skip(!info.project.name.startsWith("mobile"));
         await page.goto("/");
-        const box = await page.locator("#photo-open").boundingBox();
+        const box = await page.locator(".photo-window").boundingBox();
         expect(box!.width).toBeGreaterThan(390 - 2 * 16 - 4);
     });
 });

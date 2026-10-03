@@ -3,6 +3,7 @@ export type TimelineMode = "alternate" | "single";
 // Registro de skins: la lista manda. El nombre visible sale del diccionario (`skin.<id>`).
 export const skinRegistry = [
     { id: "terminal", swatch: "#9fd65a", timeline: "alternate" },
+    { id: "tactical", swatch: "#f0a83a", timeline: "single" },
 ] as const satisfies readonly { id: string; swatch: string; timeline: TimelineMode }[];
 
 export type Skin = (typeof skinRegistry)[number]["id"];

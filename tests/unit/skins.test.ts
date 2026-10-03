@@ -65,3 +65,7 @@ test("states.css oculta los adornos de las demás skins para cada skin registrad
         expect(css, skin).toContain(`:root[data-skin="${skin}"] [data-for-skin]:not([data-for-skin="${skin}"])`);
     }
 });
+
+test("Táctico está registrada con su muestra y modo single", () => {
+    expect(skinRegistry.find((s) => s.id === "tactical")).toEqual({ id: "tactical", swatch: "#f0a83a", timeline: "single" });
+});

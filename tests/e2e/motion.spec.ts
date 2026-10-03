@@ -36,7 +36,7 @@ test.describe("sin JavaScript", () => {
 });
 
 test("cruzar 768 px durante la intro no la repite ni corta el prompt", async ({ page }, info) => {
-    test.skip(info.project.name !== "desktop");
+    test.skip(info.project.name !== "desktop", "escritura del prompt: propia de Terminal");
     await page.goto("/");
     const prompt = page.locator('.hero .prompt [data-for-skin="terminal"]');
     // A mitad de la escritura: el prompt ya empezó, pero aún no está completo.
@@ -46,7 +46,8 @@ test("cruzar 768 px durante la intro no la repite ni corta el prompt", async ({ 
     await expect(prompt).toHaveText("whoami");
 });
 
-test("con animaciones, la intro termina con el nombre completo", async ({ page }) => {
+test("con animaciones, la intro termina con el nombre completo", async ({ page }, info) => {
+    test.skip(info.project.name.endsWith("-tactical"), "intro de Táctico: tarea 6");
     await page.goto("/");
     await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
 });

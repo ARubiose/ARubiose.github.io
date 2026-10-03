@@ -17,7 +17,7 @@ test("modo single en escritorio: eje a la izquierda y todas las tarjetas a su de
 });
 
 test("modo alternate (Terminal) en escritorio: tarjetas a ambos lados del eje", async ({ page }, info) => {
-    test.skip(info.project.name !== "desktop");
+    test.skip(info.project.name !== "desktop", "modo alternate: Terminal");
     await page.goto("/");
     const rail = (await page.locator("#experience .timeline-rail").boundingBox())!;
     const xs = await page.locator("#experience .t-card").evaluateAll((els) => els.map((e) => e.getBoundingClientRect().x));

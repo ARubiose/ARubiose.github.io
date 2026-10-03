@@ -61,6 +61,8 @@ describe("Projects", () => {
         expect(html).toContain('id="projects"');
         expect(html).toMatch(/aria-hidden="true" class="window-file">my-site\/README\.md</);
         expect(html).toContain("En desarrollo");
+        // El «cat» de la barra es un adorno de Terminal: oculto a lectores y solo en esa skin.
+        expect(html).toMatch(/<span aria-hidden="true" data-for-skin="terminal"[^>]*>cat<\/span>/);
         expect(html).toContain('href="https://github.com/ada/my-site"');
     });
 
@@ -156,7 +158,7 @@ describe.each<Locale>(["es", "en"])("en %s", (locale) => {
 
     test.each(sections)("$name muestra su título traducido", async ({ component, title, full }) => {
         const html = clean(await container.renderToString(component, { props: { locale, ...full } }));
-        expect(html).toMatch(new RegExp(`<h2[^>]*>${title}</h2>`));
+        expect(html).toMatch(new RegExp(`<h2[^>]*>${title}<`));
     });
 
     test.each(sections)("$name sin elementos no renderiza nada", async ({ component, empty }) => {
@@ -167,6 +169,6 @@ describe.each<Locale>(["es", "en"])("en %s", (locale) => {
     test("Contact muestra su título traducido", async () => {
         const links = { email: "a@example.com", linkedin: "https://www.linkedin.com/in/a/", github: "https://github.com/a" };
         const html = clean(await container.renderToString(Contact, { props: { links, locale } }));
-        expect(html).toMatch(new RegExp(`<h2[^>]*>${t("section.contact")}</h2>`));
+        expect(html).toMatch(new RegExp(`<h2[^>]*>${t("section.contact")}<`));
     });
 });
