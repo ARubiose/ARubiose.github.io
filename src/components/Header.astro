@@ -38,7 +38,7 @@ const t = useTranslations(locale);
             <ul class="mt-2.5 grid">
                 {sections.map((s) => (
                     <li>
-                        <a class="nav-link flex items-center border-b border-dashed border-line px-1 py-3.5 font-display text-2xl font-bold" href={`#${s.id}`}>
+                        <a class="nav-link flex items-center border-b border-dashed border-(color:--menu-link-border) px-1 py-3.5 font-display text-(length:--menu-link-size) leading-(--menu-link-leading) font-bold" href={`#${s.id}`}>
                             {s.label.toLowerCase()}<span class="ml-auto font-mono text-sm font-normal text-muted" aria-hidden="true">↵</span>
                         </a>
                     </li>

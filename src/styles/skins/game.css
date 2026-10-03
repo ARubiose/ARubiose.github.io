@@ -41,6 +41,10 @@
     --section-title-size-md: 40px;
     --handle-size: 20px;
     --handle-size-md: 22px;
+    /* Menú móvil como menú de pausa: secciones grandes, sin separadores. */
+    --menu-link-size: 34px;
+    --menu-link-leading: 1.05;
+    --menu-link-border: transparent;
 }
 
 /* Rótulos en Saira Condensed, mayúsculas: el lenguaje de los menús. */

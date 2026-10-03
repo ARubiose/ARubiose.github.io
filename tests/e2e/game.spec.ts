@@ -116,6 +116,15 @@ test("el botón de equipar con borde visible no va recortado", async ({ page }, 
     expect(on.clip).toBe("none");
 });
 
+test("móvil: el menú es un menú de pausa, con secciones grandes y sin separadores", async ({ page }, info) => {
+    test.skip(!info.project.name.startsWith("mobile"));
+    await page.goto("/");
+    await page.locator('[popovertarget="site-menu"]').click();
+    const link = page.locator("#site-menu .nav-link").first();
+    await expect(link).toHaveCSS("font-size", "34px");
+    await expect(link).toHaveCSS("border-bottom-color", "rgba(0, 0, 0, 0)");
+});
+
 test("el panel diagonal del hero no ensancha la página", async ({ page }) => {
     await page.goto("/");
     const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
