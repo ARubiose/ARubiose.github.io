@@ -1,7 +1,18 @@
 export function initNav(): void {
     const links = [...document.querySelectorAll<HTMLAnchorElement>("a.nav-link[href^='#']")];
     const menu = document.getElementById("site-menu");
-    links.forEach((a) => a.addEventListener("click", () => menu?.hidePopover?.()));
+    // Al elegir en el menú móvil, el salto es instantáneo: tras cerrarse el popover, Chromium
+    // cancelaba a veces el scroll suave y la página se quedaba arriba. El menú ocupa la pantalla,
+    // así que no se pierde nada. La navegación sigue siendo la nativa (hash y punto de partida del foco).
+    const root = document.documentElement;
+    links.forEach((a) =>
+        a.addEventListener("click", () => {
+            if (!menu?.matches(":popover-open")) return;
+            menu.hidePopover();
+            root.style.scrollBehavior = "auto";
+            setTimeout(() => root.style.removeProperty("scroll-behavior"));
+        }),
+    );
 
     const setActive = (id: string) => {
         for (const a of links) {
@@ -10,24 +21,22 @@ export function initNav(): void {
         }
     };
 
-    const sections = [...document.querySelectorAll<HTMLElement>("main section[id]")];
-    const io = new IntersectionObserver(
-        (entries) => {
-            for (const entry of entries) if (entry.isIntersecting) setActive(entry.target.id);
-        },
-        { rootMargin: "-45% 0px -50% 0px" },
-    );
-    sections.forEach((s) => io.observe(s));
-
-    // La última sección nunca alcanza la franja central: al ver el pie entero, se marca ella.
+    // Solo las secciones enlazadas: los paneles del creador también son <section id>.
+    const linked = new Set(links.map((a) => a.getAttribute("href")!.slice(1)));
+    const sections = [...document.querySelectorAll<HTMLElement>("main section[id]")].filter((s) => linked.has(s.id));
     const footer = document.querySelector("footer");
-    const last = sections.at(-1);
-    if (footer && last) {
-        new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) setActive(last.id);
-            },
-            { threshold: 1 },
-        ).observe(footer);
-    }
+
+    // Se recalcula con la geometría actual en cada aviso: los avisos llegan en lotes durante el
+    // scroll suave y aplicar sus entradas en orden podía dejar marcada una sección ya pasada.
+    const update = () => {
+        // Borde inferior de la franja del observador (rootMargin): ahí avisa cuando entra una sección.
+        const line = innerHeight * 0.5 + 1;
+        // La última sección nunca alcanza la franja central: con el pie entero a la vista, se marca ella.
+        const footerVisible = footer && footer.getBoundingClientRect().bottom <= innerHeight + 1;
+        const current = footerVisible ? sections.at(-1) : sections.findLast((s) => s.getBoundingClientRect().top <= line);
+        if (current) setActive(current.id);
+    };
+    const io = new IntersectionObserver(update, { rootMargin: "-45% 0px -50% 0px" });
+    sections.forEach((s) => io.observe(s));
+    if (footer) new IntersectionObserver(update, { threshold: 1 }).observe(footer);
 }

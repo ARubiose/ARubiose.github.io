@@ -1,6 +1,7 @@
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
+import { z } from "astro/zod";
 import { schemasByType } from "@lib/schemas";
 import { readFrontmatter } from "../support/frontmatter";
 
@@ -73,4 +74,29 @@ test("url: null equivale a omitirla", () => {
 test("los años sin mes se normalizan a string", () => {
     const result = validate(join(FIXTURES, "valid/education-year-only.md"));
     expect(result.success && result.data).toMatchObject({ start: "2015", end: "2020", grade: "8.55" });
+});
+
+describe("JSON Schema del editor (como lo genera Astro)", () => {
+    // Mismas opciones que astro/dist/content/types-generator.js: el editor valida la entrada.
+    const jsonSchema = (schema: (typeof schemasByType)[keyof typeof schemasByType]) =>
+        JSON.stringify(z.toJSONSchema(schema, {
+            unrepresentable: "any",
+            io: "input",
+            override: (ctx) => {
+                if (ctx.zodSchema._zod.def.type === "date") Object.assign(ctx.jsonSchema, { type: "string", format: "date-time" });
+            },
+        }));
+    const property = (schema: (typeof schemasByType)[keyof typeof schemasByType], key: string) =>
+        (JSON.parse(jsonSchema(schema)) as { properties: Record<string, unknown> }).properties[key];
+
+    test("las fechas no anuncian date-time, que la build rechaza", () => {
+        expect(JSON.stringify(property(schemasByType.experience, "start"))).not.toContain("date-time");
+        expect(JSON.stringify(property(schemasByType.experience, "end"))).not.toContain("date-time");
+    });
+
+    test("url y links.source admiten null, igual que la build", () => {
+        expect(JSON.stringify(property(schemasByType.project, "url"))).toContain('"null"');
+        const links = property(schemasByType.profile, "links") as { properties: Record<string, unknown> };
+        expect(JSON.stringify(links.properties.source)).toContain('"null"');
+    });
 });

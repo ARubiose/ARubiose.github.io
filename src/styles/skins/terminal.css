@@ -98,6 +98,9 @@
 /* Navegación */
 [data-skin="terminal"] .nav-link::before {
     content: "> ";
+    /* Ancho fijo: en la fuente de display «> » no mide 2ch y el margen no lo compensaría. */
+    display: inline-block;
+    width: 2ch;
     color: var(--skin-accent);
     opacity: 0;
     margin-left: -2ch;

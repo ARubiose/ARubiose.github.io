@@ -16,7 +16,8 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 | 2026-10-02 | Actualización a Astro 7.3, Tailwind 4.3, Node 24 y pnpm 11 | `28f6ddf` |
 | 2026-10-02 | Fuentes web y declaraciones del humano en la wiki | `8ab7eac`; decisión [0003](decisions/0003-web-and-human-sources.md) |
 | 2026-10-02 | Fase 5: arquitectura de skins y skin Terminal (timeline, creador de personaje, foto ampliable, animaciones GSAP, regresión visual) | [spec](superpowers/specs/2026-10-02-terminal-skin-design.md), [plan](superpowers/plans/2026-10-02-terminal-skin.md), [maquetas](design/mockups/) |
-| 2026-10-03 | Mejoras menores de las revisiones de las fases 1–5: contrato (URLs solo http(s), fechas YAML completas, `url: null`, orden total), skin en `@layer components`, respaldo sin Popover API, intro del hero estable al cambiar de ancho, JSON del creador escapado, tests más estrictos | rama `fix/minor-improvements` |
+| 2026-10-03 | Fixes pendientes: alineación del menú móvil, sección activa y saltos del menú fiables (fallaban 1 de cada 40 ejecuciones), JSON Schema del editor alineado con la build. Descartado: respaldo para navegadores sin `@supports selector()` (Tailwind 4 ya exige navegadores posteriores) | rama `fix/pending-fixes` |
+| 2026-10-03 | Mejoras menores de las revisiones de las fases 1–5: contrato (URLs solo http(s), fechas YAML completas, `url: null`, orden total), skin en `@layer components`, respaldo sin Popover API, intro del hero estable al cambiar de ancho, JSON del creador escapado, tests más estrictos | `85ba009` |
 | 2026-10-02 | Fases 1–4: contenido inicial, base del sitio, contrato de contenido y secciones, con tests (unitarios, contrato, componentes, privacidad y E2E con axe) | [spec](superpowers/specs/2026-10-02-portfolio-content-design.md), [plan](superpowers/plans/2026-10-02-portfolio-content.md); `af663b9`..`6384a1b` |
 
 ## Pendiente
@@ -30,17 +31,6 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
   (`getAbsoluteLocaleUrlList()`).
   Al crear el CI, añadir `github-actions` a `skills` de `wiki/public/projects/portfolio-llm-wiki.md`
   (decisión del humano, 2026-10-02).
-
-### Mejoras menores
-
-- [ ] En el menú móvil, el `::before` («> ») de `.nav-link` tiene `margin-left: -2ch`, pero en
-  la fuente de display `> ` no mide 2ch: el texto sale 13 px a la izquierda del margen
-  (`src/styles/skins/terminal.css`, regla `.nav-link::before`). Ya pasaba antes de la rama de mejoras.
-- [ ] El JSON Schema que Astro genera para el editor (`.astro/collections/*.schema.json`) da por
-  válida una fecha `date-time` en `start`/`end` y marca `url: null` como error, al revés que la
-  build (`src/lib/dates.ts:11`, `src/lib/schemas.ts`). Solo afecta al autocompletado.
-- [ ] El respaldo sin Popover API usa `@supports selector()`: los navegadores aún más antiguos
-  ignoran el bloque entero (`src/styles/states.css`).
 
 ### Cuestiones abiertas
 
