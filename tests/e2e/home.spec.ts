@@ -33,7 +33,7 @@ for (const p of pages) {
         test("no se cuelan valores sin resolver", async ({ page }) => {
             await page.goto(p.path);
             const text = await page.locator("body").innerText();
-            expect(text).not.toMatch(/undefined|\[object Object\]|NaN/);
+            expect(text).not.toMatch(/\bundefined\b|\[object Object\]|\bNaN\b/);
         });
 
         test("la foto de perfil tiene nombre accesible y la ampliada, texto alternativo", async ({ page }) => {

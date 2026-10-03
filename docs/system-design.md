@@ -17,7 +17,7 @@ de Karpathy a Claude Code).
   │   (agente)    notas, log   │
   │                            │
   └──ingest──────────────────────▶ wiki/public/ ──collections──▶ src/ ──build──▶ dist/ ──▶ GitHub Pages
-      (agente)                 │   Markdown +     [pendiente]    Astro           HTML
+      (agente)                 │   Markdown +     glob + Zod     Astro           HTML
                                │   frontmatter                                   estático
 ```
 
