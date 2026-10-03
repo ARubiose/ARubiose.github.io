@@ -60,14 +60,17 @@ el selector móvil). Muestra de color `#ec4c56`; línea de tiempo `single`.
   - `h2` en Saira 800 grande, con el subtítulo (adorno `sectionSub`) en rojo y espaciado ancho, y
     una línea que se desvanece detrás.
   - Hero: panel `surface` inclinado detrás de la foto, con un filo rojo, como pseudoelementos de
-    `.hero`; la foto recortada en trapecio; el rol como bloque `text` con texto `bg`.
+    `.photo-window` (así sirve igual en escritorio y en la «carta de personaje» móvil); la foto
+    recortada en trapecio; el rol como bloque `text` con texto `bg`.
   - Línea de tiempo: tarjetas con borde izquierdo de 4 px (`line`; rojo y degradado rojo en el
-    puesto vigente) y viñetas «▸» rojas; sin eje ni nodos.
+    puesto vigente) y viñetas «▸» rojas; sin eje ni nodos (se ocultan; queda la sangría de 28 px de
+    la columna del nodo). La fecha va encima de la tarjeta, como en Táctico.
   - Creador de personaje: los elementos como lista de menú (filas separadas por líneas, la fila
     seleccionada con degradado rojo y «▶», el equipado con «✓» rojo); pestaña activa en bloque
     `text`; huecos llenos en rojo; panel de detalles con el nombre en Saira grande.
-  - Menú móvil como menú de pausa: secciones en Saira 800 a ~34 px y la activa en bloque rojo
-    inclinado con «▶».
+  - Menú móvil como menú de pausa: secciones en Saira y mayúsculas, la activa en bloque rojo
+    inclinado con «▶». El tamaño (24 px) y los separadores son los del marcado, que fijan
+    utilidades; la maqueta los llevaba a ~34 px sin separadores.
   - Sin scanlines, cursor ni esquinas.
 - **Distribución:**
 
@@ -78,6 +81,10 @@ el selector móvil). Muestra de color `#ec4c56`; línea de tiempo `single`.
   | `--hero-photo-max` | `none` / `400px` | `380px` | `ProfilePhoto` |
   | `--hero-name-size` (nuevo) | `38px` | `50px` | `intro.astro` |
   | `--hero-name-size-md` (nuevo) | `58px` | `84px` | `intro.astro` |
+  | `--hero-name-leading` (nuevo) | `1.04` | `0.9` | `intro.astro` |
+  | `--hero-name-weight` (nuevo) | `700` | `800` | `intro.astro` |
+  | `--section-title-size` (nuevo) | `26px` | `32px` | `h2` de las cinco secciones |
+  | `--section-title-size-md` (nuevo) | `30px` | `40px` | `h2` de las cinco secciones |
 
   En móvil, el orden es el de las otras skins (foto antes del texto); el panel diagonal y la foto
   forman una «carta de personaje». La línea de tiempo es de una columna en los dos tamaños.
@@ -116,11 +123,14 @@ Además de lo que la receta de §3.4 ya prevé (registro, hoja en `src/styles/sk
 importada en `global.css`, regla de adornos en `states.css`, nombre en `ui.ts`, adornos, preset de
 intro, fuentes en `astro.config.mjs` y `<Font>` sin precarga en `Layout`, proyectos de Playwright):
 
-1. **Tamaño del nombre como token.** `intro.astro` sustituye `text-[38px] md:text-[58px]` por
-   `text-(length:--hero-name-size) md:text-(length:--hero-name-size-md)`; los valores de Terminal van
-   en `base.css` y Táctico los hereda, así que ninguna de las dos cambia. El interlineado y las
-   mayúsculas de Juego los pone su hoja (la utilidad `leading-[1.04]` pasa también a token,
-   `--hero-name-leading`, si la hoja no puede ganarle; se decide en el plan comprobando la cascada).
+1. **Tipografía del nombre y de los titulares como tokens.** `intro.astro` sustituye
+   `text-[38px] leading-[1.04] font-bold md:text-[58px]` por
+   `text-(length:--hero-name-size) leading-(--hero-name-leading) font-(--hero-name-weight)
+   md:text-(length:--hero-name-size-md)`, y los `h2` de las cinco secciones sustituyen
+   `text-[26px] md:text-[30px]` por `text-(length:--section-title-size)
+   md:text-(length:--section-title-size-md)`. Los valores de Terminal van en `base.css` y Táctico
+   los hereda, así que ninguna de las dos cambia. Las mayúsculas las pone la hoja de Juego (ninguna
+   utilidad las fija).
 2. **Color del rol en la skin.** `.hero-role` deja la utilidad `text-accent`; cada hoja declara su
    color (Terminal y Táctico, el acento; Juego, bloque `text` con texto `bg`). Las capturas de
    Terminal y Táctico no deben cambiar.
@@ -133,7 +143,7 @@ intro, fuentes en `astro.config.mjs` y `<Font>` sin precarga en `Layout`, proyec
 Preset `game` en `src/scripts/motion.ts`:
 
 1. El panel diagonal del hero entra barriendo desde la derecha (escala horizontal desde su borde,
-   ~0,35 s) y el filo rojo lo sigue.
+   ~0,35 s, con la variable registrada `--panel-reveal`) y el filo rojo lo sigue.
 2. La foto se desliza desde la derecha tras el panel.
 3. El nombre entra «de golpe» desde la izquierda (desplazamiento corto, opacidad y un desenfoque de
    movimiento breve), sin descifrado.
@@ -149,7 +159,8 @@ intro. Con `prefers-reduced-motion` no se ejecuta nada.
   (caso que también cubre el menor aplazado de probar una skin no predeterminada en el arranque);
   `shortNameFromName` y `callsignFromName`; cada adorno de Juego en `es` y `en`; `states.css` tiene la
   regla de Juego (el test existente lo exige al registrarla).
-- **Componentes:** `intro` usa los tokens del nombre y `.hero-role` no lleva color de utilidad;
+- **Componentes:** `intro` usa los tokens del nombre, los `h2` de sección los de titular y
+  `.hero-role` no lleva color de utilidad;
   `Header` pinta el nombre corto en el adorno de Juego.
 - **E2E:** proyectos `desktop-game` y `mobile-game` que ejecutan la batería común (navegación, menú,
   visor, creador, sin JS, movimiento reducido, desbordamiento, CLS, axe con diálogos abiertos); en
