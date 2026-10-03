@@ -98,6 +98,23 @@ test("un nombre con una palabra muy larga no desborda ni aplasta la foto", async
     if (info.project.name.startsWith("desktop")) expect(photo!.width).toBeGreaterThan(250);
 });
 
+// Un borde visible y un clip-path inclinado no casan: el recorte se come los laterales del borde.
+test("el botón de equipar con borde visible no va recortado", async ({ page }, info) => {
+    test.skip(!info.project.name.startsWith("desktop"), "en móvil el botón está en el panel inferior");
+    await page.goto("/");
+    const button = page.locator("#skills .inspector-equip");
+    const look = () => button.evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return { border: cs.borderLeftColor, background: cs.backgroundColor, clip: cs.clipPath };
+    });
+    await page.locator("#skills .tile-main").first().click();
+    await button.click(); // equipa: el botón pasa a «quitar», solo con borde
+    await expect(button).toHaveAttribute("data-equipped", "");
+    const on = await look();
+    expect(on.border).not.toBe(on.background);
+    expect(on.clip).toBe("none");
+});
+
 test("el panel diagonal del hero no ensancha la página", async ({ page }) => {
     await page.goto("/");
     const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);

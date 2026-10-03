@@ -411,6 +411,11 @@
     letter-spacing: 0.08em;
     clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
 }
+/* Equipado: el botón es solo un borde (utilidades del script) y la inclinación se comería sus
+   laterales; va recto. */
+[data-skin="game"] :is(.inspector-equip, .sheet-equip)[data-equipped] {
+    clip-path: none;
+}
 
 /* Selector de skin */
 [data-skin="game"] .skin-switcher {

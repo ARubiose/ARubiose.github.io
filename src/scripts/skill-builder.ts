@@ -65,12 +65,14 @@ export function initSkillBuilder(): void {
             const on = state.build.includes(state.selected);
             action.className = `inspector-equip mt-4 w-full border border-accent p-2.5 ${on ? "text-accent" : "bg-accent text-accent-ink"}`;
             action.dataset.toggle = state.selected;
+            action.toggleAttribute("data-equipped", on);
             action.textContent = (on ? root.dataset.unequipAction : root.dataset.equipAction) ?? "";
             inspectorBody.append(action);
             sheetBody.replaceChildren(detailOf(state.selected).cloneNode(true));
             sheetEquip.dataset.toggle = state.selected;
             sheetEquip.textContent = (on ? root.dataset.unequipAction : root.dataset.equipAction) ?? "";
             sheetEquip.className = `sheet-equip border border-accent p-3 text-[13.5px] ${on ? "text-accent" : "bg-accent text-accent-ink"}`;
+            sheetEquip.toggleAttribute("data-equipped", on);
         }
 
         const n = state.build.length;
