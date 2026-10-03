@@ -8,9 +8,10 @@ const YEAR_MONTH = /^\d{4}(-(0[1-9]|1[0-2]))?$/;
 
 const FORMAT_MESSAGE = "Formato esperado: AAAA o AAAA-MM";
 
-// YAML convierte 2026-06-01 en Date: se rechaza con el mismo mensaje en vez de perder el día.
+// YAML convierte 2026-06-01 en Date: no entra en la unión y recibe el mensaje de formato en vez de
+// perder el día. Sin rama z.date(), el JSON Schema del editor tampoco anuncia date-time.
 export const yearMonth = z
-    .union([z.string(), z.number(), z.date().transform(() => "")], {
+    .union([z.string(), z.number()], {
         // Sin valor, el mensaje por defecto («Required»); con otro tipo, el de formato.
         error: (issue) => (issue.input === undefined ? undefined : FORMAT_MESSAGE),
     })

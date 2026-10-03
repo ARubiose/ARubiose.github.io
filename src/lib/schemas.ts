@@ -10,7 +10,7 @@ const text = z.string().trim().min(1);
 // z.url() acepta cualquier esquema (javascript:, data:…); los enlaces del sitio solo pueden ser web.
 const webUrl = z.url({ protocol: /^https?$/, error: "URL http(s) esperada" });
 // Un enlace opcional puede omitirse o escribirse `null` en YAML.
-const optionalWebUrl = z.preprocess((v) => v ?? undefined, webUrl.optional());
+const optionalWebUrl = webUrl.nullish().transform((v) => v ?? undefined).optional();
 const highlights = z.array(text).default([]);
 const skillRefs = z.array(z.string().regex(/^[a-z0-9-]+$/, "id de habilidad en minúsculas con guiones")).optional();
 const icon = z
