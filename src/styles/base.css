@@ -26,6 +26,9 @@
     body {
         min-height: 100dvh;
         overflow-x: clip;
+        /* Contenedor de consultas: 100cqw es el ancho de la página sin la barra de desplazamiento
+           (100vw la incluye y un elemento que lo use ensancha la página). */
+        container-type: inline-size;
     }
 
     [id] {

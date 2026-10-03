@@ -199,8 +199,9 @@
     pointer-events: none;
 }
 /* El panel llega hasta el borde derecho de la ventana: el margen de <main> (16 px en móvil; en
-   escritorio, 40 px más lo que sobra a los lados del ancho máximo de 72rem). Su borde izquierdo se
-   inclina con clip-path, que no se sale de la caja (un skewX desbordaría la página). */
+   escritorio, 40 px más lo que sobra a los lados del ancho máximo de 72rem, medido con 100cqw
+   sobre body, que no incluye la barra de desplazamiento). Su borde izquierdo se inclina con
+   clip-path, que no se sale de la caja (un skewX desbordaría la página). */
 [data-skin="game"] .photo-window::before {
     left: -18%;
     right: -16px;
@@ -239,7 +240,7 @@
         --panel-slant: 110px;
     }
     [data-skin="game"] .photo-window::before {
-        right: calc((min(100vw, 72rem) - 100vw) / 2 - 40px);
+        right: calc((min(100cqw, 72rem) - 100cqw) / 2 - 40px);
     }
 }
 
