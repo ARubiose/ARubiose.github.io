@@ -1,7 +1,8 @@
 import { expect, test } from "@playwright/test";
+import { skinOf } from "./support";
 
 test.use({ reducedMotion: "reduce" });
-test.beforeEach(({}, info) => test.skip(!info.project.name.endsWith("-tactical")));
+test.beforeEach(({}, info) => test.skip(skinOf(info.project.name) !== "tactical"));
 
 test("se carga Táctico con su modo de línea de tiempo", async ({ page }) => {
     await page.goto("/");

@@ -1,7 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
+import { skinOf } from "./support";
 
 test.use({ reducedMotion: "reduce" });
-test.beforeEach(({}, info) => test.skip(info.project.name.endsWith("-tactical"), "parte de Terminal"));
+test.beforeEach(({}, info) => test.skip(skinOf(info.project.name) !== "terminal", "parte de Terminal"));
 
 async function openSwitcher(page: Page, mobile: boolean) {
     if (mobile) await page.locator('[popovertarget="site-menu"]').click();
