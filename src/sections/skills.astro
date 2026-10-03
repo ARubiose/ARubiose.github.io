@@ -19,7 +19,7 @@ const t = useTranslations(locale);
 
 {groups.length > 0 && (
     <section id="skills" class="mt-11 md:mt-18">
-        <h2 class="section-title mb-1.5 text-[26px] md:text-[30px]">{t("section.skills")}<Adorn name="sectionSub.skills" locale={locale} class="section-sub" /></h2>
+        <h2 class="section-title mb-1.5 text-(length:--section-title-size) md:text-(length:--section-title-size-md)">{t("section.skills")}<Adorn name="sectionSub.skills" locale={locale} class="section-sub" /></h2>
         <p class="mb-5 text-muted">{t("skills.lead")}</p>
         <SkillBuilder locale={locale} groups={groups} {...rest} />
     </section>

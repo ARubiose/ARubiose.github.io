@@ -6,6 +6,13 @@
         --hero-cols: 340px 1fr;
         --hero-photo-order: 0;
         --hero-photo-max: none;
+        /* Tipografía del nombre del hero y de los titulares de sección (valores de Terminal). */
+        --hero-name-size: 38px;
+        --hero-name-size-md: 58px;
+        --hero-name-leading: 1.04;
+        --hero-name-weight: 700;
+        --section-title-size: 26px;
+        --section-title-size-md: 30px;
     }
 
     html {

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { skinOf } from "./support";
 
 test("escritorio: el menú lleva a cada sección y la marca como activa", async ({ page }, info) => {
     test.skip(!info.project.name.startsWith("desktop"));
@@ -38,11 +39,11 @@ test("móvil: el texto de cada enlace del menú empieza en su margen, sin que el
         }),
     );
     expect(offsets.length).toBeGreaterThan(0);
-    // En Terminal el marcador «>» no ocupa sitio; en Táctico el rombo va delante del texto a propósito,
+    // En Terminal el marcador «>» no ocupa sitio; en Táctico y Juego el marcador va delante del texto a propósito,
     // pero el texto nunca debe salirse a la izquierda del margen.
-    const tactical = info.project.name.endsWith("-tactical");
+    const marked = skinOf(info.project.name) !== "terminal";
     for (const offset of offsets) {
-        if (tactical) expect(offset).toBeGreaterThanOrEqual(-1);
+        if (marked) expect(offset).toBeGreaterThanOrEqual(-1);
         else expect(Math.abs(offset)).toBeLessThanOrEqual(1);
     }
 });

@@ -33,6 +33,16 @@ const introPresets: Record<string, (tl: gsap.core.Timeline, ctx: IntroContext) =
             .from(".hero-name", scramble("0123456789/◆"), "-=0.1");
         revealRest(tl, wide, 1);
     },
+    // Pantalla de selección: el panel diagonal barre desde la derecha, la foto entra tras él, el
+    // nombre llega de golpe desde la izquierda y el bloque del rol se estira. La foto ya ha entrado:
+    // no se usa revealRest, que la animaría otra vez.
+    game(tl, { wide }) {
+        tl.fromTo(".photo-window", { "--panel-reveal": 0 }, { "--panel-reveal": 1, duration: 0.35, ease: "power3.out" })
+            .from(".photo-window img, .photo-window > .window-bar", { opacity: 0, x: wide ? 40 : 0, y: wide ? 0 : 16, duration: 0.45 }, "-=0.15")
+            .from(".hero-name", { opacity: 0, x: -48, filter: "blur(6px)", duration: 0.45, ease: "power4.out", clearProps: "filter" }, "-=0.25")
+            .from(".hero-role", { scaleX: 0, transformOrigin: "left center", duration: 0.3, ease: "power3.out" }, "-=0.15")
+            .from([".hero-loc", ".hero-sum", ".hero-cta"], { opacity: 0, y: 12, duration: 0.5, stagger: 0.08 }, "-=0.1");
+    },
 };
 
 export function initMotion(): void {

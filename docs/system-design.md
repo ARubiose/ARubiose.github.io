@@ -129,8 +129,9 @@ src/scripts/: nav · lightbox · skill-builder (+ tab-edges) · skin-switcher ·
 ### 3.4 Estilos
 
 Arquitectura de **skins** ([fase 5](superpowers/specs/2026-10-02-terminal-skin-design.md),
-[fase 5b](superpowers/specs/2026-10-03-tactical-skin-design.md)). Skins: **Terminal**
-(predeterminada) y **Táctico**.
+[fase 5b](superpowers/specs/2026-10-03-tactical-skin-design.md),
+[fase 5b, 2/2](superpowers/specs/2026-10-03-game-skin-design.md)). Skins: **Terminal**
+(predeterminada), **Táctico** y **Juego**.
 
 - **Registro** (`src/lib/skins.ts`): `skinRegistry` lista cada skin con su muestra de color y su
   modo de línea de tiempo (`alternate` o `single`). Un script en línea en `<head>`
@@ -140,10 +141,13 @@ Arquitectura de **skins** ([fase 5](superpowers/specs/2026-10-02-terminal-skin-d
   `--skin-*` (colores, fuentes, radio), tokens de distribución y decoración bajo
   `[data-skin="<skin>"]`. Las utilidades ganan siempre a la skin; lo que la skin oculta y una
   utilidad muestra se oculta con propiedades que ninguna utilidad toca (`visibility`).
-- **Distribución por skin:** tokens `--hero-cols`, `--hero-photo-order` y `--hero-photo-max`
-  (valores de Terminal en `base.css`) que los componentes leen con `md:grid-cols-(--hero-cols)`;
-  y la variante `timeline-single:` (lee `data-timeline="single"`) para la línea de tiempo de
-  una columna.
+- **Distribución por skin:** tokens `--hero-cols`, `--hero-photo-order` y `--hero-photo-max`,
+  y de tipografía `--hero-name-size`/`-md`, `--hero-name-leading`, `--hero-name-weight` y
+  `--section-title-size`/`-md` (nombre del hero y titulares de sección), con los valores de
+  Terminal en `base.css`, que los componentes leen con utilidades como
+  `md:grid-cols-(--hero-cols)`; y la variante `timeline-single:` (lee `data-timeline="single"`)
+  para la línea de tiempo de una columna.
+- **Color del rol del hero:** lo declara cada hoja (`.hero-role`), no una utilidad.
 - **Adornos por skin:** los textos decorativos (`whoami`, `personaje.sav`, `Registro de
   misiones`…) están en `adorns` de `src/i18n/ui.ts`, con un texto por skin. `Adorn.astro` pinta
   un `<span aria-hidden data-for-skin>` por skin y `states.css` muestra solo los de la activa (un
@@ -158,7 +162,11 @@ Arquitectura de **skins** ([fase 5](superpowers/specs/2026-10-02-terminal-skin-d
 **Añadir una skin:** entrada en `skinRegistry`; hoja en `src/styles/skins/` importada en
 `global.css`; regla de adornos en `states.css`; nombre `skin.<id>` en `ui.ts`; adornos y preset
 de intro opcionales; fuentes en `astro.config.mjs` (`<Font>` sin precarga en `Layout`); proyectos
-`desktop-<id>`/`mobile-<id>` en `playwright.config.ts` y capturas con `pnpm test:visual:update`.
+`desktop-<id>`/`mobile-<id>` en `playwright.config.ts` (los e2e filtran por skin con `skinOf()`
+de `tests/e2e/support.ts`) y capturas solo de esos proyectos con `--update-snapshots`. Si la skin
+necesita otro valor de algo que hoy fija una utilidad del marcado, conviértelo en token con el
+valor actual en `base.css` (las capturas de las demás skins deben seguir pasando sin
+regenerarse). Con `clip-path`, el contorno de foco va por dentro del elemento: por fuera lo recorta.
 - `global.css` declara los tokens **semánticos** con `@theme inline` (`bg`, `surface`,
   `line`, `text`, `muted`, `accent`, `warn`, `font-display`, `font-mono`…) apuntando a las
   variables de la skin, y Tailwind los expone como utilidades (`bg-surface`, `text-accent`).
@@ -188,7 +196,7 @@ portfolio consume únicamente `wiki/public/`.
 | Componentes | Vitest + Container API | Secciones y cabecera en ambos idiomas y con listas vacías | `tests/components/` |
 | Privacidad | Vitest | Teléfono, dirección, código postal y nacimiento en `wiki/public/` y `dist/`; credenciales y rutas personales en todos los archivos versionados, los mensajes de commit y las líneas añadidas del historial; en ambos, `wiki/private/forbidden-strings.txt` si existe | `tests/privacy/` |
 | E2E | Playwright + axe | `/` y `/en/` en escritorio (1280) y móvil (390): navegación, menú, visor, creador de personaje, sin JS, movimiento reducido, desbordamiento, CLS, accesibilidad con diálogos abiertos | `tests/e2e/` |
-| Regresión visual | Playwright `toHaveScreenshot` | Portada completa en ambos tamaños e idiomas, con movimiento reducido | `tests/e2e/visual.spec.ts-snapshots/` |
+| Regresión visual | Playwright `toHaveScreenshot` | Portada completa en ambos tamaños e idiomas y en las tres skins (12 capturas), con movimiento reducido | `tests/e2e/visual.spec.ts-snapshots/` |
 | Presupuesto | Vitest | JavaScript de la portada ≤ 60 KB comprimido | `tests/perf/` |
 
 Scripts: `pnpm test` (todo salvo E2E), `pnpm test:e2e` (build + preview + Playwright, y

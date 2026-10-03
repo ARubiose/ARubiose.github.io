@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { skinOf } from "./support";
 
 test.describe("foto ampliable", () => {
     test("abre, atrapa el foco, cierra con Esc y devuelve el foco", async ({ page }) => {
@@ -36,10 +37,16 @@ test.describe("foto ampliable", () => {
         await expect(page.locator("#photo-dialog")).toBeHidden();
     });
 
-    test("en móvil la foto ocupa el ancho de la pantalla", async ({ page }, info) => {
+    test("en móvil la foto ocupa el ancho de la pantalla (en Juego, tres cuartos)", async ({ page }, info) => {
         test.skip(!info.project.name.startsWith("mobile"));
         await page.goto("/");
         const box = await page.locator(".photo-window").boundingBox();
-        expect(box!.width).toBeGreaterThan(390 - 2 * 16 - 4);
+        if (skinOf(info.project.name) === "game") {
+            // Juego la convierte en carta de personaje: tres cuartos del ancho, pegada al margen derecho.
+            expect(box!.width).toBeGreaterThan((390 - 2 * 16) * 0.7);
+            expect(box!.x + box!.width).toBeCloseTo(390 - 16, 0);
+        } else {
+            expect(box!.width).toBeGreaterThan(390 - 2 * 16 - 4);
+        }
     });
 });

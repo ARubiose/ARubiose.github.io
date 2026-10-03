@@ -3,6 +3,7 @@
 /* En la capa de componentes: las utilidades de Tailwind (border-b-0…) ganan a la decoración de la skin. */
 @import "./skins/terminal.css" layer(components);
 @import "./skins/tactical.css" layer(components);
+@import "./skins/game.css" layer(components);
 @import "./states.css";
 
 /* Tokens semánticos: apuntan a variables que define cada skin. */

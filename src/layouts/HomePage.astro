@@ -2,7 +2,7 @@
 import { getCollection, getEntry } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { locales, type Locale } from "@i18n/ui";
-import { buildHomeView, callsignFromName, handleFromName } from "@lib/home";
+import { buildHomeView, callsignFromName, handleFromName, shortNameFromName } from "@lib/home";
 import { findBrokenSkillRefs } from "@lib/skills";
 import Layout from "./Layout.astro";
 import Header from "@components/Header.astro";
@@ -50,7 +50,7 @@ const urls = Object.fromEntries(locales.map((l) => [l, getRelativeLocaleUrl(l, "
 ---
 
 <Layout locale={locale} title={`${view.profile.name} · ${view.profile.headline}`} description={view.profile.summary}>
-    <Header locale={locale} sections={view.sections} urls={urls} handle={handleFromName(view.profile.name)} callsign={callsignFromName(view.profile.name)} />
+    <Header locale={locale} sections={view.sections} urls={urls} handle={handleFromName(view.profile.name)} callsign={callsignFromName(view.profile.name)} shortName={shortNameFromName(view.profile.name)} />
     <main class="mx-auto max-w-6xl px-4 md:px-10">
         <Intro profile={view.profile} locale={locale} />
         <Experience items={view.experience} locale={locale} />

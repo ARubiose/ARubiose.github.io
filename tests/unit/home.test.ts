@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { buildHomeView, callsignFromName, displayUrl, handleFromName, type HomeData } from "@lib/home";
+import { buildHomeView, callsignFromName, shortNameFromName, displayUrl, handleFromName, type HomeData } from "@lib/home";
 
 const meta = { tags: [], sources: ["x"], updated: new Date("2026-10-02") };
 const NOW = "2026-10";
@@ -100,4 +100,10 @@ test("handle del prompt: primer nombre en minúsculas y sin tildes", () => {
 test("indicativo de Táctico: dos primeras palabras en mayúsculas", () => {
     expect(callsignFromName("Álvaro Rubio Segovia")).toBe("ÁLVARO // RUBIO");
     expect(callsignFromName("  Ada  ")).toBe("ADA");
+});
+
+test("nombre corto de Juego: dos primeras palabras en mayúsculas", () => {
+    expect(shortNameFromName("Álvaro Rubio Segovia")).toBe("ÁLVARO RUBIO");
+    expect(shortNameFromName("  Ada  ")).toBe("ADA");
+    expect(shortNameFromName("ada   lovelace byron")).toBe("ADA LOVELACE");
 });
