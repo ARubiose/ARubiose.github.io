@@ -13,6 +13,9 @@
         --hero-name-weight: 700;
         --section-title-size: 26px;
         --section-title-size-md: 30px;
+        /* Nombre o prompt de la cabecera. */
+        --handle-size: 13px;
+        --handle-size-md: 13px;
     }
 
     html {

@@ -39,6 +39,8 @@
     --hero-name-weight: 800;
     --section-title-size: 32px;
     --section-title-size-md: 40px;
+    --handle-size: 20px;
+    --handle-size-md: 22px;
 }
 
 /* Rótulos en Saira Condensed, mayúsculas: el lenguaje de los menús. */
@@ -66,7 +68,6 @@
 /* Cabecera */
 [data-skin="game"] .site-handle {
     font-weight: 800;
-    font-size: 20px;
     letter-spacing: 0.04em;
     color: var(--skin-text);
 }
@@ -407,9 +408,12 @@
 }
 [data-skin="game"] :is(.inspector-equip, .sheet-equip) {
     font-weight: 700;
-    font-size: 16px;
     letter-spacing: 0.08em;
     clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+/* El del panel inferior lleva su tamaño en una utilidad (skill-builder.ts). */
+[data-skin="game"] .inspector-equip {
+    font-size: 16px;
 }
 /* Equipado: el botón es solo un borde (utilidades del script) y la inclinación se comería sus
    laterales; va recto. */

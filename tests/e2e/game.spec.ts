@@ -21,8 +21,9 @@ for (const path of ["/", "/en/"]) {
     });
 }
 
-test("la cabecera muestra el nombre corto en mayúsculas", async ({ page }) => {
+test("la cabecera muestra el nombre corto en mayúsculas", async ({ page }, info) => {
     await page.goto("/");
+    await expect(page.locator(".site-handle")).toHaveCSS("font-size", info.project.name.startsWith("desktop") ? "22px" : "20px");
     await expect(page.locator('.site-handle [data-for-skin="game"]')).toHaveText(/^\S+ \S+$/);
     await expect(page.locator(".site-handle")).toHaveCSS("text-transform", "uppercase");
 });
