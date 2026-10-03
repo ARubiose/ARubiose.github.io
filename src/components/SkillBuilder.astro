@@ -75,7 +75,7 @@ const builderData = JSON.stringify({ usage, entryNames }).replace(/</g, "\\u003c
         {groups.map((g) => (
             <section class="skill-panel mb-4" id={`panel-${g.category}`} role="tabpanel" aria-labelledby={`tab-${g.category}`} data-panel={g.category}>
                 <h3 class="panel-title mb-2 text-[13px] text-accent">{g.label}</h3>
-                <ul class="grid gap-2 lg:grid-cols-[repeat(auto-fill,minmax(150px,1fr))] lg:gap-2.5">
+                <ul class="grid gap-2 lg:grid-cols-(--inventory-cols) lg:gap-(--inventory-gap)">
                     {g.items.map((s) => (
                         <li class="tile flex flex-wrap" data-skill={s.id}>
                             <button class="tile-main flex min-w-0 flex-1 items-center gap-2.5 px-2.5 py-3 text-left" data-inspect={s.id}>

@@ -20,6 +20,9 @@
         --menu-link-size: 1.5rem;
         --menu-link-leading: calc(2 / 1.5);
         --menu-link-border: var(--skin-line);
+        /* Inventario del creador en escritorio: rejilla de tarjetas. */
+        --inventory-cols: repeat(auto-fill, minmax(150px, 1fr));
+        --inventory-gap: 0.625rem;
     }
 
     html {

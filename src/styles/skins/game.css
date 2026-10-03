@@ -45,6 +45,9 @@
     --menu-link-size: 34px;
     --menu-link-leading: 1.05;
     --menu-link-border: transparent;
+    /* Inventario como lista de menú a dos columnas: filas pegadas, separadas por su línea. */
+    --inventory-cols: repeat(2, minmax(0, 1fr));
+    --inventory-gap: 0 18px;
 }
 
 /* Rótulos en Saira Condensed, mayúsculas: el lenguaje de los menús. */

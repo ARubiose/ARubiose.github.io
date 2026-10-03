@@ -125,6 +125,15 @@ test("móvil: el menú es un menú de pausa, con secciones grandes y sin separad
     await expect(link).toHaveCSS("border-bottom-color", "rgba(0, 0, 0, 0)");
 });
 
+test("escritorio: el inventario del creador es una lista de dos columnas", async ({ page }, info) => {
+    test.skip(!info.project.name.startsWith("desktop"));
+    await page.goto("/");
+    const grid = page.locator("#skills .skill-panel[data-active] > ul");
+    const [cols, rowGap] = await grid.evaluate((el) => [getComputedStyle(el).gridTemplateColumns.split(" ").length, getComputedStyle(el).rowGap]);
+    expect(cols).toBe(2);
+    expect(rowGap).toBe("0px");
+});
+
 test("el panel diagonal del hero no ensancha la página", async ({ page }) => {
     await page.goto("/");
     const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
