@@ -48,9 +48,16 @@ test("cruzar 768 px durante la intro no la repite ni corta el prompt", async ({ 
     await expect(prompt).toHaveText("whoami");
 });
 
-test("con animaciones, la intro termina con el nombre completo", async ({ page }) => {
+test("con animaciones, la intro termina con el nombre completo y la foto visible", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+    // Opacidad efectiva de la foto (la suya y la de sus contenedores): una transición CSS en la imagen
+    // hacía que la intro de Juego la dejara a 0.
+    await expect.poll(() => page.locator(".photo-window img").evaluate((img) => {
+        let op = 1;
+        for (let e: Element | null = img; e; e = e.parentElement) op *= Number(getComputedStyle(e).opacity);
+        return op;
+    }), { timeout: 4000 }).toBe(1);
 });
 
 test("Táctico: la intro termina con el nombre completo, las esquinas dibujadas y sin prompt escrito", async ({ page }, info) => {
