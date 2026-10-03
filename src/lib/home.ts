@@ -48,7 +48,7 @@ export function displayUrl(url: string): string {
 }
 
 const byStart = <T extends { data: { start: string; end?: string | null } }>(entries: T[]) =>
-    sortByStartDesc(entries.map((e) => ({ ...e, start: e.data.start, end: e.data.end ?? null }))).map(({ start: _s, end: _e, ...e }) => e as unknown as T);
+    sortByStartDesc(entries, (e) => ({ start: e.data.start, end: e.data.end ?? null }));
 
 export function buildHomeView(data: HomeData, locale: Locale, now: string): HomeView {
     const t = useTranslations(locale);

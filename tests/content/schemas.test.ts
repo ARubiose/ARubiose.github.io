@@ -22,12 +22,45 @@ describe("fixtures válidos", () => {
     }
 });
 
+// Ruta del error que debe dar cada fixture: falla por lo que dice su nombre y no por otra cosa.
+const invalidPaths: Record<string, (string | number)[]> = {
+    "bad-email.md": ["links", "email"],
+    "bad-icon-format.md": ["icon"],
+    "bad-month.md": ["start"],
+    "bad-repo-url.md": ["repo"],
+    "end-before-start.md": ["end"],
+    "full-date.md": ["start"],
+    "highlights-mismatch.md": ["en", "highlights"],
+    "javascript-link.md": ["links", "linkedin"],
+    "javascript-url.md": ["url"],
+    "missing-en-block.md": ["en"],
+    "missing-en-summary.md": ["en", "summary"],
+    "no-sources.md": ["sources"],
+    "skills-not-array.md": ["skills"],
+    "unknown-category.md": ["category"],
+    "unknown-icon.md": ["icon"],
+};
+
 describe("fixtures inválidos", () => {
     for (const file of readdirSync(join(FIXTURES, "invalid"))) {
         test(file, () => {
-            expect(validate(join(FIXTURES, "invalid", file)).success).toBe(false);
+            const result = validate(join(FIXTURES, "invalid", file));
+            expect(result.success).toBe(false);
+            expect(invalidPaths, "falta la ruta esperada del fixture").toHaveProperty([file]);
+            expect(result.error?.issues.map((i) => i.path)).toEqual([invalidPaths[file]]);
         });
     }
+});
+
+test("una fecha YAML completa da el mensaje de formato", () => {
+    const result = validate(join(FIXTURES, "invalid/full-date.md"));
+    expect(result.error?.issues[0].message).toMatch(/AAAA-MM/);
+});
+
+test("url: null equivale a omitirla", () => {
+    const result = schemasByType.project.safeParse(readFrontmatter(join(FIXTURES, "valid/project-null-url.md")));
+    expect(result.success).toBe(true);
+    expect(result.data?.url).toBeUndefined();
 });
 
 test("los años sin mes se normalizan a string", () => {

@@ -7,11 +7,13 @@ export type SkillCategory = (typeof skillCategories)[number];
 export const projectStatuses = ["active", "paused", "done"] as const;
 
 const text = z.string().trim().min(1);
+// z.url() acepta cualquier esquema (javascript:, data:…); los enlaces del sitio solo pueden ser web.
+const webUrl = z.url({ protocol: /^https?$/, error: "URL http(s) esperada" });
 const highlights = z.array(text).default([]);
 const skillRefs = z.array(z.string().regex(/^[a-z0-9-]+$/, "id de habilidad en minúsculas con guiones")).optional();
 const icon = z
     .string()
-    .regex(/^(si|ph):[a-z0-9-]+$/, "Formato esperado: si:<slug> o ph:<nombre>")
+    .regex(/^(si|ph):[a-z0-9-]+$/, { error: "Formato esperado: si:<slug> o ph:<nombre>", abort: true })
     .refine(iconExists, { message: "El icono no existe en simple-icons ni en Phosphor" });
 
 const meta = {
@@ -39,7 +41,7 @@ export const profileSchema = z.object({
     name: text,
     headline: text,
     location: text,
-    links: z.object({ email: z.email(), linkedin: z.url(), github: z.url(), source: z.url().optional() }),
+    links: z.object({ email: z.email(), linkedin: webUrl, github: webUrl, source: webUrl.optional() }),
     en: z.object({ headline: text, summary: text }),
 });
 
@@ -62,8 +64,9 @@ export const projectSchema = z
     .object({
         ...meta,
         type: z.literal("project"),
-        repo: z.url(),
-        url: z.url().optional(),
+        repo: webUrl,
+        // `url: null` en YAML equivale a omitirla.
+        url: z.preprocess((v) => v ?? undefined, webUrl.optional()),
         status: z.enum(projectStatuses),
         start: yearMonth,
         highlights,
