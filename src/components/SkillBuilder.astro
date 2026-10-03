@@ -18,6 +18,8 @@ interface Props {
 const { locale, groups, profile, professionalXp, usage, entryNames } = Astro.props;
 const t = useTranslations(locale);
 const total = groups.reduce((n, g) => n + g.items.length, 0);
+// `<` escapado: un nombre con «</script>» cerraría la etiqueta. Sigue siendo JSON válido.
+const builderData = JSON.stringify({ usage, entryNames }).replace(/</g, "\\u003c");
 ---
 
 <div
@@ -30,7 +32,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     data-equip-action={t("skills.equipAction")}
     data-unequip-action={t("skills.unequipAction")}
 >
-    <script type="application/json" data-builder-data set:html={JSON.stringify({ usage, entryNames })} />
+    <script type="application/json" data-builder-data set:html={builderData} />
 
     <aside class="window sheet">
         <div class="window-bar"><span aria-hidden="true">{t("skills.sheet")}</span><span aria-hidden="true">{t("skills.level")} {new Date().getFullYear()}</span></div>

@@ -66,11 +66,26 @@ describe("Projects", () => {
     });
 });
 
+const skill = (id: string, title: string, category: "backend" | "ai", over = {}) => ({
+    id, title, category, summary: `${title} summary.`, icon: "si:python", months: 46, xp: "3 years 10 months",
+    xpShort: "3.8 years", since: 2022, usedIn: [{ id: "zalcu", name: "Zalcu Technologies", role: "Developer" }], ...over,
+});
+
+test("Skills: los datos del creador no pueden cerrar su <script>", async () => {
+    const name = "Evil </script><img src=x onerror=alert(1)>";
+    const props = {
+        locale: "en",
+        groups: [{ category: "backend", label: "Backend", items: [skill("python", "Python", "backend")] }],
+        profile: { name: "Ada", headline: "Engineer" },
+        professionalXp: "1 year", usage: { python: ["evil"] }, entryNames: { evil: name },
+    };
+    const html = clean(await container.renderToString(Skills, { props }));
+    expect(html).not.toContain("</script><img");
+    const json = html.match(/<script type="application\/json" data-builder-data>([\s\S]*?)<\/script>/)?.[1];
+    expect(JSON.parse(json ?? "null")).toEqual({ usage: { python: ["evil"] }, entryNames: { evil: name } });
+});
+
 test("Skills sin JS: todas las categorías, XP, desde y dónde se usó cada habilidad", async () => {
-    const skill = (id: string, title: string, category: "backend" | "ai", over = {}) => ({
-        id, title, category, summary: `${title} summary.`, icon: "si:python", months: 46, xp: "3 years 10 months",
-        xpShort: "3.8 years", since: 2022, usedIn: [{ id: "zalcu", name: "Zalcu Technologies", role: "Developer" }], ...over,
-    });
     const props = {
         locale: "en",
         groups: [

@@ -1,6 +1,6 @@
 ---
 import type { TimelineView } from "@lib/home";
-import { toDatetime } from "@lib/dates";
+import { PERIOD_SEPARATOR, toDatetime } from "@lib/dates";
 import Window from "./Window.astro";
 
 interface Props {
@@ -9,13 +9,13 @@ interface Props {
     currentTag: string;
 }
 const { item, side, currentTag } = Astro.props;
-const [from, to] = item.period.split(" - ");
+const [from, to] = item.period.split(PERIOD_SEPARATOR);
 ---
 
 <li class="t-item relative grid grid-cols-[28px_1fr] md:grid-cols-[1fr_56px_1fr]" data-side={side} data-current={item.current || undefined}>
     <span class="timeline-node relative z-[1] col-start-1 row-start-1 mt-1 md:col-start-2 md:mt-[18px] md:justify-self-center" aria-hidden="true"></span>
     <p class:list={["t-when col-start-2 row-start-1 md:pt-3.5", side === "left" ? "md:col-start-3 md:pl-1" : "md:col-start-1 md:pr-1 md:text-right"]}>
-        <time datetime={toDatetime(item.start)}>{from}</time>{to && <> - {item.end ? <time datetime={toDatetime(item.end)}>{to}</time> : to}</>}
+        <time datetime={toDatetime(item.start)}>{from}</time>{to && <>{PERIOD_SEPARATOR}{item.end ? <time datetime={toDatetime(item.end)}>{to}</time> : to}</>}
     </p>
     <Window file={item.file} tag={item.current ? currentTag : undefined} meta={item.duration || undefined} class={["t-card col-start-2 row-start-2 mt-1.5 md:row-start-1 md:mt-0", side === "left" ? "md:col-start-1" : "md:col-start-3"].join(" ")}>
         <div class="p-3 md:px-[18px] md:py-4">
