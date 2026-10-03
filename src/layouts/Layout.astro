@@ -2,7 +2,7 @@
 import "@styles/global.css";
 import { Font } from "astro:assets";
 import type { Locale } from "@i18n/ui";
-import { defaultSkin, skinBootScript } from "@lib/skins";
+import { defaultSkin, skinBootScript, timelineOf } from "@lib/skins";
 
 interface Props {
     locale: Locale;
@@ -13,7 +13,7 @@ const { locale, title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang={locale} data-skin={defaultSkin}>
+<html lang={locale} data-skin={defaultSkin} data-timeline={timelineOf(defaultSkin)}>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

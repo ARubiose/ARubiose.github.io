@@ -1,5 +1,12 @@
-export const skins = ["terminal"] as const;
-export type Skin = (typeof skins)[number];
+export type TimelineMode = "alternate" | "single";
+
+// Registro de skins: la lista manda. El nombre visible sale del diccionario (`skin.<id>`).
+export const skinRegistry = [
+    { id: "terminal", swatch: "#9fd65a", timeline: "alternate" },
+] as const satisfies readonly { id: string; swatch: string; timeline: TimelineMode }[];
+
+export type Skin = (typeof skinRegistry)[number]["id"];
+export const skins: readonly Skin[] = skinRegistry.map((s) => s.id);
 export const defaultSkin: Skin = "terminal";
 export const SKIN_STORAGE_KEY = "skin";
 
@@ -9,8 +16,14 @@ export function resolveSkin(stored: string | null, registered: readonly string[]
     return (registered.includes(stored ?? "") ? stored : fallback) as Skin;
 }
 
-/** Script en línea que aplica la skin guardada antes de pintar, sin parpadeo. */
+export function timelineOf(skin: string): TimelineMode {
+    const entry = skinRegistry.find((s) => s.id === skin) ?? skinRegistry.find((s) => s.id === defaultSkin)!;
+    return entry.timeline;
+}
+
+/** Script en línea que aplica la skin guardada y su modo de línea de tiempo antes de pintar. */
 export function skinBootScript(): string {
+    const modes = Object.fromEntries(skinRegistry.map((s) => [s.id, s.timeline]));
     const args = [`localStorage.getItem(${JSON.stringify(SKIN_STORAGE_KEY)})`, JSON.stringify(skins), JSON.stringify(defaultSkin)];
-    return `try { document.documentElement.dataset.skin = (${resolveSkin.toString()})(${args.join(", ")}); } catch {}`;
+    return `try { var r = document.documentElement, s = (${resolveSkin.toString()})(${args.join(", ")}); r.dataset.skin = s; r.dataset.timeline = ${JSON.stringify(modes)}[s]; } catch {}`;
 }
