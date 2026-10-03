@@ -150,3 +150,20 @@ test("Juego: el panel del hero barre, el nombre queda completo y el prompt sin e
     await expect(page.locator(".hero-name")).toHaveCSS("opacity", "1");
     await expect(page.locator('.hero .prompt [data-for-skin="terminal"]')).toHaveText("whoami");
 });
+
+test("tras cambiar a una skin de una columna, las tarjetas aún ocultas entran desde la derecha", async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop", "en Terminal de escritorio hay tarjetas a la izquierda del eje");
+    await page.goto("/");
+    await page.locator('.header-lang [data-skin-option="game"]').click();
+    await expect(page.locator("html")).toHaveAttribute("data-timeline", "single");
+    // Una tarjeta que en Terminal está a la izquierda (entraría desde -60 px) y aún no ha entrado.
+    const card = page.locator('#experience .t-item[data-side="left"] .t-card').last();
+    await card.evaluate((el) => el.scrollIntoView({ block: "center", behavior: "instant" }));
+    const xs: number[] = [];
+    await expect.poll(async () => {
+        xs.push(await card.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).e));
+        return xs.some((x) => x !== 0);
+    }, { intervals: [16], timeout: 3000 }).toBe(true);
+    expect(xs.find((x) => x !== 0)).toBeGreaterThan(0);
+});
+

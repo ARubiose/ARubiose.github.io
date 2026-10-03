@@ -69,7 +69,6 @@ export function initMotion(): void {
         if (!ok) return;
 
         // Timelines: la línea se dibuja con el scroll y las tarjetas entran desde su lado.
-        const single = document.documentElement.dataset.timeline === "single";
         gsap.utils.toArray<HTMLElement>(".timeline").forEach((timeline) => {
             gsap.from(timeline.querySelector(".timeline-fill"), {
                 scaleY: 0, ease: "none",
@@ -77,9 +76,13 @@ export function initMotion(): void {
             });
             timeline.querySelectorAll<HTMLElement>(".t-item").forEach((item) => {
                 const st = { trigger: item, start: "top 82%" };
-                // En modo single todas las tarjetas están a la derecha del eje: entran desde ahí.
-                const dx = wide && !single ? (item.dataset.side === "left" ? -60 : 60) : 30;
-                gsap.from(item.querySelector(".t-card"), { opacity: 0, x: dx, duration: 0.7, ease: "power3.out", scrollTrigger: st });
+                // En modo single todas las tarjetas están a la derecha del eje: entran desde ahí. El modo
+                // se lee en cada refresco (el cambio de skin lo provoca) para las tarjetas aún por entrar.
+                const dx = () => {
+                    const single = document.documentElement.dataset.timeline === "single";
+                    return wide && !single ? (item.dataset.side === "left" ? -60 : 60) : 30;
+                };
+                gsap.from(item.querySelector(".t-card"), { opacity: 0, x: dx, duration: 0.7, ease: "power3.out", scrollTrigger: { ...st, invalidateOnRefresh: true } });
                 gsap.from(item.querySelector(".timeline-node"), { scale: 0, duration: 0.4, ease: "back.out(3)", scrollTrigger: st });
                 gsap.from(item.querySelector(".t-when"), { opacity: 0, duration: 0.6, delay: 0.2, scrollTrigger: st });
             });
