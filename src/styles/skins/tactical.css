@@ -146,6 +146,7 @@
 }
 [data-skin="tactical"] .hero-role {
     font-weight: 600;
+    color: var(--skin-accent);
 }
 
 /* Foto: dos esquinas en ángulo en lugar de ventana */

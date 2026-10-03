@@ -312,3 +312,8 @@
 [data-skin="terminal"] .site-handle {
     color: var(--skin-accent);
 }
+
+/* Rol del hero: el color lo decide la skin. */
+[data-skin="terminal"] .hero-role {
+    color: var(--skin-accent);
+}

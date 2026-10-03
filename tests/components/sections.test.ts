@@ -139,7 +139,13 @@ test("Intro: nombre como h1, adorno whoami oculto a lectores y botón de foto et
     expect(html).toContain('<dialog id="photo-dialog"');
     expect(html).toMatch(/<section id="about" class="[^"]*md:grid-cols-\(--hero-cols\)/);
     expect(html).toMatch(/class="window photo-window[^"]*md:order-\(--hero-photo-order\)/);
+    expect(html).toMatch(/<h1 class="[^"]*text-\(length:--hero-name-size\)[^"]*md:text-\(length:--hero-name-size-md\)/);
+    expect(html).toMatch(/<h1 class="[^"]*leading-\(--hero-name-leading\)[^"]*font-\(--hero-name-weight\)/);
+    // El color del rol lo decide la skin: una utilidad ganaría a todas las hojas.
+    expect(html).toMatch(/<p class="hero-role(?![^"]*text-accent)[^"]*"/);
 });
+
+const TITLE_TOKENS = /<h2 class="section-title[^"]*text-\(length:--section-title-size\)[^"]*md:text-\(length:--section-title-size-md\)/;
 
 describe.each<Locale>(["es", "en"])("en %s", (locale) => {
     const t = useTranslations(locale);
@@ -161,6 +167,11 @@ describe.each<Locale>(["es", "en"])("en %s", (locale) => {
         expect(html).toMatch(new RegExp(`<h2[^>]*>${title}<`));
     });
 
+    test.each(sections)("$name: el titular lee los tokens de tamaño", async ({ component, full }) => {
+        const html = clean(await container.renderToString(component, { props: { locale, ...full } }));
+        expect(html).toMatch(TITLE_TOKENS);
+    });
+
     test.each(sections)("$name sin elementos no renderiza nada", async ({ component, empty }) => {
         const html = clean(await container.renderToString(component, { props: { locale, ...empty } }));
         expect(html.trim()).toBe("");
@@ -170,5 +181,6 @@ describe.each<Locale>(["es", "en"])("en %s", (locale) => {
         const links = { email: "a@example.com", linkedin: "https://www.linkedin.com/in/a/", github: "https://github.com/a" };
         const html = clean(await container.renderToString(Contact, { props: { links, locale } }));
         expect(html).toMatch(new RegExp(`<h2[^>]*>${t("section.contact")}<`));
+        expect(html).toMatch(TITLE_TOKENS);
     });
 });
