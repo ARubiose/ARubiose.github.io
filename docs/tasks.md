@@ -36,6 +36,31 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
   SEO a incluir en el plan: `sitemap.xml`, `robots.txt`, `canonical`, JSON-LD `Person` e imagen
   Open Graph (checklist de la skill `seo` de ECC, sin instalarla).
 
+### Mejoras menores (revisión final de la fase 5b, skin Táctico)
+
+- [ ] Táctico en móvil pone la foto antes del texto (orden de Terminal); la maqueta la pone entre
+  la ubicación y el resumen, y el marcado (texto en un solo bloque) no lo permite
+  (`src/sections/intro.astro`).
+- [ ] El indicativo de Táctico sale blanco entero; la maqueta lleva el «//» en ámbar, lo que
+  exigiría partir el adorno `handle` en dos spans (`src/i18n/ui.ts`, `adorns.*.handle`).
+- [ ] Sin Popover API se oculta el selector de skin de la cabecera: esos navegadores solo ven la
+  skin predeterminada (`src/styles/states.css`, bloque `@supports not selector(:popover-open)`).
+- [ ] Tras cambiar de skin a mitad de página, las tarjetas aún no reveladas entran con la
+  dirección de la skin anterior: `single` se lee una vez (`src/scripts/motion.ts`, bloque de
+  timelines). Leerlo con valores en función e `invalidateOnRefresh`.
+- [ ] Las fuentes de Táctico llegan después del `ScrollTrigger.refresh()` del cambio de skin y las
+  posiciones pueden desviarse unos píxeles: refrescar también con `document.fonts.ready`
+  (`src/scripts/motion.ts`, escucha de `skinchange`).
+- [ ] Tras cambiar de skin, `aria-current` de la navegación no se recalcula hasta el siguiente
+  scroll: escuchar `skinchange` en `src/scripts/nav.ts`.
+- [ ] Los tests del script de arranque solo prueban `terminal`, que es también la predeterminada:
+  añadir el caso `tactical` (`tests/unit/skins.test.ts`, `tests/perf/skin-boot.test.ts`).
+- [ ] Un `data-skin` fuera del registro mostraría los adornos de todas las skins: ocultar
+  `[data-for-skin]` por defecto y mostrar solo los de la activa (`src/styles/states.css`).
+  No ocurre por `resolveSkin`, pero sería más robusto.
+- [ ] El selector usa `text-[12px]` en las dos skins, mientras el idioma va a 13 px
+  (`src/components/SkinSwitcher.astro`).
+
 ### Cuestiones abiertas
 
 - [ ] **Imágenes del contenido** (logos de empresas, capturas de proyectos): ¿van en

@@ -307,3 +307,8 @@
 [data-skin="terminal"] .skin-option[aria-pressed="true"] .skin-swatch {
     background: var(--skin-accent-ink);
 }
+
+/* Cabecera: el color del prompt lo decide la skin (una utilidad ganaría a cualquier otra skin). */
+[data-skin="terminal"] .site-handle {
+    color: var(--skin-accent);
+}

@@ -61,3 +61,8 @@ test("con localStorage bloqueado el selector sigue funcionando", async ({ page }
     await expect(page.locator("html")).toHaveAttribute("data-skin", "tactical");
     expect(errors).toEqual([]);
 });
+
+test("en Terminal el prompt de la cabecera va en el color de acento", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator(".site-handle")).toHaveCSS("color", "rgb(159, 214, 90)");
+});

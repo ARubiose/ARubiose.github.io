@@ -34,3 +34,16 @@ test("la cabecera muestra el indicativo derivado del nombre", async ({ page }) =
     await page.goto("/");
     await expect(page.locator('.site-handle [data-for-skin="tactical"]')).toHaveText(/^\S+ \/\/ \S+$/);
 });
+
+test("el indicativo usa el color de texto de Táctico, no el acento de Terminal", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator(".site-handle")).toHaveCSS("color", "rgb(231, 234, 239)");
+});
+
+test("ninguna barra de ventana visible queda vacía", async ({ page }) => {
+    await page.goto("/");
+    const empty = await page.locator(".window-bar").evaluateAll((bars) =>
+        bars.filter((b) => (b as HTMLElement).offsetHeight > 0 && !(b as HTMLElement).innerText.trim()).map((b) => b.closest("[id]")?.id ?? "?"),
+    );
+    expect(empty).toEqual([]);
+});
