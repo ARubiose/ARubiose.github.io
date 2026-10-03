@@ -43,6 +43,11 @@ export function handleFromName(name: string): string {
     return (name.trim().split(/\s+/)[0] ?? "").normalize("NFD").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 }
 
+/** Indicativo de Táctico: dos primeras palabras del nombre, en mayúsculas («ÁLVARO // RUBIO»). */
+export function callsignFromName(name: string): string {
+    return name.trim().split(/\s+/).slice(0, 2).join(" // ").toLocaleUpperCase("es");
+}
+
 export function displayUrl(url: string): string {
     return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
 }

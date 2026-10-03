@@ -12,11 +12,11 @@ test.describe("creador de personaje", () => {
     });
 
     test("cambiar de pestaña muestra su panel e inspecciona su primera habilidad", async ({ page }, info) => {
-        test.skip(info.project.name === "mobile", "en móvil el inspector solo se abre al tocar");
+        test.skip(info.project.name.startsWith("mobile"), "en móvil el inspector solo se abre al tocar");
         await tab(page, "devops");
         await expect(page.locator('[data-panel="devops"]')).toBeVisible();
         await expect(page.locator('[data-panel="backend"]')).toBeHidden();
-        const title = await inspectTitle(page, info.project.name);
+        const title = await inspectTitle(page, info.project.name.startsWith("mobile") ? "mobile" : "desktop");
         await expect(title).toHaveText("Docker");
         await expect(title).toBeVisible();
         await expect(page.locator("[data-inspector-body] .skill-detail")).toBeVisible();
@@ -83,7 +83,7 @@ test.describe("creador de personaje", () => {
     });
 
     test("móvil: tocar una habilidad abre el panel inferior y equipa desde él", async ({ page }, info) => {
-        test.skip(info.project.name !== "mobile");
+        test.skip(!info.project.name.startsWith("mobile"));
         await page.locator('[data-inspect="python"]').click();
         const sheet = page.locator("[data-sheet]");
         await expect(sheet).toBeVisible();
@@ -96,7 +96,7 @@ test.describe("creador de personaje", () => {
     });
 
     test("móvil: flechas de scroll según la posición de las pestañas", async ({ page }, info) => {
-        test.skip(info.project.name !== "mobile");
+        test.skip(!info.project.name.startsWith("mobile"));
         const bar = page.locator("[data-tabbar]");
         await expect(bar).toHaveAttribute("data-more-r", "");
         await expect(bar).not.toHaveAttribute("data-more-l", "");

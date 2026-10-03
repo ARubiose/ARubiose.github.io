@@ -16,6 +16,7 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 | 2026-10-02 | Actualización a Astro 7.3, Tailwind 4.3, Node 24 y pnpm 11 | `28f6ddf` |
 | 2026-10-02 | Fuentes web y declaraciones del humano en la wiki | `8ab7eac`; decisión [0003](decisions/0003-web-and-human-sources.md) |
 | 2026-10-02 | Fase 5: arquitectura de skins y skin Terminal (timeline, creador de personaje, foto ampliable, animaciones GSAP, regresión visual) | [spec](superpowers/specs/2026-10-02-terminal-skin-design.md), [plan](superpowers/plans/2026-10-02-terminal-skin.md), [maquetas](design/mockups/) |
+| 2026-10-03 | Fase 5b (1/2): skin Táctico y selector de skin (registro con metadatos, adornos y distribución por skin, intro por skin, e2e en las dos skins) | [spec](superpowers/specs/2026-10-03-tactical-skin-design.md), [plan](superpowers/plans/2026-10-03-tactical-skin.md), [maquetas](design/mockups/) |
 | 2026-10-03 | Test de privacidad ampliado: credenciales y rutas personales en todo el repo y en el historial de git (patrones del agente `opensource-sanitizer` de ECC) | `72f94e1` |
 | 2026-10-03 | Fixes pendientes: alineación del menú móvil, sección activa y saltos del menú fiables (fallaban 1 de cada 40 ejecuciones), JSON Schema del editor alineado con la build. Descartado: respaldo para navegadores sin `@supports selector()` (Tailwind 4 ya exige navegadores posteriores) | `f31f3cb` |
 | 2026-10-03 | Mejoras menores de las revisiones de las fases 1–5: contrato (URLs solo http(s), fechas YAML completas, `url: null`, orden total), skin en `@layer components`, respaldo sin Popover API, intro del hero estable al cambiar de ancho, JSON del creador escapado, tests más estrictos | `85ba009` |
@@ -25,8 +26,8 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 
 ### Fases
 
-- [ ] **5b. Más skins.** Táctico y Menú de juego (ver `design/mockups/hud-directions.html`)
-  y selector de skin visible.
+- [ ] **5b (2/2). Skin Menú de juego** (ver `design/mockups/hud-directions.html`, dirección C),
+  siguiendo «Añadir una skin» de [system-design.md](system-design.md) §3.4.
 - [ ] **6. Despliegue.** `site` en `astro.config.mjs`, workflow de GitHub Actions a GitHub
   Pages con `pnpm check`, `pnpm test` y `pnpm test:e2e`, y etiquetas `hreflang`
   (`getAbsoluteLocaleUrlList()`).
@@ -34,6 +35,31 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
   (decisión del humano, 2026-10-02).
   SEO a incluir en el plan: `sitemap.xml`, `robots.txt`, `canonical`, JSON-LD `Person` e imagen
   Open Graph (checklist de la skill `seo` de ECC, sin instalarla).
+
+### Mejoras menores (revisión final de la fase 5b, skin Táctico)
+
+- [ ] Táctico en móvil pone la foto antes del texto (orden de Terminal); la maqueta la pone entre
+  la ubicación y el resumen, y el marcado (texto en un solo bloque) no lo permite
+  (`src/sections/intro.astro`).
+- [ ] El indicativo de Táctico sale blanco entero; la maqueta lleva el «//» en ámbar, lo que
+  exigiría partir el adorno `handle` en dos spans (`src/i18n/ui.ts`, `adorns.*.handle`).
+- [ ] Sin Popover API se oculta el selector de skin de la cabecera: esos navegadores solo ven la
+  skin predeterminada (`src/styles/states.css`, bloque `@supports not selector(:popover-open)`).
+- [ ] Tras cambiar de skin a mitad de página, las tarjetas aún no reveladas entran con la
+  dirección de la skin anterior: `single` se lee una vez (`src/scripts/motion.ts`, bloque de
+  timelines). Leerlo con valores en función e `invalidateOnRefresh`.
+- [ ] Las fuentes de Táctico llegan después del `ScrollTrigger.refresh()` del cambio de skin y las
+  posiciones pueden desviarse unos píxeles: refrescar también con `document.fonts.ready`
+  (`src/scripts/motion.ts`, escucha de `skinchange`).
+- [ ] Tras cambiar de skin, `aria-current` de la navegación no se recalcula hasta el siguiente
+  scroll: escuchar `skinchange` en `src/scripts/nav.ts`.
+- [ ] Los tests del script de arranque solo prueban `terminal`, que es también la predeterminada:
+  añadir el caso `tactical` (`tests/unit/skins.test.ts`, `tests/perf/skin-boot.test.ts`).
+- [ ] Un `data-skin` fuera del registro mostraría los adornos de todas las skins: ocultar
+  `[data-for-skin]` por defecto y mostrar solo los de la activa (`src/styles/states.css`).
+  No ocurre por `resolveSkin`, pero sería más robusto.
+- [ ] El selector usa `text-[12px]` en las dos skins, mientras el idioma va a 13 px
+  (`src/components/SkinSwitcher.astro`).
 
 ### Cuestiones abiertas
 

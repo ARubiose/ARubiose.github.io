@@ -1,16 +1,20 @@
 ---
+import type { Locale } from "@i18n/ui";
 import type { ProjectView } from "@lib/home";
+import Adorn from "./Adorn.astro";
 import Window from "./Window.astro";
 
 interface Props {
     project: ProjectView;
     repoLabel: string;
     visitLabel: string;
+    locale: Locale;
 }
-const { project, repoLabel, visitLabel } = Astro.props;
+const { project, repoLabel, visitLabel, locale } = Astro.props;
 ---
 
-<Window file={project.file} meta="cat" as="article" class="reveal">
+<Window file={project.file} as="article" class="reveal">
+    <span slot="meta" aria-hidden="true"><Adorn name="projectMeta" locale={locale} /></span>
     <div class="px-3 py-3 md:px-[22px] md:py-5">
         <h3 class="readme-title font-display text-[18px] font-bold md:text-[22px]">
             {project.title}<span class="badge ml-2.5 align-[4px] font-mono font-normal">{project.statusLabel}</span>

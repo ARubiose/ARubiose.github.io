@@ -5,6 +5,7 @@ import type { HomeView } from "@lib/home";
 import { BUILD_CAP } from "@lib/skills";
 import { Image } from "astro:assets";
 import profileImage from "@assets/images/profile.jpg";
+import Adorn from "./Adorn.astro";
 import Icon from "./Icon.astro";
 
 interface Props {
@@ -34,7 +35,7 @@ const builderData = JSON.stringify({ usage, entryNames }).replace(/</g, "\\u003c
     <script type="application/json" data-builder-data set:html={builderData} />
 
     <aside class="window sheet">
-        <div class="window-bar"><span aria-hidden="true">{t("skills.sheet")}</span><span aria-hidden="true">{t("skills.level")} {new Date().getFullYear()}</span></div>
+        <div class="window-bar"><span aria-hidden="true"><Adorn name="sheet" locale={locale} /></span><span aria-hidden="true"><Adorn name="level" locale={locale} vars={{ year: String(new Date().getFullYear()) }} /></span></div>
         <div class="p-3 lg:p-4">
             <div class="flex items-center gap-3">
                 <Image src={profileImage} alt="" width={64} height={64} densities={[1, 2]} class="size-12 flex-none border border-line object-cover grayscale-[.3] lg:size-16" />
@@ -106,7 +107,7 @@ const builderData = JSON.stringify({ usage, entryNames }).replace(/</g, "\\u003c
     </div>
 
     <div class="window inspector hidden lg:block" data-inspector hidden>
-        <div class="window-bar"><span aria-hidden="true">{t("skills.inspect")}</span><span aria-hidden="true">i</span></div>
+        <div class="window-bar"><span aria-hidden="true"><Adorn name="inspect" locale={locale} /></span><span aria-hidden="true"><Adorn name="inspectMark" locale={locale} /></span></div>
         <div class="p-4" data-inspector-body></div>
     </div>
 

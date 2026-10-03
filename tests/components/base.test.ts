@@ -14,7 +14,7 @@ test("Window pinta barra con archivo (oculto a lectores), etiqueta y contenido",
         slots: { default: "<p>Contenido</p>" },
     });
     expect(html).toContain('class="window');
-    expect(html).toMatch(/<span aria-hidden="true">zalcu\.log<\/span>/);
+    expect(html).toMatch(/<span aria-hidden="true" class="window-file">zalcu\.log<\/span>/);
     expect(html).toContain("EN CURSO");
     expect(html).toContain("<p>Contenido</p>");
 });

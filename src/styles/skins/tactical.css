@@ -1,0 +1,392 @@
+/* Variables animables de la intro (motion.ts): registradas para que se interpolen como longitudes.
+   Heredables: las leen los pseudoelementos ::before/::after del elemento animado. */
+@property --corner-size {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 38px;
+}
+@property --kicker-line {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 26px;
+}
+
+[data-skin="tactical"] {
+    --skin-bg: #0b0e12;
+    --skin-surface: #11161d;
+    --skin-surface-2: #18202a;
+    --skin-line: #263140;
+    --skin-text: #e7eaef;
+    --skin-body: #c6cdd6;
+    --skin-muted: #93a0b0;
+    --skin-accent: #f0a83a;
+    --skin-accent-ink: #17110a;
+    --skin-warn: #ef5350;
+    --skin-font-display: var(--font-chakra-petch);
+    --skin-font-body: var(--font-barlow);
+    --skin-font-mono: var(--font-jetbrains-mono);
+    --skin-radius: 0;
+    --skin-cut: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+    --skin-cut-sm: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+
+    /* Distribución: texto a la izquierda y foto a la derecha. */
+    --hero-cols: 1.35fr 1fr;
+    --hero-photo-order: 1;
+    --hero-photo-max: 400px;
+}
+
+/* Etiquetas monoespaciadas en mayúsculas: el lenguaje de los rótulos del HUD. */
+[data-skin="tactical"] :is(.window-bar, .site-nav .nav-link, .tab, .btn, .t-when, .badge, .window-tag, .section-sub, .prompt, .slot, .menu-toggle, .menu-label, .inspector-equip, .sheet-equip) {
+    font-family: var(--skin-font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Cabecera */
+[data-skin="tactical"] .site-handle {
+    font-family: var(--skin-font-display);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--skin-text);
+}
+[data-skin="tactical"] .menu-toggle::before {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 8px;
+    background: var(--skin-accent);
+    transform: rotate(45deg);
+}
+[data-skin="tactical"] .site-nav .nav-link {
+    font-size: 12px;
+}
+[data-skin="tactical"] .site-nav .nav-link[aria-current="true"] {
+    color: var(--skin-text);
+    box-shadow: inset 0 -2px 0 var(--skin-accent);
+    padding-bottom: 5px;
+}
+[data-skin="tactical"] .site-menu .nav-link {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-family: var(--skin-font-display);
+}
+[data-skin="tactical"] .site-menu .nav-link::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    margin-right: 12px;
+    border: 1px solid var(--skin-muted);
+    transform: rotate(45deg);
+}
+[data-skin="tactical"] .site-menu .nav-link[aria-current="true"] {
+    color: var(--skin-accent);
+}
+[data-skin="tactical"] .site-menu .nav-link[aria-current="true"]::before {
+    background: var(--skin-accent);
+    border-color: var(--skin-accent);
+}
+
+/* Ventanas → paneles con esquina cortada */
+[data-skin="tactical"] .window {
+    background: var(--skin-surface);
+    box-shadow: inset 0 0 0 1px var(--skin-line);
+    clip-path: var(--skin-cut);
+}
+[data-skin="tactical"] .window-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--skin-line);
+    font-size: 11px;
+    color: var(--skin-muted);
+}
+[data-skin="tactical"] .window-file {
+    display: none;
+}
+/* Sin el nombre de archivo, una barra que solo lo tenía a él quedaría vacía: se oculta. */
+[data-skin="tactical"] .window-bar:has(> .window-file:only-child) {
+    display: none;
+}
+[data-skin="tactical"] .window-tag {
+    color: var(--skin-accent-ink);
+    background: var(--skin-accent);
+    padding: 2px 7px;
+    font-size: 10.5px;
+}
+
+/* Hero */
+[data-skin="tactical"] .prompt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--skin-muted);
+}
+[data-skin="tactical"] .prompt::before {
+    content: "";
+    width: var(--kicker-line, 26px);
+    height: 2px;
+    background: var(--skin-accent);
+}
+[data-skin="tactical"] .cursor,
+[data-skin="tactical"] body::after {
+    display: none;
+}
+/* El aviso de la foto y el icono de su barra fijan display con utilidades (flex, inline-grid),
+   que ganan a esta capa: se ocultan con propiedades que ninguna utilidad toca. */
+[data-skin="tactical"] .photo-hint,
+[data-skin="tactical"] .photo-window > .window-bar .icon {
+    position: absolute;
+    visibility: hidden;
+}
+[data-skin="tactical"] .hero-name {
+    letter-spacing: -0.01em;
+}
+[data-skin="tactical"] .hero-role {
+    font-weight: 600;
+}
+
+/* Foto: dos esquinas en ángulo en lugar de ventana */
+[data-skin="tactical"] .photo-window {
+    position: relative;
+    padding: 14px;
+    background: none;
+    box-shadow: none;
+    clip-path: none;
+}
+[data-skin="tactical"] .photo-window::before,
+[data-skin="tactical"] .photo-window::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    width: var(--corner-size, 38px);
+    height: var(--corner-size, 38px);
+    border: 2px solid var(--skin-accent);
+    pointer-events: none;
+}
+[data-skin="tactical"] .photo-window::before {
+    top: 0;
+    left: 0;
+    border-right: 0;
+    border-bottom: 0;
+}
+[data-skin="tactical"] .photo-window::after {
+    right: 0;
+    bottom: 0;
+    border-left: 0;
+    border-top: 0;
+}
+[data-skin="tactical"] .photo-window > .window-bar {
+    position: absolute;
+    left: 24px;
+    bottom: 5px;
+    z-index: 2;
+    padding: 0 8px;
+    border: 0;
+    background: var(--skin-bg);
+}
+[data-skin="tactical"] .photo-window img {
+    clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px);
+    filter: saturate(0.8) contrast(1.05);
+}
+
+/* Titulares de sección: rombo, subtítulo y línea que se desvanece */
+[data-skin="tactical"] .section-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--skin-font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+[data-skin="tactical"] .section-title::before {
+    content: "";
+    flex: none;
+    width: 11px;
+    height: 11px;
+    background: var(--skin-accent);
+    transform: rotate(45deg);
+}
+[data-skin="tactical"] .section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--skin-line), transparent);
+}
+[data-skin="tactical"] .section-sub {
+    font-size: 11.5px;
+    font-weight: 400;
+    color: var(--skin-muted);
+    letter-spacing: 0.14em;
+}
+
+/* Listas: rombos huecos */
+[data-skin="tactical"] .marker-list {
+    list-style: none;
+}
+[data-skin="tactical"] .marker-list li {
+    position: relative;
+    padding-left: 18px;
+}
+[data-skin="tactical"] .marker-list li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 0.6em;
+    width: 6px;
+    height: 6px;
+    border: 1px solid var(--skin-accent);
+    transform: rotate(45deg);
+}
+
+/* Botones con esquinas cortadas */
+[data-skin="tactical"] .btn {
+    display: inline-flex;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 12.5px;
+    clip-path: var(--skin-cut-sm);
+    transition: background 0.2s, color 0.2s;
+}
+[data-skin="tactical"] .btn-primary {
+    background: var(--skin-accent);
+    color: var(--skin-accent-ink);
+    font-weight: 500;
+}
+[data-skin="tactical"] .btn-primary:hover {
+    background: color-mix(in oklab, var(--skin-accent) 85%, white);
+}
+[data-skin="tactical"] .btn-secondary {
+    background: var(--skin-surface);
+    color: var(--skin-text);
+    box-shadow: inset 0 0 0 1px var(--skin-line);
+}
+[data-skin="tactical"] .btn-secondary:hover {
+    box-shadow: inset 0 0 0 1px var(--skin-accent);
+}
+
+/* Línea de tiempo */
+[data-skin="tactical"] .timeline-rail {
+    background: var(--skin-line);
+}
+[data-skin="tactical"] .timeline-fill {
+    background: var(--skin-accent);
+    transform-origin: top;
+}
+[data-skin="tactical"] .timeline-node {
+    width: 12px;
+    height: 12px;
+    background: var(--skin-bg);
+    border: 2px solid var(--skin-accent);
+    transform: rotate(45deg);
+}
+[data-skin="tactical"] .t-item[data-current] .timeline-node {
+    background: var(--skin-accent);
+}
+[data-skin="tactical"] .t-when {
+    color: var(--skin-muted);
+    font-size: 12px;
+}
+
+/* Proyectos */
+[data-skin="tactical"] .readme-title {
+    font-family: var(--skin-font-display);
+}
+[data-skin="tactical"] .badge {
+    color: var(--skin-accent-ink);
+    background: var(--skin-accent);
+    padding: 2px 7px;
+    font-size: 10.5px;
+}
+
+/* Creador de personaje */
+[data-skin="tactical"] .tile {
+    background: var(--skin-surface);
+    box-shadow: inset 0 0 0 1px var(--skin-line);
+    transition: box-shadow 0.15s, background 0.15s;
+}
+[data-skin="tactical"] .tile:hover,
+[data-skin="tactical"] .tile[data-selected] {
+    box-shadow: inset 0 0 0 1px var(--skin-accent);
+}
+[data-skin="tactical"] .tile[data-selected] {
+    background: var(--skin-surface-2);
+}
+[data-skin="tactical"] .tile-name {
+    font-family: var(--skin-font-display);
+    font-weight: 600;
+}
+[data-skin="tactical"] .tile-equip {
+    border-left: 1px solid var(--skin-line);
+    color: var(--skin-accent);
+}
+[data-skin="tactical"] .tile-equip[aria-pressed="true"] {
+    background: var(--skin-accent);
+    color: var(--skin-accent-ink);
+    border-left-color: var(--skin-accent);
+}
+[data-skin="tactical"] .tab {
+    padding: 7px 12px;
+    font-size: 11.5px;
+    color: var(--skin-muted);
+    box-shadow: inset 0 0 0 1px var(--skin-line);
+    clip-path: var(--skin-cut-sm);
+}
+[data-skin="tactical"] .tab[aria-selected="true"] {
+    color: var(--skin-accent-ink);
+    background: var(--skin-accent);
+    box-shadow: none;
+}
+[data-skin="tactical"] .slot {
+    box-shadow: inset 0 0 0 1px var(--skin-line);
+    color: var(--skin-muted);
+}
+[data-skin="tactical"] .slot[data-filled] {
+    box-shadow: inset 0 0 0 1px var(--skin-accent);
+    background: color-mix(in oklab, var(--skin-accent) 8%, var(--skin-surface));
+    color: var(--skin-accent);
+}
+[data-skin="tactical"] .slot[data-over] {
+    box-shadow: inset 0 0 0 1px var(--skin-warn);
+    background: color-mix(in oklab, var(--skin-warn) 10%, var(--skin-surface));
+}
+[data-skin="tactical"] .broken {
+    border-left: 3px solid var(--skin-warn);
+    background: color-mix(in oklab, var(--skin-warn) 10%, var(--skin-surface));
+    color: var(--skin-text);
+    padding: 8px 10px;
+    font-size: 13px;
+}
+[data-skin="tactical"] .edge-btn {
+    color: var(--skin-accent);
+    background: var(--skin-bg);
+    box-shadow: inset 0 0 0 1px var(--skin-accent);
+}
+[data-skin="tactical"] .inspector-equip,
+[data-skin="tactical"] .sheet-equip {
+    clip-path: var(--skin-cut-sm);
+}
+
+/* Selector de skin */
+[data-skin="tactical"] .skin-option {
+    font-family: var(--skin-font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--skin-muted);
+    box-shadow: inset 0 0 0 1px var(--skin-line);
+}
+[data-skin="tactical"] .skin-option[aria-pressed="true"] {
+    background: var(--skin-accent);
+    color: var(--skin-accent-ink);
+    box-shadow: none;
+}
+[data-skin="tactical"] .skin-swatch {
+    background: var(--swatch);
+    transform: rotate(45deg);
+}
+[data-skin="tactical"] .skin-option[aria-pressed="true"] .skin-swatch {
+    background: var(--skin-accent-ink);
+}

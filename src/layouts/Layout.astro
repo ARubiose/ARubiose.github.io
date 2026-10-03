@@ -2,7 +2,7 @@
 import "@styles/global.css";
 import { Font } from "astro:assets";
 import type { Locale } from "@i18n/ui";
-import { defaultSkin, skinBootScript } from "@lib/skins";
+import { defaultSkin, skinBootScript, timelineOf } from "@lib/skins";
 
 interface Props {
     locale: Locale;
@@ -13,7 +13,7 @@ const { locale, title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang={locale} data-skin={defaultSkin}>
+<html lang={locale} data-skin={defaultSkin} data-timeline={timelineOf(defaultSkin)}>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,9 +26,13 @@ const { locale, title, description } = Astro.props;
         <meta property="og:locale" content={locale === "es" ? "es_ES" : "en_US"} />
         <Font cssVariable="--font-space-grotesk" preload />
         <Font cssVariable="--font-ibm-plex-mono" preload />
+        {/* Fuentes de Táctico, sin precarga: solo se descargan si la skin activa las usa. */}
+        <Font cssVariable="--font-chakra-petch" />
+        <Font cssVariable="--font-barlow" />
+        <Font cssVariable="--font-jetbrains-mono" />
         <script is:inline set:html={skinBootScript()} />
     </head>
-    <body class="bg-bg text-text font-mono">
+    <body class="bg-bg text-text font-body">
         <slot />
     </body>
 </html>

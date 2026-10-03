@@ -2,6 +2,10 @@
 @layer base {
     :root {
         --header-h: 52px;
+        /* Tokens de distribución: valores de Terminal; cada skin puede redefinirlos. */
+        --hero-cols: 340px 1fr;
+        --hero-photo-order: 0;
+        --hero-photo-max: none;
     }
 
     html {

@@ -26,17 +26,26 @@ export function initNav(): void {
     const sections = [...document.querySelectorAll<HTMLElement>("main section[id]")].filter((s) => linked.has(s.id));
     const footer = document.querySelector("footer");
 
-    // Se recalcula con la geometría actual en cada aviso: los avisos llegan en lotes durante el
-    // scroll suave y aplicar sus entradas en orden podía dejar marcada una sección ya pasada.
+    // Se recalcula con la geometría actual en cada fotograma de scroll. Antes se usaban
+    // IntersectionObserver: sus avisos llegaban en lotes durante el scroll suave, y el del pie
+    // (threshold 1) no saltaba nunca si su altura era fraccionaria, así que «contacto» no se marcaba.
     const update = () => {
-        // Borde inferior de la franja del observador (rootMargin): ahí avisa cuando entra una sección.
         const line = innerHeight * 0.5 + 1;
         // La última sección nunca alcanza la franja central: con el pie entero a la vista, se marca ella.
         const footerVisible = footer && footer.getBoundingClientRect().bottom <= innerHeight + 1;
         const current = footerVisible ? sections.at(-1) : sections.findLast((s) => s.getBoundingClientRect().top <= line);
         if (current) setActive(current.id);
     };
-    const io = new IntersectionObserver(update, { rootMargin: "-45% 0px -50% 0px" });
-    sections.forEach((s) => io.observe(s));
-    if (footer) new IntersectionObserver(update, { threshold: 1 }).observe(footer);
+    let queued = false;
+    const schedule = () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+            queued = false;
+            update();
+        });
+    };
+    addEventListener("scroll", schedule, { passive: true });
+    addEventListener("resize", schedule, { passive: true });
+    update();
 }

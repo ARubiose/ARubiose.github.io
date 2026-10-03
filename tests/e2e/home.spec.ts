@@ -18,7 +18,7 @@ for (const p of pages) {
 
         test("todas las secciones del menú existen y tienen contenido", async ({ page }, info) => {
             await page.goto(p.path);
-            const navSel = info.project.name === "mobile" ? '#site-menu a[href^="#"]' : '.site-nav a[href^="#"]';
+            const navSel = info.project.name.startsWith("mobile") ? '#site-menu a[href^="#"]' : '.site-nav a[href^="#"]';
             const anchors = await page.locator(navSel).evaluateAll((els) =>
                 els.map((e) => e.getAttribute("href")!),
             );
@@ -54,7 +54,7 @@ for (const p of pages) {
 
         test("el selector lleva al otro idioma", async ({ page, baseURL }, info) => {
             await page.goto(p.path);
-            if (info.project.name === "mobile") await page.locator('[popovertarget="site-menu"]').click();
+            if (info.project.name.startsWith("mobile")) await page.locator('[popovertarget="site-menu"]').click();
             await page.getByRole("link", { name: p.otherLabel }).click();
             await expect(page).toHaveURL(new URL(p.other, baseURL).href);
             await expect(page.locator("html")).toHaveAttribute("lang", p.lang === "es" ? "en" : "es");
@@ -67,7 +67,7 @@ for (const p of pages) {
             let results = await new AxeBuilder({ page }).analyze();
             expect(results.violations.filter((v) => ["serious", "critical"].includes(v.impact ?? "")).map((v) => v.id)).toEqual([]);
             await page.keyboard.press("Escape");
-            if (info.project.name === "mobile") {
+            if (info.project.name.startsWith("mobile")) {
                 await page.locator('[popovertarget="site-menu"]').click();
                 results = await new AxeBuilder({ page }).analyze();
                 expect(results.violations.filter((v) => ["serious", "critical"].includes(v.impact ?? "")).map((v) => v.id)).toEqual([]);

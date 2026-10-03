@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selector de skin</title>
+<style>body{margin:0;padding:28px;background:#08090b;color:#d6d9de;font-family:system-ui,sans-serif} h2{font-size:22px;margin:0 0 6px} .subtitle{color:#8c8c98;margin:0 0 22px;max-width:95ch} .options{display:grid;gap:28px} .letter{display:none} .option h3{margin:0 0 4px} .option p{color:#9a9aa6;margin:0 0 12px} *{box-sizing:border-box} p,h1,ul{margin:0}</style>
+</head>
+<body>
+<h2>¿Dónde y cómo cambia el visitante de skin?</h2>
+<p class="subtitle">Cabecera de escritorio arriba, menú móvil abierto debajo. Todo en la skin Terminal actual; con Táctico activo, el selector tomaría su estilo.</p>
+
+<style>
+  .t { --bg:#0c0f0d; --surface:#121714; --line:#223228; --text:#e3ece5; --muted:#93a59a; --accent:#9fd65a; --amber:#f0a83a;
+       background: var(--bg); color: var(--text); font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 13px; border: 1px solid var(--line); }
+  .t .hdr { display:flex; align-items:center; gap: 22px; padding: 14px 22px; border-bottom: 1px solid var(--line); }
+  .t .hdr .id { color: var(--accent); white-space: nowrap; }
+  .t .hdr nav { display:flex; gap: 16px; color: var(--muted); margin-right: auto; }
+  .t .hdr nav b { color: var(--text); font-weight: 400; } .t .hdr nav b::before { content: "> "; color: var(--accent); }
+  .t .lang { color: var(--muted); } .t .lang b { color: var(--text); font-weight: 400; }
+  .t .seg { display:inline-flex; border: 1px solid var(--line); }
+  .t .seg span { padding: 3px 9px; color: var(--muted); display:flex; align-items:center; gap: 6px; }
+  .t .seg span.on { background: var(--accent); color: var(--bg); }
+  .t .sw { width: 8px; height: 8px; display:inline-block; }
+  .t .mob { display:grid; grid-template-columns: 1fr; width: 260px; margin: 14px 22px 18px; border: 1px solid var(--line); }
+  .t .mob .bar { display:flex; justify-content:space-between; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  .t .mob .list { padding: 10px 12px; }
+  .t .mob .list p { font-family: "Space Grotesk", system-ui, sans-serif; font-weight: 700; font-size: 17px; padding: 7px 0; border-bottom: 1px dashed var(--line); }
+  .t .mob .box { margin: 10px 12px 12px; border: 1px solid var(--line); padding: 8px 10px; display:flex; justify-content:space-between; align-items:center; gap: 8px; }
+  .t .mob .label { color: var(--muted); font-size: 11.5px; }
+  .t .gear { width: 30px; height: 30px; border: 1px solid var(--line); display:grid; place-items:center; color: var(--accent); }
+  .t .pop { position:absolute; right: 22px; top: 52px; width: 230px; background: var(--surface); border: 1px solid var(--line); }
+  .t .pop .bar { padding: 7px 12px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; display:flex; justify-content:space-between; }
+  .t .pop .card { margin: 8px 10px; border: 1px solid var(--line); padding: 8px; display:flex; gap: 10px; align-items:center; }
+  .t .pop .card.on { border-color: var(--accent); }
+  .t .thumb { width: 46px; height: 30px; border: 1px solid var(--line); position:relative; }
+  .t .foot { padding: 12px 22px; border-top: 1px solid var(--line); color: var(--muted); display:flex; justify-content:space-between; }
+  .rel { position: relative; }
+</style>
+
+<div class="options">
+  <div class="option" data-choice="a" >
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>En la cabecera, junto al idioma (recomendada)</h3>
+      <p>Un control segmentado con una muestra de color por skin. En móvil va dentro del menú, debajo de ES / EN. Siempre visible y fácil de descubrir; con 3 skins sigue cabiendo.</p>
+      <div class="t">
+        <div class="hdr">
+          <span class="id">alvaro@portfolio:~$</span>
+          <nav><span>experiencia</span><span>proyectos</span><b>habilidades</b><span>formación</span><span>contacto</span></nav>
+          <span class="seg" aria-label="Skin"><span class="on"><i class="sw" style="background:#0c0f0d;border:1px solid #0c0f0d"></i>terminal</span><span><i class="sw" style="background:#f0a83a"></i>táctico</span></span>
+          <span class="lang"><b>ES</b> / EN</span>
+        </div>
+        <div class="mob">
+          <div class="bar"><span style="color:var(--accent)">alvaro@portfolio:~$</span><span>$ menu</span></div>
+          <div class="list"><p>experiencia</p><p>proyectos</p><p>habilidades</p></div>
+          <div class="box"><span class="lang"><b>ES</b> / EN</span></div>
+          <div class="box"><span class="label">skin</span><span class="seg"><span class="on">terminal</span><span>táctico</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" >
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Botón de ajustes con panel de vista previa</h3>
+      <p>Un icono en la cabecera abre un panel con una miniatura de cada skin. Más vistoso y escala a muchas skins, pero queda escondido tras un clic y añade un popover más.</p>
+      <div class="t rel">
+        <div class="hdr">
+          <span class="id">alvaro@portfolio:~$</span>
+          <nav><span>experiencia</span><span>proyectos</span><b>habilidades</b><span>formación</span><span>contacto</span></nav>
+          <span class="lang"><b>ES</b> / EN</span>
+          <span class="gear">◐</span>
+        </div>
+        <div class="pop">
+          <div class="bar"><span>skins.cfg</span><span>2</span></div>
+          <div class="card on"><span class="thumb" style="background:#0c0f0d"><i style="position:absolute;left:5px;top:5px;width:18px;height:3px;background:#9fd65a"></i></span><span>terminal<br><span style="color:var(--muted);font-size:11px">consola hacker</span></span></div>
+          <div class="card"><span class="thumb" style="background:#0b0e12"><i style="position:absolute;left:5px;top:5px;width:18px;height:3px;background:#f0a83a"></i></span><span>táctico<br><span style="color:var(--muted);font-size:11px">HUD de mecha</span></span></div>
+        </div>
+        <div style="height:150px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" >
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Solo en el pie de página</h3>
+      <p>Discreto: no compite con la navegación. Pero casi nadie llega al pie, así que la skin pasa desapercibida como rasgo de marca.</p>
+      <div class="t">
+        <div class="hdr">
+          <span class="id">alvaro@portfolio:~$</span>
+          <nav><span>experiencia</span><span>proyectos</span><b>habilidades</b><span>formación</span><span>contacto</span></nav>
+          <span class="lang"><b>ES</b> / EN</span>
+        </div>
+        <div style="height:60px"></div>
+        <div class="foot"><span>© 2026 · hecho con Astro</span><span>skin: <span class="seg"><span class="on">terminal</span><span>táctico</span></span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

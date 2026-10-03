@@ -1,0 +1,22 @@
+---
+import type { Locale } from "@i18n/ui";
+import { useTranslations } from "@i18n/utils";
+import { defaultSkin, skinRegistry } from "@lib/skins";
+
+interface Props {
+    locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+{skinRegistry.length > 1 && (
+    <div class="skin-switcher flex" role="group" aria-label={t("skin.label")} data-skin-switcher hidden>
+        {skinRegistry.map((s) => (
+            <button type="button" class="skin-option flex items-center gap-1.5 px-2 py-0.5 text-[12px]" data-skin-option={s.id} data-label={t(`skin.${s.id}`)} aria-pressed={s.id === defaultSkin ? "true" : "false"}>
+                <span class="skin-swatch size-2 flex-none" style={`--swatch: ${s.swatch}`} aria-hidden="true"></span>
+                {t(`skin.${s.id}`)}
+            </button>
+        ))}
+    </div>
+)}
