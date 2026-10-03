@@ -138,11 +138,13 @@ export const ui = {
 export type UiKey = keyof (typeof ui)["es"];
 
 // Adornos decorativos (siempre aria-hidden): un texto por skin. Una skin sin entrada no pinta nada.
-// Variables: {handle} (prompt de Terminal), {callsign} (indicativo de Táctico), {shortName} (nombre corto de Juego), {year}.
+// Variables: {handle} (prompt de Terminal), {first} y {second} (las dos palabras del nombre corto),
+// {shortName} (nombre corto de Juego), {year}. Un fragmento entre [[ y ]] es una marca que la skin
+// resalta (.adorn-mark).
 type AdornVariants = Partial<Record<string, string>>;
 export const adorns = {
     es: {
-        handle: { terminal: "{handle}@portfolio:~$", tactical: "{callsign}", game: "{shortName}" },
+        handle: { terminal: "{handle}@portfolio:~$", tactical: "{first} [[//]] {second}", game: "{shortName}" },
         menuMark: { terminal: "$", game: "▶" },
         navList: { terminal: "$ ls secciones/", tactical: "Navegación", game: "Menú principal" },
         heroKicker: { terminal: "whoami", tactical: "Perfil de operador", game: "▶ Jugador 1" },
@@ -162,7 +164,7 @@ export const adorns = {
         "sectionSub.contact": { tactical: "Canal seguro", game: "Multijugador" },
     },
     en: {
-        handle: { terminal: "{handle}@portfolio:~$", tactical: "{callsign}", game: "{shortName}" },
+        handle: { terminal: "{handle}@portfolio:~$", tactical: "{first} [[//]] {second}", game: "{shortName}" },
         menuMark: { terminal: "$", game: "▶" },
         navList: { terminal: "$ ls sections/", tactical: "Navigation", game: "Main menu" },
         heroKicker: { terminal: "whoami", tactical: "Operator profile", game: "▶ Player 1" },

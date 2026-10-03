@@ -43,14 +43,9 @@ export function handleFromName(name: string): string {
     return (name.trim().split(/\s+/)[0] ?? "").normalize("NFD").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 }
 
-/** Nombre corto de la cabecera de Juego: dos primeras palabras del nombre, en mayúsculas («ÁLVARO RUBIO»). */
+/** Nombre corto de la cabecera: dos primeras palabras del nombre, en mayúsculas («ÁLVARO RUBIO»). */
 export function shortNameFromName(name: string): string {
     return name.trim().split(/\s+/).slice(0, 2).join(" ").toLocaleUpperCase("es");
-}
-
-/** Indicativo de Táctico: el nombre corto con « // » entre las palabras («ÁLVARO // RUBIO»). */
-export function callsignFromName(name: string): string {
-    return shortNameFromName(name).split(" ").join(" // ");
 }
 
 export function displayUrl(url: string): string {

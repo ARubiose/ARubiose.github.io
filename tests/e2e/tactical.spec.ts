@@ -75,3 +75,8 @@ test("el foco de teclado se ve en botones y pestañas recortados", async ({ page
     const t = await ring('#skills .tab[aria-selected="true"]');
     expect(t.color).not.toBe(t.background);
 });
+
+test("el «//» del indicativo va en el acento", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator('.site-handle [data-for-skin="tactical"] .adorn-mark')).toHaveCSS("color", "rgb(240, 168, 58)");
+});

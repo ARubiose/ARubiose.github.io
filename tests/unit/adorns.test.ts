@@ -33,11 +33,28 @@ describe("diccionario de adornos", () => {
 
 describe("adornTexts", () => {
     test("una entrada por skin que lo define, con variables sustituidas", () => {
-        expect(adornTexts("handle", "es", { handle: "ada", callsign: "ADA // L" })).toContainEqual({ skin: "terminal", text: "ada@portfolio:~$" });
+        expect(adornTexts("handle", "es", { handle: "ada", first: "ADA", second: "L" })).toContainEqual(expect.objectContaining({ skin: "terminal", text: "ada@portfolio:~$" }));
     });
 
     test("el nombre corto de Juego se sustituye en la cabecera", () => {
-        expect(adornTexts("handle", "en", { shortName: "ADA LOVELACE" })).toContainEqual({ skin: "game", text: "ADA LOVELACE" });
+        expect(adornTexts("handle", "en", { shortName: "ADA LOVELACE" })).toContainEqual(expect.objectContaining({ skin: "game", text: "ADA LOVELACE" }));
+    });
+
+    test("[[…]] marca un fragmento: el texto lo incluye y las partes lo separan", () => {
+        const tactical = adornTexts("handle", "es", { first: "ÁLVARO", second: "RUBIO" }).find((a) => a.skin === "tactical")!;
+        expect(tactical.text).toBe("ÁLVARO // RUBIO");
+        expect(tactical.parts).toEqual([{ text: "ÁLVARO " }, { text: "//", mark: true }, { text: " RUBIO" }]);
+    });
+
+    test("una marca que se queda en un extremo (variable vacía) desaparece", () => {
+        const tactical = adornTexts("handle", "es", { first: "ADA", second: "" }).find((a) => a.skin === "tactical")!;
+        expect(tactical.text).toBe("ADA");
+        expect(tactical.parts).toEqual([{ text: "ADA" }]);
+    });
+
+    test("los valores de las variables no se interpretan como marcas", () => {
+        const game = adornTexts("handle", "es", { shortName: "[[X]]" }).find((a) => a.skin === "game")!;
+        expect(game.parts).toEqual([{ text: "[[X]]" }]);
     });
 
     test("una skin sin el adorno no aparece", () => {

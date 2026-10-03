@@ -58,6 +58,10 @@
     letter-spacing: 0.08em;
     color: var(--skin-text);
 }
+/* Marca del indicativo («//» entre las dos palabras). */
+[data-skin="tactical"] .adorn-mark {
+    color: var(--skin-accent);
+}
 [data-skin="tactical"] .menu-toggle::before {
     content: "";
     display: inline-block;

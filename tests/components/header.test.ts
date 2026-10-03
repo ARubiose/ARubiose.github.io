@@ -27,7 +27,7 @@ test("el selector marca el idioma actual y enlaza al otro", async () => {
 
 test("el prompt usa el handle recibido, no un nombre fijo", async () => {
     const container = await AstroContainer.create();
-    const html = clean(await container.renderToString(Header, { props: { locale: "es", urls, sections: [], handle: "ada", callsign: "ADA" } }));
+    const html = clean(await container.renderToString(Header, { props: { locale: "es", urls, sections: [], handle: "ada", shortName: "ADA" } }));
     expect(html).toMatch(/data-for-skin="terminal"[^>]*>ada@portfolio:~\$</);
     expect(html).not.toContain("alvaro@");
 });
@@ -48,6 +48,8 @@ test("selector de skin en la cabecera y en el menú: oculto sin JS, un botón po
 
 test("la cabecera pasa el nombre corto a los adornos", async () => {
     const container = await AstroContainer.create();
-    const html = clean(await container.renderToString(Header, { props: { locale: "es", urls, sections: [], handle: "ada", callsign: "ADA // L", shortName: "ADA L" } }));
+    const html = clean(await container.renderToString(Header, { props: { locale: "es", urls, sections: [], handle: "ada", shortName: "ADA L" } }));
     expect(html).toMatch(/data-for-skin="game"[^>]*>ADA L</);
+    // Táctico usa las dos palabras con «//» marcado entre ellas.
+    expect(html).toMatch(/data-for-skin="tactical"[^>]*>ADA <span class="adorn-mark">\/\/<\/span> L</);
 });
