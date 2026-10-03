@@ -42,12 +42,25 @@
     letter-spacing: 0.1em;
 }
 
+/* Foco: el contorno de base va por fuera y el clip-path de las esquinas cortadas lo recortaría; aquí
+   va por dentro, en el color de texto sobre acento donde el fondo ya es el acento. */
+[data-skin="tactical"] :is(.btn, .tab, .inspector-equip, .sheet-equip):focus-visible {
+    outline-offset: -4px;
+}
+[data-skin="tactical"] :is(.btn-primary, .tab[aria-selected="true"]):focus-visible {
+    outline-color: var(--skin-accent-ink);
+}
+
 /* Cabecera */
 [data-skin="tactical"] .site-handle {
     font-family: var(--skin-font-display);
     font-weight: 700;
     letter-spacing: 0.08em;
     color: var(--skin-text);
+}
+/* Marca del indicativo («//» entre las dos palabras). */
+[data-skin="tactical"] .adorn-mark {
+    color: var(--skin-accent);
 }
 [data-skin="tactical"] .menu-toggle::before {
     content: "";
@@ -147,6 +160,24 @@
 [data-skin="tactical"] .hero-role {
     font-weight: 600;
     color: var(--skin-accent);
+}
+
+/* Móvil: la foto va entre la ubicación y el resumen. El bloque de texto se disuelve en la rejilla
+   del hero (display: contents) para que sus párrafos y la foto se ordenen juntos. */
+@media (max-width: 767px) {
+    [data-skin="tactical"] .hero {
+        --hero-gap: 0;
+    }
+    [data-skin="tactical"] .hero-text {
+        display: contents;
+    }
+    [data-skin="tactical"] .photo-window {
+        order: 1;
+        margin-block: 18px 2px;
+    }
+    [data-skin="tactical"] :is(.hero-sum, .hero-cta) {
+        order: 2;
+    }
 }
 
 /* Foto: dos esquinas en ángulo en lugar de ventana */

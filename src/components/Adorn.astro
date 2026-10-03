@@ -11,4 +11,4 @@ interface Props {
 const { name, locale, vars, class: className } = Astro.props;
 ---
 
-{adornTexts(name, locale, vars).map(({ skin, text }) => <span aria-hidden="true" data-for-skin={skin} class={className}>{text}</span>)}
+{adornTexts(name, locale, vars).map(({ skin, parts }) => <span aria-hidden="true" data-for-skin={skin} class={className}>{parts.map((p) => (p.mark ? <span class="adorn-mark">{p.text}</span> : p.text))}</span>)}

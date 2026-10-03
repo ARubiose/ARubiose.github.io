@@ -48,9 +48,16 @@ test("cruzar 768 px durante la intro no la repite ni corta el prompt", async ({ 
     await expect(prompt).toHaveText("whoami");
 });
 
-test("con animaciones, la intro termina con el nombre completo", async ({ page }) => {
+test("con animaciones, la intro termina con el nombre completo y la foto visible", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+    // Opacidad efectiva de la foto (la suya y la de sus contenedores): una transición CSS en la imagen
+    // hacía que la intro de Juego la dejara a 0.
+    await expect.poll(() => page.locator(".photo-window img").evaluate((img) => {
+        let op = 1;
+        for (let e: Element | null = img; e; e = e.parentElement) op *= Number(getComputedStyle(e).opacity);
+        return op;
+    }), { timeout: 4000 }).toBe(1);
 });
 
 test("Táctico: la intro termina con el nombre completo, las esquinas dibujadas y sin prompt escrito", async ({ page }, info) => {
@@ -96,22 +103,32 @@ test("una skin sin preset de intro usa la de Terminal sin escribir el prompt", a
     expect(errors).toEqual([]);
 });
 
-test("cambiar de skin a mitad de página no deja contenido revelado invisible", async ({ page }, info) => {
-    test.skip(skinOf(info.project.name) !== "terminal");
-    const mobile = info.project.name.startsWith("mobile");
-    await page.goto("/");
-    for (const card of await page.locator(".t-card").all()) {
-        await card.scrollIntoViewIfNeeded();
-        await expect(card).toHaveCSS("opacity", "1");
-    }
-    if (mobile) await page.locator('[popovertarget="site-menu"]').click();
-    await page.locator(`${mobile ? "#site-menu" : ".header-lang"} [data-skin-option="tactical"]`).click();
-    if (mobile) await page.keyboard.press("Escape");
-    for (const card of await page.locator(".t-card").all()) {
-        await card.scrollIntoViewIfNeeded();
-        await expect(card).toHaveCSS("opacity", "1");
-    }
-});
+for (const target of ["tactical", "game"]) {
+    test(`cambiar de Terminal a ${target} a mitad de página no deja contenido invisible ni repite la intro`, async ({ page }, info) => {
+        test.skip(skinOf(info.project.name) !== "terminal");
+        const mobile = info.project.name.startsWith("mobile");
+        // Centrada: con scrollIntoViewIfNeeded una tarjeta puede quedar visible pero bajo la línea de disparo.
+        const center = (el: Element) => el.scrollIntoView({ block: "center", behavior: "instant" });
+        await page.goto("/");
+        await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+        for (const card of await page.locator(".t-card").all()) {
+            await card.evaluate(center);
+            await expect(card).toHaveCSS("opacity", "1");
+        }
+        if (mobile) await page.locator('[popovertarget="site-menu"]').click();
+        await page.locator(`${mobile ? "#site-menu" : ".header-lang"} [data-skin-option="${target}"]`).click();
+        if (mobile) await page.keyboard.press("Escape");
+        await expect(page.locator("html")).toHaveAttribute("data-skin", target);
+        for (const card of await page.locator(".t-card").all()) {
+            await card.evaluate(center);
+            await expect(card).toHaveCSS("opacity", "1");
+        }
+        // La intro no se repite: el nombre y la foto del hero siguen enteros.
+        await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
+        await expect(page.locator(".hero-name")).toHaveCSS("opacity", "1");
+        await expect(page.locator(".photo-window img")).toHaveCSS("opacity", "1");
+    });
+}
 
 test("al cambiar de skin se recalculan las posiciones: la línea de tiempo se completa al final de su sección", async ({ page }, info) => {
     test.skip(info.project.name !== "desktop");
@@ -143,3 +160,40 @@ test("Juego: el panel del hero barre, el nombre queda completo y el prompt sin e
     await expect(page.locator(".hero-name")).toHaveCSS("opacity", "1");
     await expect(page.locator('.hero .prompt [data-for-skin="terminal"]')).toHaveText("whoami");
 });
+
+test("tras cambiar a una skin de una columna, las tarjetas aún ocultas entran desde la derecha", async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop", "en Terminal de escritorio hay tarjetas a la izquierda del eje");
+    await page.goto("/");
+    await page.locator('.header-lang [data-skin-option="game"]').click();
+    await expect(page.locator("html")).toHaveAttribute("data-timeline", "single");
+    // Una tarjeta que en Terminal está a la izquierda (entraría desde -60 px) y aún no ha entrado.
+    const card = page.locator('#experience .t-item[data-side="left"] .t-card').last();
+    await card.evaluate((el) => el.scrollIntoView({ block: "center", behavior: "instant" }));
+    const xs: number[] = [];
+    await expect.poll(async () => {
+        xs.push(await card.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).e));
+        return xs.some((x) => x !== 0);
+    }, { intervals: [16], timeout: 3000 }).toBe(true);
+    expect(xs.find((x) => x !== 0)).toBeGreaterThan(0);
+});
+
+// Las fuentes de la skin nueva no se precargan: llegan después del refresco del cambio de skin y
+// cambian la altura de la página. Si no se vuelve a refrescar, los disparadores quedan desplazados.
+test("tras cambiar de skin y cargar sus fuentes, una tarjeta bien dentro de la pantalla ya ha entrado", async ({ page }, info) => {
+    test.skip(skinOf(info.project.name) !== "terminal");
+    const mobile = info.project.name.startsWith("mobile");
+    await page.goto("/");
+    if (mobile) await page.locator('[popovertarget="site-menu"]').click();
+    await page.locator(`${mobile ? "#site-menu" : ".header-lang"} [data-skin-option="game"]`).click();
+    if (mobile) await page.keyboard.press("Escape");
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForTimeout(300);
+    for (const card of await page.locator("#education .t-card").all()) {
+        await card.evaluate((el) => {
+            const item = el.closest(".t-item")!;
+            scrollTo({ top: scrollY + item.getBoundingClientRect().top - innerHeight * 0.6, behavior: "instant" });
+        });
+        await expect(card).toHaveCSS("opacity", "1");
+    }
+});
+

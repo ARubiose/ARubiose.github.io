@@ -12,16 +12,16 @@ interface Props {
     sections: { id: SectionId; label: string }[];
     urls: Record<Locale, string>;
     handle?: string;
-    callsign?: string;
     shortName?: string;
 }
-const { locale, sections, urls, handle = "", callsign = "", shortName = "" } = Astro.props;
+const { locale, sections, urls, handle = "", shortName = "" } = Astro.props;
+const [first = "", second = ""] = shortName.split(" ");
 const t = useTranslations(locale);
 ---
 
 <header class="sticky top-0 z-50 h-[var(--header-h)] border-b border-line bg-bg/90 backdrop-blur-md">
     <div class="mx-auto flex h-full max-w-6xl items-center gap-7 px-4 md:px-10">
-        <span class="site-handle whitespace-nowrap text-[13px]" aria-hidden="true"><Adorn name="handle" locale={locale} vars={{ handle, callsign, shortName }} /></span>
+        <span class="site-handle whitespace-nowrap text-(length:--handle-size) md:text-(length:--handle-size-md)" aria-hidden="true"><Adorn name="handle" locale={locale} vars={{ handle, first, second, shortName }} /></span>
         <nav aria-label={t("nav.label")} class="site-nav mr-auto hidden md:block">
             <ul class="flex gap-5 text-[13px] text-muted">
                 {sections.map((s) => <li><a class="nav-link hover:text-text" href={`#${s.id}`}>{s.label.toLowerCase()}</a></li>)}
@@ -38,7 +38,7 @@ const t = useTranslations(locale);
             <ul class="mt-2.5 grid">
                 {sections.map((s) => (
                     <li>
-                        <a class="nav-link flex items-center border-b border-dashed border-line px-1 py-3.5 font-display text-2xl font-bold" href={`#${s.id}`}>
+                        <a class="nav-link flex items-center border-b border-dashed border-(color:--menu-link-border) px-1 py-3.5 font-display text-(length:--menu-link-size) leading-(--menu-link-leading) font-bold" href={`#${s.id}`}>
                             {s.label.toLowerCase()}<span class="ml-auto font-mono text-sm font-normal text-muted" aria-hidden="true">↵</span>
                         </a>
                     </li>

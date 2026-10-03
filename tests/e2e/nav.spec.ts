@@ -91,3 +91,27 @@ test("sin Popover API el móvil sigue teniendo navegación e idioma", async ({ p
         expect(box!.x + box!.width, selector).toBeLessThanOrEqual(390);
     }
 });
+
+// Cambiar de skin cambia la altura de las secciones sin que haya scroll: la sección activa debe
+// recalcularse igualmente. Se recorren varias posiciones porque el desfase depende del contenido.
+test("al cambiar de skin, la navegación marca la sección que queda en la franja central", async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop");
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const expected = () => page.evaluate(() => {
+        const secs = [...document.querySelectorAll(".site-nav a.nav-link")].map((a) => document.getElementById(a.getAttribute("href")!.slice(1))!);
+        if (document.querySelector("footer")!.getBoundingClientRect().bottom <= innerHeight + 1) return `#${secs.at(-1)!.id}`;
+        return `#${secs.findLast((s) => s.getBoundingClientRect().top <= innerHeight * 0.5 + 1)?.id}`;
+    });
+    const wrong: string[] = [];
+    for (let y = 400; y < 4000; y += 211) {
+        await page.locator('.header-lang [data-skin-option="terminal"]').click();
+        await page.evaluate((y) => scrollTo({ top: y, behavior: "instant" }), y);
+        await page.waitForTimeout(80);
+        await page.locator('.header-lang [data-skin-option="game"]').click();
+        await page.waitForTimeout(150);
+        const [want, got] = [await expected(), await page.locator('.site-nav a[aria-current="true"]').getAttribute("href")];
+        if (want !== got) wrong.push(`${y}: ${got} en vez de ${want}`);
+    }
+    expect(wrong).toEqual([]);
+});

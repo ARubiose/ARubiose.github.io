@@ -141,21 +141,27 @@ Arquitectura de **skins** ([fase 5](superpowers/specs/2026-10-02-terminal-skin-d
   `--skin-*` (colores, fuentes, radio), tokens de distribución y decoración bajo
   `[data-skin="<skin>"]`. Las utilidades ganan siempre a la skin; lo que la skin oculta y una
   utilidad muestra se oculta con propiedades que ninguna utilidad toca (`visibility`).
-- **Distribución por skin:** tokens `--hero-cols`, `--hero-photo-order` y `--hero-photo-max`,
-  y de tipografía `--hero-name-size`/`-md`, `--hero-name-leading`, `--hero-name-weight` y
-  `--section-title-size`/`-md` (nombre del hero y titulares de sección), con los valores de
-  Terminal en `base.css`, que los componentes leen con utilidades como
-  `md:grid-cols-(--hero-cols)`; y la variante `timeline-single:` (lee `data-timeline="single"`)
-  para la línea de tiempo de una columna.
+- **Distribución por skin:** tokens con los valores de Terminal en `base.css`, que los
+  componentes leen con utilidades como `md:grid-cols-(--hero-cols)`: hero (`--hero-cols`,
+  `--hero-gap`, `--hero-photo-order`, `--hero-photo-max`), tipografía (`--hero-name-size`/`-md`,
+  `--hero-name-leading`, `--hero-name-weight`, `--section-title-size`/`-md`, `--handle-size`/`-md`),
+  menú móvil (`--menu-link-size`, `--menu-link-leading`, `--menu-link-border`) e inventario del
+  creador (`--inventory-cols`, `--inventory-gap`). Y la variante `timeline-single:` (lee
+  `data-timeline="single"`) para la línea de tiempo de una columna. `body` es contenedor de
+  consultas (`container-type: inline-size`): `100cqw` mide la página sin la barra de
+  desplazamiento, a diferencia de `100vw`.
 - **Color del rol del hero:** lo declara cada hoja (`.hero-role`), no una utilidad.
 - **Adornos por skin:** los textos decorativos (`whoami`, `personaje.sav`, `Registro de
   misiones`…) están en `adorns` de `src/i18n/ui.ts`, con un texto por skin. `Adorn.astro` pinta
-  un `<span aria-hidden data-for-skin>` por skin y `states.css` muestra solo los de la activa (un
-  test exige la regla de cada skin registrada). Una skin sin adorno no pinta nada.
+  un `<span aria-hidden data-for-skin>` por skin; `states.css` los oculta todos y muestra solo los
+  de la activa (un test exige la regla de cada skin registrada), así que una skin sin adorno, o
+  fuera del registro, no pinta nada. Un fragmento entre `[[` y `]]` del diccionario sale como
+  `<span class="adorn-mark">`, que la skin resalta (el «//» del indicativo de Táctico).
 - **Selector** (`SkinSwitcher.astro`, en la cabecera y en el menú móvil): oculto sin JS;
   `skin-switcher.ts` aplica la skin con `applySkin`, la guarda, sincroniza `aria-pressed`, la
   anuncia por `aria-live` y emite `skinchange` (que `motion.ts` usa para recalcular
-  ScrollTrigger).
+  ScrollTrigger, también cuando llegan las fuentes de la skin nueva, y `nav.ts` para recalcular la
+  sección activa).
 - **Intro por skin:** `motion.ts` elige un preset según `data-skin` al cargar; una skin sin
   preset usa el de Terminal sin la escritura del prompt.
 

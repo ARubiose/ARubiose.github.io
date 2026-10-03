@@ -8,7 +8,7 @@ test("pinta un span oculto a lectores por cada skin que define el adorno", async
 });
 
 test("sustituye variables", async () => {
-    const html = await render(Adorn, { props: { name: "handle", locale: "en", vars: { handle: "ada", callsign: "ADA" } } });
+    const html = await render(Adorn, { props: { name: "handle", locale: "en", vars: { handle: "ada", first: "ADA", second: "L" } } });
     expect(html).toContain(">ada@portfolio:~$<");
 });
 

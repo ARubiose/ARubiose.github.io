@@ -29,7 +29,8 @@
     --panel-slant: 60px;
 
     /* Distribución: texto a la izquierda y foto a la derecha, nombre enorme. */
-    --hero-cols: 1.3fr 1fr;
+    /* minmax(0, …): una palabra larga del nombre no puede ensanchar la columna y aplastar la foto. */
+    --hero-cols: minmax(0, 1.3fr) minmax(0, 1fr);
     --hero-photo-order: 1;
     --hero-photo-max: 380px;
     --hero-name-size: 50px;
@@ -38,6 +39,15 @@
     --hero-name-weight: 800;
     --section-title-size: 32px;
     --section-title-size-md: 40px;
+    --handle-size: 20px;
+    --handle-size-md: 22px;
+    /* Menú móvil como menú de pausa: secciones grandes, sin separadores. */
+    --menu-link-size: 34px;
+    --menu-link-leading: 1.05;
+    --menu-link-border: transparent;
+    /* Inventario como lista de menú a dos columnas: filas pegadas, separadas por su línea. */
+    --inventory-cols: repeat(2, minmax(0, 1fr));
+    --inventory-gap: 0 18px;
 }
 
 /* Rótulos en Saira Condensed, mayúsculas: el lenguaje de los menús. */
@@ -65,7 +75,6 @@
 /* Cabecera */
 [data-skin="game"] .site-handle {
     font-weight: 800;
-    font-size: 20px;
     letter-spacing: 0.04em;
     color: var(--skin-text);
 }
@@ -157,6 +166,11 @@
     position: absolute;
     visibility: hidden;
 }
+/* El nombre va enorme y en mayúsculas: una palabra larga se parte antes que desbordar. */
+[data-skin="game"] .hero-name {
+    overflow-wrap: anywhere;
+    hyphens: auto;
+}
 [data-skin="game"] .hero-role {
     display: inline-block;
     margin-top: 16px;
@@ -193,8 +207,9 @@
     pointer-events: none;
 }
 /* El panel llega hasta el borde derecho de la ventana: el margen de <main> (16 px en móvil; en
-   escritorio, 40 px más lo que sobra a los lados del ancho máximo de 72rem). Su borde izquierdo se
-   inclina con clip-path, que no se sale de la caja (un skewX desbordaría la página). */
+   escritorio, 40 px más lo que sobra a los lados del ancho máximo de 72rem, medido con 100cqw
+   sobre body, que no incluye la barra de desplazamiento). Su borde izquierdo se inclina con
+   clip-path, que no se sale de la caja (un skewX desbordaría la página). */
 [data-skin="game"] .photo-window::before {
     left: -18%;
     right: -16px;
@@ -233,7 +248,7 @@
         --panel-slant: 110px;
     }
     [data-skin="game"] .photo-window::before {
-        right: calc((min(100vw, 72rem) - 100vw) / 2 - 40px);
+        right: calc((min(100cqw, 72rem) - 100cqw) / 2 - 40px);
     }
 }
 
@@ -400,9 +415,17 @@
 }
 [data-skin="game"] :is(.inspector-equip, .sheet-equip) {
     font-weight: 700;
-    font-size: 16px;
     letter-spacing: 0.08em;
     clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+/* El del panel inferior lleva su tamaño en una utilidad (skill-builder.ts). */
+[data-skin="game"] .inspector-equip {
+    font-size: 16px;
+}
+/* Equipado: el botón es solo un borde (utilidades del script) y la inclinación se comería sus
+   laterales; va recto. */
+[data-skin="game"] :is(.inspector-equip, .sheet-equip)[data-equipped] {
+    clip-path: none;
 }
 
 /* Selector de skin */

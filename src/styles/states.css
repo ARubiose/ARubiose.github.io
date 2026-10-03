@@ -48,14 +48,18 @@
     }
 }
 
-/* Adornos por skin: cada skin muestra solo los suyos. Una regla por skin del registro
-   (tests/unit/skins.test.ts comprueba que no falte ninguna). */
-:root[data-skin="terminal"] [data-for-skin]:not([data-for-skin="terminal"]) {
+/* Adornos por skin: ocultos por defecto (una skin fuera del registro no muestra ninguno) y cada skin
+   muestra solo los suyos. revert-layer devuelve el display que les den la skin o las utilidades, que
+   van en capas. Una regla por skin del registro (tests/unit/skins.test.ts comprueba que no falte ninguna). */
+[data-for-skin] {
     display: none;
 }
-:root[data-skin="tactical"] [data-for-skin]:not([data-for-skin="tactical"]) {
-    display: none;
+:root[data-skin="terminal"] [data-for-skin="terminal"] {
+    display: revert-layer;
 }
-:root[data-skin="game"] [data-for-skin]:not([data-for-skin="game"]) {
-    display: none;
+:root[data-skin="tactical"] [data-for-skin="tactical"] {
+    display: revert-layer;
+}
+:root[data-skin="game"] [data-for-skin="game"] {
+    display: revert-layer;
 }

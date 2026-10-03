@@ -67,3 +67,11 @@ test("en Terminal el prompt de la cabecera va en el color de acento", async ({ p
     await page.goto("/");
     await expect(page.locator(".site-handle")).toHaveCSS("color", "rgb(159, 214, 90)");
 });
+
+test("con una skin fuera del registro en <html> no se ve ningún adorno", async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop");
+    await page.goto("/");
+    await page.evaluate(() => { document.documentElement.dataset.skin = "sin-registro"; });
+    const visible = await page.locator("[data-for-skin]").evaluateAll((els) => els.filter((e) => getComputedStyle(e).display !== "none").length);
+    expect(visible).toBe(0);
+});

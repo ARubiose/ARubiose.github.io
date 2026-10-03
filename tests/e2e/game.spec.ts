@@ -21,8 +21,9 @@ for (const path of ["/", "/en/"]) {
     });
 }
 
-test("la cabecera muestra el nombre corto en mayúsculas", async ({ page }) => {
+test("la cabecera muestra el nombre corto en mayúsculas", async ({ page }, info) => {
     await page.goto("/");
+    await expect(page.locator(".site-handle")).toHaveCSS("font-size", info.project.name.startsWith("desktop") ? "22px" : "20px");
     await expect(page.locator('.site-handle [data-for-skin="game"]')).toHaveText(/^\S+ \S+$/);
     await expect(page.locator(".site-handle")).toHaveCSS("text-transform", "uppercase");
 });
@@ -87,6 +88,50 @@ test("el foco se distingue del fondo en la pestaña seleccionada y en la skin ac
     const o = await contrast('.header-lang [data-skin-option="game"]');
     expect(o.style).toBe("solid");
     expect(o.outline).not.toBe(o.background);
+});
+
+// Plantilla: el nombre puede traer palabras muy largas, que a 50-84 px en mayúsculas no caben.
+test("un nombre con una palabra muy larga no desborda ni aplasta la foto", async ({ page }, info) => {
+    await page.goto("/");
+    await page.locator(".hero-name").evaluate((el) => { el.textContent = "Supercalifragilisticoexpialidoso Rubio"; });
+    const [name, hero, photo] = await Promise.all([".hero-name", "#about", ".photo-window"].map((s) => page.locator(s).boundingBox()));
+    expect(name!.x + name!.width).toBeLessThanOrEqual(hero!.x + hero!.width + 1);
+    if (info.project.name.startsWith("desktop")) expect(photo!.width).toBeGreaterThan(250);
+});
+
+// Un borde visible y un clip-path inclinado no casan: el recorte se come los laterales del borde.
+test("el botón de equipar con borde visible no va recortado", async ({ page }, info) => {
+    test.skip(!info.project.name.startsWith("desktop"), "en móvil el botón está en el panel inferior");
+    await page.goto("/");
+    const button = page.locator("#skills .inspector-equip");
+    const look = () => button.evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return { border: cs.borderLeftColor, background: cs.backgroundColor, clip: cs.clipPath };
+    });
+    await page.locator("#skills .tile-main").first().click();
+    await button.click(); // equipa: el botón pasa a «quitar», solo con borde
+    await expect(button).toHaveAttribute("data-equipped", "");
+    const on = await look();
+    expect(on.border).not.toBe(on.background);
+    expect(on.clip).toBe("none");
+});
+
+test("móvil: el menú es un menú de pausa, con secciones grandes y sin separadores", async ({ page }, info) => {
+    test.skip(!info.project.name.startsWith("mobile"));
+    await page.goto("/");
+    await page.locator('[popovertarget="site-menu"]').click();
+    const link = page.locator("#site-menu .nav-link").first();
+    await expect(link).toHaveCSS("font-size", "34px");
+    await expect(link).toHaveCSS("border-bottom-color", "rgba(0, 0, 0, 0)");
+});
+
+test("escritorio: el inventario del creador es una lista de dos columnas", async ({ page }, info) => {
+    test.skip(!info.project.name.startsWith("desktop"));
+    await page.goto("/");
+    const grid = page.locator("#skills .skill-panel[data-active] > ul");
+    const [cols, rowGap] = await grid.evaluate((el) => [getComputedStyle(el).gridTemplateColumns.split(" ").length, getComputedStyle(el).rowGap]);
+    expect(cols).toBe(2);
+    expect(rowGap).toBe("0px");
 });
 
 test("el panel diagonal del hero no ensancha la página", async ({ page }) => {

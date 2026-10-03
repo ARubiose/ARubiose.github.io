@@ -47,5 +47,7 @@ export function initNav(): void {
     };
     addEventListener("scroll", schedule, { passive: true });
     addEventListener("resize", schedule, { passive: true });
+    // Cambiar de skin cambia la altura de las secciones sin que haya scroll.
+    document.addEventListener("skinchange", schedule);
     update();
 }
