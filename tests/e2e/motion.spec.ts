@@ -14,6 +14,11 @@ test.describe("sin animaciones", () => {
             await expect(card).toHaveCSS("opacity", "1");
             await expect(card).toHaveCSS("transform", "none");
         }
+        // Una animación corta ya terminada también deja opacity 1: lo que la delata es el style en línea.
+        const animated = page.locator(".hero .prompt, .hero-name, .hero-role, .hero-loc, .hero-sum, .hero-cta, .photo-window, .t-card, .timeline-node, .t-when, .reveal, [data-builder]");
+        expect(await animated.count()).toBeGreaterThan(5);
+        const styled = await animated.evaluateAll((els) => els.filter((el) => el.hasAttribute("style")).map((el) => el.className));
+        expect(styled).toEqual([]);
     });
 });
 
@@ -28,6 +33,16 @@ test.describe("sin JavaScript", () => {
         await expect(page.locator("[data-tabs]")).toBeHidden();
         await expect(page.locator(".t-card").first()).toBeVisible();
     });
+});
+
+test("cruzar 768 px durante la intro no la repite ni corta el prompt", async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop");
+    await page.goto("/");
+    const prompt = page.locator(".hero .prompt");
+    await page.waitForTimeout(150); // a mitad de la escritura
+    await page.setViewportSize({ width: 600, height: 800 });
+    await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+    await expect(prompt).toHaveText("whoami");
 });
 
 test("con animaciones, la intro termina con el nombre completo", async ({ page }) => {
