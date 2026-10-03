@@ -16,6 +16,7 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 | 2026-10-02 | Actualización a Astro 7.3, Tailwind 4.3, Node 24 y pnpm 11 | `28f6ddf` |
 | 2026-10-02 | Fuentes web y declaraciones del humano en la wiki | `8ab7eac`; decisión [0003](decisions/0003-web-and-human-sources.md) |
 | 2026-10-02 | Fase 5: arquitectura de skins y skin Terminal (timeline, creador de personaje, foto ampliable, animaciones GSAP, regresión visual) | [spec](superpowers/specs/2026-10-02-terminal-skin-design.md), [plan](superpowers/plans/2026-10-02-terminal-skin.md), [maquetas](design/mockups/) |
+| 2026-10-03 | Mejoras menores de las revisiones de las fases 1–5: contrato (URLs solo http(s), fechas YAML completas, `url: null`, orden total), skin en `@layer components`, respaldo sin Popover API, intro del hero estable al cambiar de ancho, JSON del creador escapado, tests más estrictos | rama `fix/minor-improvements` |
 | 2026-10-02 | Fases 1–4: contenido inicial, base del sitio, contrato de contenido y secciones, con tests (unitarios, contrato, componentes, privacidad y E2E con axe) | [spec](superpowers/specs/2026-10-02-portfolio-content-design.md), [plan](superpowers/plans/2026-10-02-portfolio-content.md); `af663b9`..`6384a1b` |
 
 ## Pendiente
@@ -30,59 +31,16 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
   Al crear el CI, añadir `github-actions` a `skills` de `wiki/public/projects/portfolio-llm-wiki.md`
   (decisión del humano, 2026-10-02).
 
-### Mejoras menores (revisión final de las fases 1–4)
+### Mejoras menores
 
-- [ ] El test de la cabecera se cumple sin `aria-current`: exigir
-  `/<span[^>]*aria-current="true"[^>]*>English<\/span>/` (`tests/components/header.test.ts:22`).
-- [ ] Una fecha YAML completa (`start: 2026-06-01`) llega como `Date` y da un error críptico
-  en lugar del mensaje de formato: aceptar `z.date()` en la unión y transformarla, o
-  rechazarla con mensaje claro (`src/lib/dates.ts:7`).
-- [ ] `url: null` en un proyecto rompe la build: aceptar `.nullish()` o documentar en la
-  regla de la wiki que se omite (`src/lib/schemas.ts:59`).
-- [ ] `z.url()` acepta `javascript:`: restringir a `http(s)` en `links`, `repo` y `url`
-  (`src/lib/schemas.ts:36,58,59`).
-- [ ] `compareYearMonth` no es un orden total si en el mismo año se mezclan `AAAA` y
-  `AAAA-MM`: para ordenar, tratar el mes ausente como 0 y dejar «mismo año = igual» solo
-  para la validación `end ≥ start` (`src/lib/dates.ts:21`).
-- [ ] El `summary` de cada habilidad solo aparece en el `title`, invisible con teclado o
-  lector de pantalla: mostrarlo o dejar de exigirlo (`src/components/SkillGroup.astro:12`).
-- [ ] El test de la wiki exige al menos un proyecto aunque el sitio soporta la colección
-  vacía; molesta a quien use la plantilla (`tests/content/wiki.test.ts:39`).
-- [ ] Los tests de componentes no cubren ambos idiomas ni la lista vacía en todas las
-  secciones: completar con `test.each(["es", "en"])` (`tests/components/sections.test.ts`).
-- [ ] El diagrama de `system-design.md` §1 aún marca las colecciones como `[pendiente]`.
-- [ ] La comprobación de valores sin resolver del E2E podría dar falsos positivos con prosa
-  inglesa: usar `\bundefined\b` y `\bNaN\b` (`tests/e2e/home.spec.ts:35`).
-- [ ] Recomendación: que cada fixture inválido compruebe la ruta del error (`["en",
-  "summary"]`, `["end"]`) y no solo que falle (`tests/content/schemas.test.ts`).
-
-### Mejoras menores (revisión final de la fase 5)
-
-- [ ] El CSS de la skin no está en ninguna capa: `border-b-0` no gana en la barra del visor de
-  la foto y deja una línea doble (`src/styles/global.css:3`, `src/components/ProfilePhoto.astro`).
-  Pasar la decoración a `@layer components`.
-- [ ] «Combinación usada en» queda vacío, sin mensaje, si la build solo tiene habilidades sin
-  uso (`src/scripts/skill-builder.ts`).
-- [ ] El botón de equipar cambia su `aria-label` además de `aria-pressed`; el lector anuncia
-  dos veces el estado (`src/scripts/skill-builder.ts`).
-- [ ] `TimelineItem` repite `" - "` en vez de importar `PERIOD_SEPARATOR`
-  (`src/components/TimelineItem.astro`).
-- [ ] El JSON del creador no escapa `<`: un nombre con `</script>` rompería la página
-  (`src/components/SkillBuilder.astro`).
-- [ ] El test de presupuesto solo sigue un nivel de imports estáticos
-  (`tests/perf/budget.test.ts`).
-- [ ] El test de movimiento reducido no detecta animaciones cortas: comprobar que no queda
-  `style` en línea (`tests/e2e/motion.spec.ts`).
-- [ ] La intro del hero se repite y puede cortar el prompt al cruzar 768 px
-  (`src/scripts/motion.ts`).
-- [ ] Un `end` solo con año (`start: 2020-06`, `end: 2020`) da 0 meses de XP; tratarlo como
-  diciembre (`src/lib/skills.ts`).
-- [ ] Sin Popover API, el menú móvil quedaría siempre visible; añadir `@supports` de respaldo
-  (`src/components/Header.astro`).
-- [ ] Claves sin uso: `nav.close` y `skills.brokenTitle` (`src/i18n/ui.ts`).
-- [ ] Doble conversión de tipos en `byStart` (`src/lib/home.ts`).
-- [ ] Un repo terminado en `.git` daría `name.git/README.md` (`src/lib/home.ts`).
-- [ ] El script en línea de `Layout.astro` duplica `resolveSkin`.
+- [ ] En el menú móvil, el `::before` («> ») de `.nav-link` tiene `margin-left: -2ch`, pero en
+  la fuente de display `> ` no mide 2ch: el texto sale 13 px a la izquierda del margen
+  (`src/styles/skins/terminal.css`, regla `.nav-link::before`). Ya pasaba antes de la rama de mejoras.
+- [ ] El JSON Schema que Astro genera para el editor (`.astro/collections/*.schema.json`) da por
+  válida una fecha `date-time` en `start`/`end` y marca `url: null` como error, al revés que la
+  build (`src/lib/dates.ts:11`, `src/lib/schemas.ts`). Solo afecta al autocompletado.
+- [ ] El respaldo sin Popover API usa `@supports selector()`: los navegadores aún más antiguos
+  ignoran el bloque entero (`src/styles/states.css`).
 
 ### Cuestiones abiertas
 

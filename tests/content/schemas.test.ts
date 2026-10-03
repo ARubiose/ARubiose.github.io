@@ -57,6 +57,13 @@ test("una fecha YAML completa da el mensaje de formato", () => {
     expect(result.error?.issues[0].message).toMatch(/AAAA-MM/);
 });
 
+test("links.source: null equivale a omitirlo", () => {
+    const profile = { ...readFrontmatter(join(FIXTURES, "valid/profile.md")) } as { links: Record<string, unknown> };
+    const result = schemasByType.profile.safeParse({ ...profile, links: { ...profile.links, source: null } });
+    expect(result.error?.issues ?? []).toEqual([]);
+    expect(result.data?.links.source).toBeUndefined();
+});
+
 test("url: null equivale a omitirla", () => {
     const result = schemasByType.project.safeParse(readFrontmatter(join(FIXTURES, "valid/project-null-url.md")));
     expect(result.success).toBe(true);

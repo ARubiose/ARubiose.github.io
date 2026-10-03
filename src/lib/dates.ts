@@ -10,7 +10,10 @@ const FORMAT_MESSAGE = "Formato esperado: AAAA o AAAA-MM";
 
 // YAML convierte 2026-06-01 en Date: se rechaza con el mismo mensaje en vez de perder el día.
 export const yearMonth = z
-    .union([z.string(), z.number(), z.date().transform(() => "")], { error: FORMAT_MESSAGE })
+    .union([z.string(), z.number(), z.date().transform(() => "")], {
+        // Sin valor, el mensaje por defecto («Required»); con otro tipo, el de formato.
+        error: (issue) => (issue.input === undefined ? undefined : FORMAT_MESSAGE),
+    })
     .transform(String)
     .pipe(z.string().regex(YEAR_MONTH, FORMAT_MESSAGE));
 

@@ -43,15 +43,27 @@ test("sin desbordamiento horizontal", async ({ page }) => {
     expect(offenders).toEqual([]);
 });
 
-test("sin Popover API el menú móvil queda oculto (regla de respaldo en la hoja final)", async ({ page }) => {
+test("sin Popover API el móvil sigue teniendo navegación e idioma", async ({ page }, info) => {
+    test.skip(info.project.name !== "mobile");
     await page.goto("/");
-    const fallback = await page.evaluate(() =>
-        [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules]).some(
-            (rule) =>
-                rule instanceof CSSSupportsRule &&
-                rule.conditionText.includes(":popover-open") &&
-                [...rule.cssRules].some((r) => r instanceof CSSStyleRule && r.selectorText === ".site-menu" && r.style.display === "none"),
-        ),
-    );
-    expect(fallback).toBe(true);
+    // Chromium soporta popover: se aplica el bloque @supports de respaldo como si no lo hiciera.
+    const applied = await page.evaluate(() => {
+        const rules = [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules]);
+        const fallback = rules.find((r) => r instanceof CSSSupportsRule && r.conditionText.includes(":popover-open")) as CSSSupportsRule | undefined;
+        if (!fallback) return false;
+        const style = document.createElement("style");
+        style.textContent = [...fallback.cssRules].map((r) => r.cssText).join("\n");
+        document.head.append(style);
+        return true;
+    });
+    expect(applied).toBe(true);
+    await expect(page.locator(".menu-toggle")).toBeHidden();
+    await expect(page.locator("#site-menu")).toBeHidden();
+    await expect(page.locator('.site-nav a[href="#skills"]')).toBeAttached();
+    await expect(page.locator(".site-nav")).toBeVisible();
+    await expect(page.locator('.header-lang a[hreflang="en"]')).toBeVisible();
+    for (const selector of [".site-nav", ".header-lang"]) {
+        const box = await page.locator(selector).boundingBox();
+        expect(box!.x + box!.width, selector).toBeLessThanOrEqual(390);
+    }
 });

@@ -22,8 +22,8 @@ const t = useTranslations(locale);
                 {sections.map((s) => <li><a class="nav-link hover:text-text" href={`#${s.id}`}>{s.label.toLowerCase()}</a></li>)}
             </ul>
         </nav>
-        <div class="ml-auto hidden md:block"><LanguageSwitcher locale={locale} urls={urls} /></div>
-        <button class="ml-auto border border-line px-2.5 py-1 text-[12.5px] md:hidden" popovertarget="site-menu" aria-label={t("nav.menu")}>
+        <div class="header-lang ml-auto hidden md:block"><LanguageSwitcher locale={locale} urls={urls} /></div>
+        <button class="menu-toggle ml-auto border border-line px-2.5 py-1 text-[12.5px] md:hidden" popovertarget="site-menu" aria-label={t("nav.menu")}>
             <span class="text-accent" aria-hidden="true">$</span> {t("nav.menu")}
         </button>
     </div>

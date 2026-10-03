@@ -6,7 +6,8 @@ export { BUILD_CAP, isBrokenBuild, rankCombination } from "./build";
 export type Span = { start: string; end: string | null };
 type WithSkills = { id: string; skills?: string[] };
 
-// Un fin solo con año (`end: 2020`) cuenta como diciembre, no como enero.
+// Un fin solo con año (`end: 2020`) cuenta como `2020-12`, no como enero. El fin es exclusivo,
+// igual que con un `end: 2020-12` explícito.
 const endIndex = (end: string) => monthIndex(/^\d{4}$/.test(end) ? `${end}-12` : end);
 
 export function monthsCovered(spans: Span[], now: string): number {

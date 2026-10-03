@@ -25,9 +25,19 @@
     display: flex;
 }
 
-/* Sin Popover API el atributo popover no oculta nada y el menú móvil quedaría siempre abierto. */
+/* Sin Popover API el atributo popover no oculta nada y el menú móvil quedaría siempre abierto:
+   se oculta junto con su botón y la cabecera muestra la navegación y el idioma en línea. */
 @supports not selector(:popover-open) {
-    .site-menu {
+    .site-menu,
+    .menu-toggle {
         display: none;
+    }
+    .site-nav,
+    .header-lang {
+        display: block;
+    }
+    .site-nav {
+        min-width: 0;
+        overflow-x: auto;
     }
 }
