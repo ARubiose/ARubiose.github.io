@@ -1,0 +1,32 @@
+/* Skin Juego: pantalla de selección de un juego moderno (dirección C de hud-directions.html).
+   Saira Condensed enorme en mayúsculas, paralelogramos y rojo como único acento. */
+[data-skin="game"] {
+    --skin-bg: #0f0f13;
+    --skin-surface: #17171d;
+    --skin-surface-2: #1f1f27;
+    --skin-line: #2a2a33;
+    --skin-text: #ececf1;
+    --skin-body: #cfcfd8;
+    --skin-muted: #9a9aa8;
+    --skin-accent: #ec4c56;
+    --skin-accent-ink: #ffffff;
+    --skin-warn: #f0a83a;
+    --skin-font-display: var(--font-saira-condensed);
+    --skin-font-body: var(--font-geist);
+    --skin-font-mono: var(--font-geist-mono);
+    --skin-radius: 0;
+    /* Paralelogramos: inclinación de unos 12° en elementos de ~36 px de alto. */
+    --skin-slant: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    --skin-slant-lg: polygon(14% 0, 100% 0, 86% 100%, 0 100%);
+
+    /* Distribución: texto a la izquierda y foto a la derecha, nombre enorme. */
+    --hero-cols: 1.3fr 1fr;
+    --hero-photo-order: 1;
+    --hero-photo-max: 380px;
+    --hero-name-size: 50px;
+    --hero-name-size-md: 84px;
+    --hero-name-leading: 0.9;
+    --hero-name-weight: 800;
+    --section-title-size: 32px;
+    --section-title-size-md: 40px;
+}

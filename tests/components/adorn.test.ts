@@ -13,6 +13,6 @@ test("sustituye variables", async () => {
 });
 
 test("solo pinta las skins que definen el adorno", async () => {
-    const html = await render(Adorn, { props: { name: "menuMark", locale: "es" } });
-    expect(html.match(/data-for-skin="[^"]+"/g)).toEqual(['data-for-skin="terminal"']);
+    const html = await render(Adorn, { props: { name: "sectionSub.experience", locale: "es" } });
+    expect(html.match(/data-for-skin="[^"]+"/g)).toEqual(['data-for-skin="tactical"', 'data-for-skin="game"']);
 });

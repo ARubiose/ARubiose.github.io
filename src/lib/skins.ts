@@ -4,6 +4,7 @@ export type TimelineMode = "alternate" | "single";
 export const skinRegistry = [
     { id: "terminal", swatch: "#9fd65a", timeline: "alternate" },
     { id: "tactical", swatch: "#f0a83a", timeline: "single" },
+    { id: "game", swatch: "#ec4c56", timeline: "single" },
 ] as const satisfies readonly { id: string; swatch: string; timeline: TimelineMode }[];
 
 export type Skin = (typeof skinRegistry)[number]["id"];

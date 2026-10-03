@@ -56,3 +56,6 @@
 :root[data-skin="tactical"] [data-for-skin]:not([data-for-skin="tactical"]) {
     display: none;
 }
+:root[data-skin="game"] [data-for-skin]:not([data-for-skin="game"]) {
+    display: none;
+}

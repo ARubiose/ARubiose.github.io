@@ -49,6 +49,11 @@ describe("skinBootScript", () => {
         expect(boot("terminal")).toEqual({ skin: "terminal", timeline: "alternate" });
     });
 
+    test("aplica una skin guardada que no es la predeterminada", () => {
+        expect(boot("tactical")).toEqual({ skin: "tactical", timeline: "single" });
+        expect(boot("game")).toEqual({ skin: "game", timeline: "single" });
+    });
+
     test("con un valor desconocido aplica la predeterminada y su modo", () => {
         expect(boot("tactical-retirada")).toEqual({ skin: defaultSkin, timeline: timelineOf(defaultSkin) });
         expect(boot(null)).toEqual({ skin: defaultSkin, timeline: timelineOf(defaultSkin) });
@@ -70,7 +75,17 @@ test("Táctico está registrada con su muestra y modo single", () => {
     expect(skinRegistry.find((s) => s.id === "tactical")).toEqual({ id: "tactical", swatch: "#f0a83a", timeline: "single" });
 });
 
+test("Juego está registrada con su muestra y modo single", () => {
+    expect(skinRegistry.find((s) => s.id === "game")).toEqual({ id: "game", swatch: "#ec4c56", timeline: "single" });
+});
+
 describe("applySkin", () => {
+    test("aplica Juego con su modo", () => {
+        const root = { dataset: {} as DOMStringMap };
+        expect(applySkin(root, "game")).toBe("game");
+        expect(root.dataset).toEqual({ skin: "game", timeline: "single" });
+    });
+
     test("escribe la skin y su modo, la guarda y la devuelve", () => {
         const root = { dataset: {} as DOMStringMap };
         const saved: Record<string, string> = {};

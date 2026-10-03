@@ -11,7 +11,7 @@ test.skipIf(!existsSync(INDEX) && !process.env.CI)("el script de skin del dist s
     const html = readFileSync(INDEX, "utf8");
     const script = html.match(/<script>(try \{ var r = document\.documentElement[\s\S]*?)<\/script>/)?.[1];
     expect(script, "no se encontró el script de skin en el <head>").toBeDefined();
-    for (const [stored, expected] of [["terminal", "terminal"], ["desconocida", defaultSkin]]) {
+    for (const [stored, expected] of [["terminal", "terminal"], ["tactical", "tactical"], ["game", "game"], ["desconocida", defaultSkin]]) {
         const root = { dataset: {} as Record<string, string> };
         const localStorage = { getItem: (key: string) => (key === SKIN_STORAGE_KEY ? stored : null) };
         new Function("localStorage", "document", script!)(localStorage, { documentElement: root });
