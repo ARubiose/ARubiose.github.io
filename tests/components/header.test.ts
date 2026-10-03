@@ -39,6 +39,9 @@ test("selector de skin en la cabecera y en el menú: oculto sin JS, un botón po
     expect(html.match(/data-skin-option="terminal"/g)).toHaveLength(2);
     expect(html.match(/data-skin-option="tactical"/g)).toHaveLength(2);
     expect(html.match(/data-skin-option="game"/g)).toHaveLength(2);
+    // Mismo tamaño que el selector de idioma, que va a su lado.
+    expect(html).toMatch(/class="skin-option[^"]*text-\[13px\]/);
+    expect(html).toMatch(/<ul class="[^"]*text-\[13px\][^"]*">/);
     expect(html).toMatch(/role="group"[^>]*aria-label="Skin"/);
     expect(html.match(/data-skin-status/g)).toHaveLength(1);
 });
