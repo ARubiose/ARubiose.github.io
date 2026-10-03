@@ -24,6 +24,23 @@ test("móvil: el popover abre, navega, se cierra al elegir y con Esc", async ({ 
     await expect(menu).toBeHidden();
 });
 
+test("móvil: el texto de cada enlace del menú empieza en su margen, sin que el marcador lo desplace", async ({ page }, info) => {
+    test.skip(info.project.name !== "mobile");
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.locator('[popovertarget="site-menu"]').click();
+    const offsets = await page.locator("#site-menu .nav-link").evaluateAll((links) =>
+        links.map((a) => {
+            const range = document.createRange();
+            range.selectNodeContents(a.firstChild!); // el texto, sin el ::before
+            const contentLeft = a.getBoundingClientRect().left + parseFloat(getComputedStyle(a).paddingLeft);
+            return Math.round(range.getBoundingClientRect().left - contentLeft);
+        }),
+    );
+    expect(offsets.length).toBeGreaterThan(0);
+    for (const offset of offsets) expect(Math.abs(offset)).toBeLessThanOrEqual(1);
+});
+
 test("sin desbordamiento horizontal", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
