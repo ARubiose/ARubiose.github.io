@@ -64,10 +64,11 @@ describe("skinBootScript", () => {
     });
 });
 
-test("states.css oculta los adornos de las demás skins para cada skin registrada", () => {
+test("states.css oculta los adornos por defecto y muestra los de cada skin registrada", () => {
     const css = readFileSync(join(import.meta.dirname, "../../src/styles/states.css"), "utf8");
+    expect(css).toMatch(/^\[data-for-skin\] \{\s*display: none;/m);
     for (const skin of skins) {
-        expect(css, skin).toContain(`:root[data-skin="${skin}"] [data-for-skin]:not([data-for-skin="${skin}"])`);
+        expect(css, skin).toContain(`:root[data-skin="${skin}"] [data-for-skin="${skin}"] {\n    display: revert-layer;`);
     }
 });
 
