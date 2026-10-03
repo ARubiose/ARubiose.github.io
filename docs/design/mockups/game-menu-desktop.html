@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skin Menú de juego · escritorio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>body{margin:0;padding:28px;background:#08090b;color:#d6d9de;font-family:system-ui,sans-serif} h2{font-size:22px;margin:0 0 6px} .subtitle{color:#8c8c98;margin:0 0 22px;max-width:100ch} *{box-sizing:border-box} p,h1,ul{margin:0} .note{color:#8c8c98;font-size:13.5px;margin:10px 0 0;max-width:100ch} .opt{font:700 12px/1 system-ui;background:#26262e;color:#fff;padding:5px 8px;border-radius:4px;margin-right:8px}</style>
+</head>
+<body>
+
+<h2>Skin Menú de juego: escritorio, con contenido real</h2>
+<p class="subtitle">Pantalla de selección moderna (dirección C): Saira Condensed enorme en mayúsculas, bloques inclinados, rojo como único acento y panel diagonal detrás de la foto. Mismo marcado que Terminal y Táctico: solo cambian el CSS, los tokens de distribución y los adornos. Abajo, dos opciones para la línea de tiempo.</p>
+
+<style>
+  .g { --bg:#0f0f13; --surface:#17171d; --surface-2:#1f1f27; --line:#2a2a33; --text:#ececf1; --body:#cfcfd8; --muted:#9a9aa8; --accent:#ec4c56; --ink:#fff;
+       background: var(--bg); color: var(--text); font-family: Geist, system-ui, sans-serif; font-size: 15px; border: 1px solid #1d1d24; overflow: hidden; }
+  .g .mono { font-family: "Geist Mono", ui-monospace, monospace; }
+  .g .sk { display:inline-block; transform: skewX(-12deg); }
+  .g .sk > span { display:inline-block; transform: skewX(12deg); }
+
+  /* cabecera */
+  .g .hdr { display:flex; align-items:center; gap: 26px; padding: 14px 40px; border-bottom: 1px solid var(--line); }
+  .g .hdr .id { font-family:"Saira Condensed"; font-weight:800; font-size: 22px; letter-spacing:.04em; text-transform: uppercase; white-space: nowrap; }
+  .g .hdr nav { display:flex; gap: 4px; margin-right:auto; font-family:"Saira Condensed"; font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size: 15px; }
+  .g .hdr nav .sk { padding: 5px 13px; color: var(--muted); }
+  .g .hdr nav .on { color: var(--ink); background: var(--accent); }
+  .g .seg { display:inline-flex; gap: 4px; font-family:"Saira Condensed"; font-weight:700; font-size: 14px; text-transform: uppercase; letter-spacing:.06em; }
+  .g .seg .sk { padding: 4px 11px; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); }
+  .g .seg .sk span { display:inline-flex; align-items:center; gap: 6px; }
+  .g .seg .on { background: var(--text); color: var(--bg); box-shadow: none; }
+  .g .seg i { width: 8px; height: 8px; display:inline-block; }
+  .g .lang { font-family:"Geist Mono"; font-size: 13px; color: var(--muted); } .g .lang b { color: var(--text); font-weight: 500; }
+
+  /* hero */
+  .g .hero { position: relative; display:grid; grid-template-columns: 1.3fr 1fr; gap: 48px; padding: 56px 40px 60px; align-items: end; overflow: hidden; }
+  .g .hero::before { content:""; position:absolute; right: -80px; top: 0; bottom: 0; width: 50%; background: var(--surface); transform: skewX(-10deg); }
+  .g .hero::after { content:""; position:absolute; right: calc(50% - 92px); top: 0; bottom: 0; width: 6px; background: var(--accent); transform: skewX(-10deg); }
+  .g .hero > * { position: relative; z-index: 1; }
+  .g .kick { font-family:"Saira Condensed"; font-weight:700; font-size: 15px; letter-spacing:.18em; text-transform: uppercase; color: var(--accent); }
+  .g h1 { font-family:"Saira Condensed"; font-weight:800; font-size: 84px; line-height: .9; text-transform: uppercase; margin-top: 10px; }
+  .g .role { margin-top: 18px; background: var(--text); color: var(--bg); font-family:"Saira Condensed"; font-weight:700; font-size: 22px; text-transform:uppercase; padding: 3px 16px; }
+  .g .loc { font-family:"Geist Mono"; font-size: 12.5px; color: var(--muted); margin-top: 14px; letter-spacing:.08em; text-transform: uppercase; }
+  .g .sum { color: var(--body); margin-top: 14px; max-width: 52ch; font-size: 16.5px; line-height: 1.6; }
+  .g .cta { display:flex; gap: 12px; margin-top: 28px; }
+  .g .btn { font-family:"Saira Condensed"; font-weight:700; text-transform: uppercase; letter-spacing: .06em; font-size: 18px; padding: 9px 24px; }
+  .g .btn.p { background: var(--accent); color: var(--ink); }
+  .g .btn.s { box-shadow: inset 0 0 0 2px var(--line); }
+  .g .portrait { position: relative; max-width: 380px; width: 100%; justify-self: end; }
+  .g .portrait img { display:block; width:100%; aspect-ratio: 4/5; object-fit: cover; clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%); }
+  .g .portrait .tag { position:absolute; left: 2%; bottom: 14px; font-family:"Saira Condensed"; font-weight:700; font-size: 14px; letter-spacing:.1em; background: var(--accent); color: var(--ink); padding: 2px 12px; }
+
+  /* titular de sección */
+  .g .sec { padding: 12px 40px 48px; }
+  .g .h2 { display:flex; align-items:baseline; gap: 14px; font-family:"Saira Condensed"; font-weight:800; font-size: 40px; text-transform: uppercase; letter-spacing: .01em; margin-bottom: 22px; line-height: 1; }
+  .g .h2 small { font-family:"Saira Condensed"; font-weight:700; font-size: 15px; color: var(--accent); letter-spacing:.18em; }
+  .g .h2::after { content:""; flex:1; height: 2px; align-self: center; background: linear-gradient(90deg, var(--line), transparent); }
+
+  /* timeline A: una columna con borde rojo */
+  .g .tl { display:grid; gap: 14px; }
+  .g .job { background: var(--surface); border-left: 4px solid var(--line); padding: 18px 22px; }
+  .g .job.cur { border-left-color: var(--accent); background: linear-gradient(90deg, rgba(236,76,86,.12), var(--surface) 45%); }
+  .g .job .top { display:flex; justify-content:space-between; gap: 16px; align-items: baseline; }
+  .g .job .t { font-family:"Saira Condensed"; font-weight:700; font-size: 24px; text-transform: uppercase; letter-spacing:.01em; }
+  .g .job .when { font-family:"Geist Mono"; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+  .g .job .c { color: var(--text); font-family:"Geist Mono"; font-size: 12.5px; margin-top: 2px; text-transform: uppercase; letter-spacing:.06em; }
+  .g .job p { color: var(--body); margin-top: 10px; font-size: 15px; }
+  .g .job ul { margin-top: 8px; color: var(--body); font-size: 14.5px; list-style: none; padding: 0; }
+  .g .job li { padding-left: 18px; position: relative; margin-top: 4px; }
+  .g .job li::before { content:"▸"; position:absolute; left: 0; color: var(--accent); }
+  .g .badge { font-family:"Saira Condensed"; font-weight:700; font-size: 13px; letter-spacing: .1em; color: var(--ink); background: var(--accent); padding: 1px 9px; margin-left: 12px; vertical-align: 4px; }
+  .g .dur { color: var(--muted); }
+
+  /* timeline B: alterna (como Terminal), nodos inclinados */
+  .g .alt { position: relative; display:grid; grid-template-columns: 1fr 1fr; column-gap: 56px; row-gap: 14px; }
+  .g .alt::before { content:""; position:absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(var(--accent) 0 45%, var(--line) 45%); }
+  .g .alt .job { position: relative; }
+  .g .alt .job::after { content:""; position:absolute; top: 22px; width: 14px; height: 14px; background: var(--bg); border: 2px solid var(--accent); transform: skewX(-12deg); }
+  .g .alt .job.cur::after { background: var(--accent); }
+  .g .alt .l { grid-column: 1; border-left: 0; border-right: 4px solid var(--accent); }
+  .g .alt .l::after { right: -40px; }
+  .g .alt .r { grid-column: 2; margin-top: 70px; }
+  .g .alt .r::after { left: -40px; }
+  .g .alt .l.cur { background: linear-gradient(270deg, rgba(236,76,86,.12), var(--surface) 45%); }
+
+  /* creador */
+  .g .builder { display:grid; grid-template-columns: 250px 1fr 270px; gap: 18px; align-items: start; }
+  .g .panel { background: var(--surface); }
+  .g .panel .bar { display:flex; justify-content:space-between; padding: 8px 14px; background: var(--surface-2); font-family:"Saira Condensed"; font-weight:700; font-size: 15px; letter-spacing:.08em; text-transform: uppercase; }
+  .g .panel .bar b { color: var(--accent); }
+  .g .stats { padding: 12px 14px; display:grid; gap: 6px; font-size: 14px; margin: 0; }
+  .g .stats div { display:flex; justify-content:space-between; } .g .stats dt { color: var(--muted); } .g .stats dd { margin: 0; }
+  .g .slots { display:grid; grid-template-columns: repeat(3,1fr); gap: 8px; padding: 12px 14px 14px; }
+  .g .slot { aspect-ratio: 1; box-shadow: inset 0 0 0 1px var(--line); display:grid; place-items:center; color: var(--muted); font-family:"Saira Condensed"; font-weight:700; font-size: 18px; transform: skewX(-8deg); }
+  .g .slot.f { background: var(--accent); color: var(--ink); box-shadow: none; }
+  .g .tabs { display:flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+  .g .tab { font-family:"Saira Condensed"; font-weight:700; font-size: 15px; letter-spacing:.06em; text-transform: uppercase; padding: 5px 14px; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); }
+  .g .tab.on { color: var(--bg); background: var(--text); box-shadow:none; }
+  .g .tiles { display:grid; grid-template-columns: repeat(2, 1fr); gap: 0 18px; }
+  .g .tile { display:flex; align-items:center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .g .tile .n { font-weight: 500; font-size: 15.5px; }
+  .g .tile .x { font-family:"Geist Mono"; font-size: 11.5px; color: var(--muted); text-transform: uppercase; }
+  .g .tile .e { font-family:"Saira Condensed"; font-weight:700; font-size: 13px; letter-spacing:.08em; color: var(--muted); margin-left: 12px; }
+  .g .tile.eq .e { color: var(--accent); }
+  .g .tile.sel { background: linear-gradient(90deg, rgba(236,76,86,.2), transparent); border-bottom-color: transparent; }
+  .g .tile.sel .n::before { content:"▶ "; color: var(--accent); font-size: 11px; }
+  .g .insp { padding: 14px; font-size: 14px; }
+  .g .insp .n { font-family:"Saira Condensed"; font-weight: 800; font-size: 32px; text-transform: uppercase; line-height: 1; }
+  .g .insp dl { margin: 12px 0 0; display:grid; gap: 6px; }
+  .g .insp dl div { display:flex; justify-content:space-between; border-bottom: 1px solid var(--line); padding: 6px 0; }
+  .g .insp dd { margin: 0; font-family:"Geist Mono"; font-size: 12.5px; }
+  .g .insp .act { margin-top: 16px; background: var(--accent); color: var(--ink); text-align:center; padding: 8px; font-family:"Saira Condensed"; font-weight:700; font-size: 16px; letter-spacing:.08em; text-transform: uppercase; display:block; }
+</style>
+
+<div class="g">
+  <div class="hdr">
+    <span class="id">Álvaro Rubio</span>
+    <nav><span class="sk"><span>Experiencia</span></span><span class="sk"><span>Proyectos</span></span><span class="sk on"><span>Habilidades</span></span><span class="sk"><span>Formación</span></span><span class="sk"><span>Contacto</span></span></nav>
+    <span class="seg"><span class="sk"><span><i style="background:#9fd65a"></i>Terminal</span></span><span class="sk"><span><i style="background:#f0a83a"></i>Táctico</span></span><span class="sk on"><span><i style="background:#ec4c56"></i>Menú de juego</span></span></span>
+    <span class="lang"><b>ES</b> / EN</span>
+  </div>
+
+  <div class="hero">
+    <div>
+      <p class="kick">▶ Jugador 1</p>
+      <h1>Álvaro<br>Rubio Segovia</h1>
+      <p class="role sk"><span>Ingeniero de IA y software</span></p>
+      <p class="loc">Madrid</p>
+      <p class="sum">Ingeniero de software que hoy aplica inteligencia artificial a la salud capilar en SKIN AI, con una base sólida en backend con Python, arquitectura de sistemas y visión por computador.</p>
+      <div class="cta"><span class="btn p sk"><span>Ver experiencia</span></span><span class="btn s sk"><span>Contacto</span></span></div>
+    </div>
+    <div class="portrait"><img src="../../../src/assets/images/profile.jpg" alt=""><span class="tag sk"><span>P1 · Ampliar</span></span></div>
+  </div>
+
+  <div class="sec">
+    <div class="h2">Experiencia <small>Modo historia</small></div>
+    <p class="note" style="margin:0 0 12px"><span class="opt">A</span>Una columna (modo <code>single</code>), como la maqueta C: borde rojo en el puesto vigente.</p>
+    <div class="tl">
+      <div class="job cur">
+        <div class="top"><span class="t">Ingeniero de Inteligencia Artificial<span class="badge sk"><span>En curso</span></span></span><span class="when">jun 2026 — actualidad</span></div>
+        <p class="c">SKIN AI</p>
+        <p>Desarrollo de una aplicación web y móvil que reconoce enfermedades capilares con inteligencia artificial.</p>
+      </div>
+      <div class="job">
+        <div class="top"><span class="t">Desarrollador y arquitecto de software</span><span class="when">ago 2022 — jun 2026 · <span class="dur">3 años y 10 meses</span></span></div>
+        <p class="c">Zalcu Technologies</p>
+        <p>Diseño e implementación de sistemas backend escalables y eficientes, con responsabilidades propias de un arquitecto de software.</p>
+        <ul><li>Procesamiento asíncrono de archivos con FastAPI y Django, Celery y Redis.</li><li>Diseño de sistemas escalables, asumiendo funciones de arquitecto de software.</li><li>Desarrollo, pruebas y despliegue con Docker, pytest y CI/CD en GitHub Actions.</li></ul>
+      </div>
+    </div>
+
+    <p class="note" style="margin:28px 0 12px"><span class="opt">B</span>Alterna (modo <code>alternate</code>, como Terminal), con nodos inclinados en el eje.</p>
+    <div class="alt">
+      <div class="job cur l">
+        <div class="top"><span class="t">Ingeniero de Inteligencia Artificial<span class="badge sk"><span>En curso</span></span></span></div>
+        <p class="c">SKIN AI · <span class="dur">jun 2026 — actualidad</span></p>
+        <p>Desarrollo de una aplicación web y móvil que reconoce enfermedades capilares con inteligencia artificial.</p>
+      </div>
+      <div class="job r">
+        <div class="top"><span class="t">Desarrollador y arquitecto de software</span></div>
+        <p class="c">Zalcu Technologies · <span class="dur">ago 2022 — jun 2026</span></p>
+        <p>Diseño e implementación de sistemas backend escalables y eficientes, con responsabilidades propias de un arquitecto de software.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="h2">Habilidades <small>Selección de personaje</small></div>
+    <div class="builder">
+      <div class="panel">
+        <div class="bar"><span>Ficha de jugador</span><b>NV 2026</b></div>
+        <dl class="stats"><div><dt>XP profesional</dt><dd>5,3 años</dd></div><div><dt>Habilidades</dt><dd>15</dd></div><div><dt>Categorías</dt><dd>5</dd></div></dl>
+        <div class="bar"><span>Equipamiento</span><b>2 / 6</b></div>
+        <div class="slots"><span class="slot f">PY</span><span class="slot f">FA</span><span class="slot">—</span><span class="slot">—</span><span class="slot">—</span><span class="slot">—</span></div>
+      </div>
+      <div>
+        <div class="tabs"><span class="tab on sk"><span>Backend</span></span><span class="tab sk"><span>Inteligencia artificial</span></span><span class="tab sk"><span>Frontend y móvil</span></span><span class="tab sk"><span>DevOps y calidad</span></span><span class="tab sk"><span>Ciberseguridad</span></span></div>
+        <div class="tiles">
+          <div class="tile"><span class="n">Arquitectura de software</span><span><span class="x">3,8 años</span><span class="e">+</span></span></div>
+          <div class="tile"><span class="n">Celery</span><span><span class="x">3,8 años</span><span class="e">+</span></span></div>
+          <div class="tile"><span class="n">Django</span><span><span class="x">3,8 años</span><span class="e">+</span></span></div>
+          <div class="tile eq sel"><span class="n">FastAPI</span><span><span class="x">4,2 años</span><span class="e">✓</span></span></div>
+          <div class="tile eq"><span class="n">Python</span><span><span class="x">5,3 años</span><span class="e">✓</span></span></div>
+          <div class="tile"><span class="n">Redis</span><span><span class="x">3,8 años</span><span class="e">+</span></span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="bar"><span>Detalles</span><b>▶</b></div>
+        <div class="insp">
+          <div class="n">FastAPI</div><div class="mono" style="color:var(--muted);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;margin-top:4px">Backend</div>
+          <dl><div><dt>XP</dt><dd>4 años y 2 meses</dd></div><div><dt>Desde</dt><dd>2022</dd></div></dl>
+          <p style="margin-top:12px;color:var(--body)">APIs asíncronas de alto rendimiento.</p>
+          <span class="act sk"><span>Quitar del equipamiento</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="note">Adornos propuestos: cabecera «ÁLVARO RUBIO» (nombre en mayúsculas, sin prefijo); hero «▶ Jugador 1»; foto «P1 · Ampliar»; subtítulos: Experiencia «Modo historia», Proyectos «Misiones secundarias», Habilidades «Selección de personaje», Formación «Tutorial», Contacto «Multijugador»; creador «Ficha de jugador», «NV», «Detalles»; contacto «▶ MAIL» y «▶ ABRIR».</p>
+
+</body>
+</html>
