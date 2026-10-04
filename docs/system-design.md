@@ -195,9 +195,16 @@ procesar (`favicon.svg`).
 
 ### 3.6 Build y despliegue
 
-`pnpm build` genera HTML estático en `dist/`. El despliegue previsto es **GitHub Pages**
-mediante GitHub Actions (`withastro/action`). Solo necesita lo que está en el repo, porque el
-portfolio consume únicamente `wiki/public/`.
+`pnpm build` genera HTML estático en `dist/`. Se publica en **GitHub Pages**
+(`https://arubiose.github.io`, repo de usuario `ARubiose.github.io`, sin `base`) con el
+workflow `.github/workflows/deploy.yml`:
+
+- En cada push y PR ejecuta `pnpm check`, `pnpm test` y `pnpm test:e2e`, con el historial
+  completo de git para el test de privacidad.
+- En `main`, sube como artefacto de Pages el mismo `dist/` que han construido y escaneado los
+  e2e, y lo despliega con `actions/deploy-pages`. Si falla un test, no se publica nada.
+
+Solo necesita lo que está en el repo, porque el portfolio consume únicamente `wiki/public/`.
 
 ### 3.7 Tests
 

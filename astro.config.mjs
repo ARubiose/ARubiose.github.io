@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
+    site: "https://arubiose.github.io",
     i18n: {
         locales: ["en", "es"],
         defaultLocale: "es",
