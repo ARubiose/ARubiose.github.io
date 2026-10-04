@@ -12,7 +12,7 @@ Catálogo de las páginas **públicas** (`wiki/public/`), mantenido por el LLM e
 
 - [Gofore](public/experience/gofore.md) — Investigación en métodos de visión por computador basados en deep learning para tecnologías de apoyo a personas ciegas o con baja visión.
 - [Oesia](public/experience/oesia.md) — Prácticas en el centro de operaciones de seguridad (SOC), con desarrollo de herramientas en Python.
-- [SKIN AI](public/experience/skin-ai.md) — Desarrollo de una aplicación web y móvil que reconoce enfermedades capilares con inteligencia artificial.
+- [SKIN AI](public/experience/skin-ai.md) — Desarrollo de una aplicación web y móvil que reconoce enfermedades capilares con inteligencia artificial, dentro de una plataforma de dermatología con IA validada clínicamente.
 - [Zalcu Technologies](public/experience/zalcu.md) — Diseño e implementación de sistemas backend escalables y eficientes, con responsabilidades propias de un arquitecto de software.
 
 ## Proyectos
