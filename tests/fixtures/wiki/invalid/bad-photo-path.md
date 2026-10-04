@@ -4,12 +4,12 @@ type: profile
 name: Ada Lovelace
 headline: Ingeniera de software
 location: Londres
-photo: ./photo.jpg
 summary: Programadora del motor analítico.
 links:
-  email: ada-at-example
+  email: ada@example.com
   linkedin: https://www.linkedin.com/in/ada-example/
   github: https://github.com/ada-example
+photo: https://example.com/photo.jpg
 tags: []
 en:
   headline: Software engineer

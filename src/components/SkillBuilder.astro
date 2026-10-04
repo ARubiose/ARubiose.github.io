@@ -4,14 +4,13 @@ import { useTranslations } from "@i18n/utils";
 import type { HomeView } from "@lib/home";
 import { BUILD_CAP } from "@lib/skills";
 import { Image } from "astro:assets";
-import profileImage from "@assets/images/profile.jpg";
 import Adorn from "./Adorn.astro";
 import Icon from "./Icon.astro";
 
 interface Props {
     locale: Locale;
     groups: HomeView["skillGroups"];
-    profile: Pick<HomeView["profile"], "name" | "headline">;
+    profile: Pick<HomeView["profile"], "name" | "headline" | "photo">;
     professionalXp: string;
     usage: HomeView["usage"];
     entryNames: HomeView["entryNames"];
@@ -38,7 +37,7 @@ const builderData = JSON.stringify({ usage, entryNames }).replace(/</g, "\\u003c
         <div class="window-bar"><span aria-hidden="true"><Adorn name="sheet" locale={locale} /></span><span aria-hidden="true"><Adorn name="level" locale={locale} vars={{ year: String(new Date().getFullYear()) }} /></span></div>
         <div class="p-3 lg:p-4">
             <div class="flex items-center gap-3">
-                <Image src={profileImage} alt="" width={64} height={64} densities={[1, 2]} class="size-12 flex-none border border-line object-cover grayscale-[.3] lg:size-16" />
+                <Image src={profile.photo} alt="" width={64} height={64} densities={[1, 2]} class="size-12 flex-none border border-line object-cover grayscale-[.3] lg:size-16" />
                 <div>
                     <p class="font-display text-[15px] leading-tight font-bold lg:text-[16px]">{profile.name}</p>
                     <p class="text-[12px] text-accent lg:text-[12.5px]">{profile.headline}</p>

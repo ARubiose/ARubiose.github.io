@@ -7,6 +7,7 @@ const NOW = "2026-10";
 const data: HomeData = {
     profile: {
         ...meta, type: "profile", title: "Perfil", name: "Ada", headline: "Ingeniera", location: "Londres", summary: "Resumen",
+        photo: { src: "/ada.jpg", width: 1, height: 1, format: "jpg" },
         links: { email: "a@example.com", linkedin: "https://www.linkedin.com/in/ada/", github: "https://github.com/ada" },
         en: { headline: "Engineer", summary: "Summary" },
     },

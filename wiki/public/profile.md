@@ -4,18 +4,19 @@ type: profile
 name: Álvaro Rubio Segovia
 headline: Ingeniero de IA y software
 location: Madrid
+photo: ./profile.jpg
 summary: Ingeniero de software que hoy aplica inteligencia artificial a la salud capilar en SKIN AI, con una base sólida en backend con Python, arquitectura de sistemas y visión por computador.
 links:
   email: alvaro.rubio.segovia@gmail.com
   linkedin: https://www.linkedin.com/in/alvaro-rubio-segovia/
   github: https://github.com/ARubiose
-  source: https://github.com/ARubiose/portfolio-astro
+  source: https://github.com/ARubiose/ARubiose.github.io
 tags: [ia, backend, python, arquitectura]
 en:
   headline: AI & software engineer
   summary: Software engineer currently applying artificial intelligence to hair health at SKIN AI, with a solid background in Python backend development, systems architecture and computer vision.
-sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf, "humano (2026-10-02)", "https://github.com/ARubiose (2026-10-02)", "https://github.com/ARubiose/portfolio-astro (2026-10-02)"]
-updated: 2026-10-02
+sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf, raw/assets/profile_image.jpg, "humano (2026-10-02)", "https://github.com/ARubiose (2026-10-02)", "https://github.com/ARubiose/portfolio-astro (2026-10-02)", "humano (2026-10-04)"]
+updated: 2026-10-04
 ---
 
 # Perfil
@@ -44,5 +45,8 @@ en equipo y cubrir todo el ciclo de vida del software.
 
 - raw/assets/Curriculum_Vitae___English_Variation.pdf
 - raw/assets/Linkedin_profile.pdf
+- raw/assets/profile_image.jpg: foto de perfil (`profile.jpg` es una copia idéntica)
 - humano (2026-10-02): puesto actual y datos de contacto que se publican
 - https://github.com/ARubiose (2026-10-02)
+- https://github.com/ARubiose/portfolio-astro (2026-10-02)
+- humano (2026-10-04): el repositorio se renombra a ARubiose.github.io

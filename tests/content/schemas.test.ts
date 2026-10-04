@@ -28,6 +28,7 @@ const invalidPaths: Record<string, (string | number)[]> = {
     "bad-email.md": ["links", "email"],
     "bad-icon-format.md": ["icon"],
     "bad-month.md": ["start"],
+    "bad-photo-path.md": ["photo"],
     "bad-repo-url.md": ["repo"],
     "end-before-start.md": ["end"],
     "full-date.md": ["start"],

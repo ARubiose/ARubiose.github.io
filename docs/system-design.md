@@ -46,7 +46,7 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 | Colecciones | `src/content.config.ts` | Colecciones de Astro sobre `wiki/public/` | Sí |
 | Tests | `tests/` | Unitarios, contrato, componentes, privacidad y E2E (§3.7) | Sí |
 | Estilos | `src/styles/` | `global.css` (Tailwind, tokens semánticos y variante `timeline-single`), `base.css` (reset y tokens de distribución en `@layer base`), `states.css` (reglas de estado sin capa) y `skins/` (una hoja por skin, en `@layer components`) | Sí |
-| Assets | `src/assets/`, `public/` | Imágenes que Astro optimiza / archivos que se sirven tal cual | Sí |
+| Assets | `src/assets/`, `public/` | Imágenes de la interfaz que Astro optimiza / archivos que se sirven tal cual | Sí |
 | Configuración | `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`, `playwright.config.ts` | i18n, plugin de Tailwind, alias de importación, tests | Sí |
 | Wiki pública | `wiki/public/` | Contenido publicable; fuente de datos del portfolio | Sí |
 | Wiki privada | `wiki/private/` | Notas personales, síntesis, log | No |
@@ -183,9 +183,15 @@ regenerarse). Con `clip-path`, el contorno de foco va por dentro del elemento: p
 
 ### 3.5 Imágenes
 
-Las imágenes del contenido van en `src/assets/` para que Astro las optimice
-(`astro:assets`, componente `<Image />`). `public/` queda para lo que se sirve sin procesar
-(`favicon.svg`).
+Las imágenes del contenido (foto de perfil, y en el futuro logos o capturas) viven en
+`wiki/public/` junto a la página que las usa y se citan desde su frontmatter con una ruta
+relativa (`photo: ./profile.jpg`). El esquema Zod de `src/lib/schemas.ts` valida la ruta y
+`src/content.config.ts` la sustituye por el helper `image()`, así que Astro las optimiza
+(WebP en varios tamaños con `<Image />`) y en la web nunca se sirve el original. Ver la
+decisión [0004](decisions/0004-content-images-in-wiki.md).
+
+`src/assets/` queda para imágenes de la interfaz y `public/` para lo que se sirve sin
+procesar (`favicon.svg`).
 
 ### 3.6 Build y despliegue
 

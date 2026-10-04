@@ -9,6 +9,7 @@ links:
   email: ada@example.com
   linkedin: https://www.linkedin.com/in/ada-example/
   github: https://github.com/ada-example
+photo: ./photo.jpg
 tags: []
 en:
   headline: Software engineer

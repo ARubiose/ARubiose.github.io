@@ -4,6 +4,7 @@ type: profile
 name: Ada Lovelace
 headline: Ingeniera de software
 location: Londres
+photo: ./photo.jpg
 summary: Programadora del motor analítico.
 links:
   email: ada@example.com

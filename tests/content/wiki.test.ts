@@ -1,5 +1,5 @@
 import { existsSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { describe, expect, test } from "vitest";
 import { schemasByType } from "@lib/schemas";
 import { findBrokenSkillRefs } from "@lib/skills";
@@ -19,6 +19,12 @@ test("existe el perfil y cumple el contrato", () => {
     expect(existsSync(path)).toBe(true);
     const result = schemasByType.profile.safeParse(readFrontmatter(path));
     expect(result.error?.issues ?? []).toEqual([]);
+});
+
+test("la foto del perfil existe junto a profile.md", () => {
+    const path = join(WIKI, "profile.md");
+    const { photo } = readFrontmatter(path) as { photo: string };
+    expect(existsSync(join(dirname(path), photo)), photo).toBe(true);
 });
 
 for (const [folder, type] of Object.entries(folders)) {
