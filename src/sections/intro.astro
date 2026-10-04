@@ -14,7 +14,7 @@ const t = useTranslations(locale);
 ---
 
 <section id="about" class="hero grid gap-(--hero-gap) pt-6 md:grid-cols-(--hero-cols) md:items-center md:gap-13 md:pt-14">
-    <ProfilePhoto name={profile.name} locale={locale} />
+    <ProfilePhoto name={profile.name} photo={profile.photo} locale={locale} />
     <div class="hero-text">
         <p class="prompt text-[13px]" aria-hidden="true"><Adorn name="heroKicker" locale={locale} /></p>
         <h1 class="mt-2 font-display text-(length:--hero-name-size) leading-(--hero-name-leading) font-(--hero-name-weight) tracking-tight md:text-(length:--hero-name-size-md)">

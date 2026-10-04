@@ -19,6 +19,7 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 | 2026-10-03 | Fase 5b (1/2): skin Táctico y selector de skin (registro con metadatos, adornos y distribución por skin, intro por skin, e2e en las dos skins) | [spec](superpowers/specs/2026-10-03-tactical-skin-design.md), [plan](superpowers/plans/2026-10-03-tactical-skin.md), [maquetas](design/mockups/); `8b68189` |
 | 2026-10-03 | Fase 5b (2/2): skin Juego (tokens de tipografía del hero y titulares, nombre corto en la cabecera, intro propia, e2e en las tres skins; cubre también el menor de Táctico de probar el script de arranque con otras skins) | [spec](superpowers/specs/2026-10-03-game-skin-design.md), [plan](superpowers/plans/2026-10-03-game-skin.md), [maquetas](design/mockups/); `498c092` |
 | 2026-10-04 | Fallos y menores de las fases 5b: foto invisible tras la intro de Juego (transición CSS que chocaba con GSAP), foco visible en Táctico, sección activa y dirección de las tarjetas tras cambiar de skin, refresco al cargar las fuentes, adornos ocultos por defecto, nombres largos y barras de desplazamiento en Juego, tokens para cabecera, menú móvil e inventario, «//» en ámbar y foto entre ubicación y resumen en Táctico móvil | `f65ba82` |
+| 2026-10-04 | Cuestiones abiertas resueltas: imágenes del contenido en `wiki/public/` vía frontmatter (foto de perfil migrada, optimizada a WebP por Astro), dominio `arubiose.github.io` (repo renombrado a `ARubiose.github.io`), foto alternativa descartada (era idéntica) | decisión [0004](decisions/0004-content-images-in-wiki.md) |
 | 2026-10-03 | Test de privacidad ampliado: credenciales y rutas personales en todo el repo y en el historial de git (patrones del agente `opensource-sanitizer` de ECC) | `72f94e1` |
 | 2026-10-03 | Fixes pendientes: alineación del menú móvil, sección activa y saltos del menú fiables (fallaban 1 de cada 40 ejecuciones), JSON Schema del editor alineado con la build. Descartado: respaldo para navegadores sin `@supports selector()` (Tailwind 4 ya exige navegadores posteriores) | `f31f3cb` |
 | 2026-10-03 | Mejoras menores de las revisiones de las fases 1–5: contrato (URLs solo http(s), fechas YAML completas, `url: null`, orden total), skin en `@layer components`, respaldo sin Popover API, intro del hero estable al cambiar de ancho, JSON del creador escapado, tests más estrictos | `85ba009` |
@@ -28,7 +29,7 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 
 ### Fases
 
-- [ ] **6. Despliegue.** `site` en `astro.config.mjs`, workflow de GitHub Actions a GitHub
+- [ ] **6. Despliegue.** `site: "https://arubiose.github.io"` (sin `base`) en `astro.config.mjs`, workflow de GitHub Actions a GitHub
   Pages con `pnpm check`, `pnpm test` y `pnpm test:e2e`, y etiquetas `hreflang`
   (`getAbsoluteLocaleUrlList()`).
   Al crear el CI, añadir `github-actions` a `skills` de `wiki/public/projects/portfolio-llm-wiki.md`
@@ -41,14 +42,6 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 - [ ] Sin Popover API se oculta el selector de skin de la cabecera: esos navegadores solo ven la
   skin predeterminada (`src/styles/states.css`, bloque `@supports not selector(:popover-open)`).
   Se deja así: Tailwind 4 ya exige navegadores con Popover API.
-
-### Cuestiones abiertas
-
-- [ ] **Imágenes del contenido** (logos de empresas, capturas de proyectos): ¿van en
-  `wiki/public/` junto a la página o en `src/assets/`?
-- [ ] **Dominio:** `arubiose.github.io` (repo de usuario) o `/<repo>/` (requiere `base`).
-- [ ] **Foto de perfil:** hay una foto alternativa en `raw/assets/` sin usar; decidir si
-  sustituye a `src/assets/images/profile.jpg`.
 
 ### Acciones locales (no versionadas)
 

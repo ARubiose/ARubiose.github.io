@@ -9,6 +9,7 @@ import Skills from "@sections/skills.astro";
 import Education from "@sections/education.astro";
 import Contact from "@sections/contact.astro";
 import Intro from "@sections/intro.astro";
+import photo from "../fixtures/components/photo.jpg";
 
 let container: AstroContainer;
 beforeAll(async () => {
@@ -82,7 +83,7 @@ test("Skills: los datos del creador no pueden cerrar su <script>", async () => {
     const props = {
         locale: "en",
         groups: [{ category: "backend", label: "Backend", items: [skill("python", "Python", "backend")] }],
-        profile: { name: "Ada", headline: "Engineer" },
+        profile: { name: "Ada", headline: "Engineer", photo },
         professionalXp: "1 year", usage: { python: ["evil"] }, entryNames: { evil: name },
     };
     const html = clean(await container.renderToString(Skills, { props }));
@@ -98,7 +99,7 @@ test("Skills sin JS: todas las categorías, XP, desde y dónde se usó cada habi
             { category: "backend", label: "Backend", items: [skill("python", "Python", "backend")] },
             { category: "ai", label: "Artificial intelligence", items: [skill("llm", "LLM agents", "ai", { months: 0, xp: "no recorded use", xpShort: "no recorded use", since: null, usedIn: [] })] },
         ],
-        profile: { name: "Ada", headline: "Engineer" },
+        profile: { name: "Ada", headline: "Engineer", photo },
         professionalXp: "5.3 years",
         usage: { python: ["zalcu"] },
         entryNames: { zalcu: "Zalcu Technologies" },
@@ -130,9 +131,11 @@ test("Intro: nombre como h1, adorno whoami oculto a lectores y botón de foto et
         type: "profile" as const, title: "Perfil", name: "Ada Lovelace", headline: "Engineer", location: "London",
         summary: "Analytical engine.",
         links: { email: "a@example.com", linkedin: "https://linkedin.com/in/a", github: "https://github.com/a" },
-        tags: [], sources: ["x"], updated: new Date(),
+        photo, tags: [], sources: ["x"], updated: new Date(),
     };
     const html = clean(await container.renderToString(Intro, { props: { profile, locale: "en" } }));
+    // La foto sale del frontmatter: miniatura y ampliación usan la imagen recibida.
+    expect(html.match(/<img[^>]*src="[^"]*photo[^"]*"/g)).toHaveLength(2);
     expect(html).toMatch(/<h1[^>]*>[\s\S]*Ada Lovelace[\s\S]*<\/h1>/);
     expect(html).toMatch(/<p class="prompt[^"]*" aria-hidden="true"><span aria-hidden="true" data-for-skin="terminal"[^>]*>whoami<\/span>/);
     expect(html).toMatch(/<button[^>]*id="photo-open"[^>]*aria-label="Enlarge the photo of Ada Lovelace"/);
@@ -145,11 +148,18 @@ test("Intro: nombre como h1, adorno whoami oculto a lectores y botón de foto et
     expect(html).toMatch(/<p class="hero-role(?![^"]*text-accent)[^"]*"/);
 });
 
+test("Skills: el creador de personaje usa la foto del perfil", async () => {
+    const groups = [{ category: "backend", label: "Backend", items: [skill("python", "Python", "backend")] }];
+    const props = { locale: "es", groups, profile: { name: "Ada", headline: "Engineer", photo }, professionalXp: "1", usage: {}, entryNames: {} };
+    const html = clean(await container.renderToString(Skills, { props }));
+    expect(html).toMatch(/<img[^>]*src="[^"]*photo[^"]*"/);
+});
+
 const TITLE_TOKENS = /<h2 class="section-title[^"]*text-\(length:--section-title-size\)[^"]*md:text-\(length:--section-title-size-md\)/;
 
 describe.each<Locale>(["es", "en"])("en %s", (locale) => {
     const t = useTranslations(locale);
-    const profile = { name: "Ada", headline: "Engineer" };
+    const profile = { name: "Ada", headline: "Engineer", photo };
     const skillsProps = (groups: unknown[]) => ({ locale, groups, profile, professionalXp: "1", usage: {}, entryNames: {} });
     const sections = [
         { name: "Experience", component: Experience, title: t("section.experience"), full: { items: [item()] }, empty: { items: [] } },

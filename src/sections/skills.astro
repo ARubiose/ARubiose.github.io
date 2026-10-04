@@ -8,7 +8,7 @@ import type { HomeView } from "@lib/home";
 interface Props {
     groups: HomeView["skillGroups"];
     locale: Locale;
-    profile: Pick<HomeView["profile"], "name" | "headline">;
+    profile: Pick<HomeView["profile"], "name" | "headline" | "photo">;
     professionalXp: string;
     usage: HomeView["usage"];
     entryNames: HomeView["entryNames"];

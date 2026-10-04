@@ -1,3 +1,4 @@
+import type { ImageMetadata } from "astro";
 import { z } from "astro/zod";
 import { compareYearMonth, yearMonth } from "./dates";
 import { iconExists } from "./icons";
@@ -11,6 +12,8 @@ const text = z.string().trim().min(1);
 const webUrl = z.url({ protocol: /^https?$/, error: "URL http(s) esperada" });
 // Un enlace opcional puede omitirse o escribirse `null` en YAML.
 const optionalWebUrl = webUrl.nullish().transform((v) => v ?? undefined).optional();
+// Imagen junto a la página de la wiki; content.config.ts la sustituye por image() para que Astro la optimice.
+const localImage = z.string().regex(/^\.\/[^/].*\.(jpe?g|png|webp|avif)$/i, "ruta relativa a una imagen (./foto.jpg)");
 const highlights = z.array(text).default([]);
 const skillRefs = z.array(z.string().regex(/^[a-z0-9-]+$/, "id de habilidad en minúsculas con guiones")).optional();
 const icon = z
@@ -43,6 +46,7 @@ export const profileSchema = z.object({
     name: text,
     headline: text,
     location: text,
+    photo: localImage,
     links: z.object({ email: z.email(), linkedin: webUrl, github: webUrl, source: optionalWebUrl }),
     en: z.object({ headline: text, summary: text }),
 });
@@ -105,7 +109,7 @@ export const schemasByType = {
     education: educationSchema,
 };
 
-export type ProfileData = z.output<typeof profileSchema>;
+export type ProfileData = Omit<z.output<typeof profileSchema>, "photo"> & { photo: ImageMetadata };
 export type ExperienceData = z.output<typeof experienceSchema>;
 export type ProjectData = z.output<typeof projectSchema>;
 export type SkillData = z.output<typeof skillSchema>;

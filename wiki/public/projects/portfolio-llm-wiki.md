@@ -1,7 +1,7 @@
 ---
 title: Portfolio con LLM Wiki
 type: project
-repo: https://github.com/ARubiose/portfolio-astro
+repo: https://github.com/ARubiose/ARubiose.github.io
 status: active
 start: 2025-01
 summary: Portfolio personal en Astro cuyo contenido mantiene un agente LLM como una wiki de conocimiento, siguiendo el patrón LLM Wiki de Andrej Karpathy.
@@ -20,8 +20,8 @@ en:
     - The wiki is split into a public part, which feeds the site, and a private part kept out of git.
     - The wiki frontmatter is a contract validated with Zod on every build.
     - Static site in Spanish and English with unit, contract, component, privacy and E2E tests.
-sources: ["humano (2026-10-02)", "https://github.com/ARubiose/portfolio-astro (2026-10-02)"]
-updated: 2026-10-02
+sources: ["humano (2026-10-02)", "https://github.com/ARubiose/portfolio-astro (2026-10-02)", "humano (2026-10-04)"]
+updated: 2026-10-04
 ---
 
 # Portfolio con LLM Wiki
@@ -44,3 +44,4 @@ lo personal de lo publicable. Ver [agentes LLM](../skills/llm-agents.md).
 
 - humano (2026-10-02): es el único proyecto que se muestra por ahora
 - https://github.com/ARubiose/portfolio-astro (2026-10-02): repositorio y fecha del primer commit
+- humano (2026-10-04): el repositorio se renombra a ARubiose.github.io para publicarse en GitHub Pages
