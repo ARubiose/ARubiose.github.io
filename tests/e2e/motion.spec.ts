@@ -60,6 +60,28 @@ test("con animaciones, la intro termina con el nombre completo y la foto visible
     }), { timeout: 4000 }).toBe(1);
 });
 
+test("la intro no cambia la altura de la página: un salto del menú a mitad de intro llega a su destino", async ({ page }) => {
+    // El nombre descifrado es una sola palabra sin espacios: si ensanchara su columna, la página
+    // encogería durante la intro y el scroll suave hacia «contacto» se quedaría corto.
+    await page.addInitScript(() => {
+        const samples: [string, number][] = [];
+        (window as unknown as { __samples: typeof samples }).__samples = samples;
+        const tick = () => {
+            samples.push([document.fonts.status, document.documentElement.scrollHeight]);
+            if (performance.now() < 4000) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+    });
+    await page.goto("/");
+    await page.waitForFunction(() => performance.now() >= 4000);
+    await expect(page.locator(".hero-name")).toHaveText(/\s/);
+    // Las fuentes pueden cambiar la altura al llegar; desde entonces debe quedarse fija.
+    const samples = await page.evaluate(() => (window as unknown as { __samples: [string, number][] }).__samples);
+    const loaded = samples.findLastIndex(([status]) => status === "loading") + 1;
+    const heights = [...new Set(samples.slice(loaded).map(([, h]) => h))];
+    expect(heights).toHaveLength(1);
+});
+
 test("Táctico: la intro termina con el nombre completo, las esquinas dibujadas y sin prompt escrito", async ({ page }, info) => {
     test.skip(skinOf(info.project.name) !== "tactical");
     await page.goto("/");

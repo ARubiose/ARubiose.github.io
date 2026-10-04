@@ -17,7 +17,7 @@ const t = useTranslations(locale);
     <ProfilePhoto name={profile.name} photo={profile.photo} locale={locale} />
     <div class="hero-text">
         <p class="prompt text-[13px]" aria-hidden="true"><Adorn name="heroKicker" locale={locale} /></p>
-        <h1 class="mt-2 font-display text-(length:--hero-name-size) leading-(--hero-name-leading) font-(--hero-name-weight) tracking-tight md:text-(length:--hero-name-size-md)">
+        <h1 class="relative mt-2 font-display text-(length:--hero-name-size) leading-(--hero-name-leading) font-(--hero-name-weight) tracking-tight md:text-(length:--hero-name-size-md)">
             <span class="hero-name">{profile.name}</span><span class="cursor" aria-hidden="true"></span>
         </h1>
         <p class="hero-role mt-2.5 font-display text-[19px] md:text-[23px]">{profile.headline}</p>

@@ -6,6 +6,26 @@ type IntroContext = { wide: boolean; prompt: HTMLElement | null; full: string };
 
 const scramble = (chars: string) => ({ duration: 1.1, scrambleText: { text: "{original}", chars, revealDelay: 0.15, speed: 0.6 } });
 
+// El texto descifrado no tiene espacios: escrito sobre el nombre real, cambiaba sus saltos de línea
+// y la altura de la página, y un salto del menú a mitad de intro se quedaba corto. Se descifra una
+// copia superpuesta a la caja del titular; el nombre real conserva su sitio y su texto accesible.
+function scrambleName(tl: gsap.core.Timeline, chars: string, position: gsap.Position) {
+    const name = document.querySelector<HTMLElement>(".hero-name");
+    const title = name?.parentElement;
+    if (!name || !title) return;
+    const copy = document.createElement("span");
+    copy.className = "hero-name-scramble";
+    copy.setAttribute("aria-hidden", "true");
+    copy.textContent = name.textContent;
+    title.append(copy);
+    gsap.set(name, { visibility: "hidden" });
+    const done = () => {
+        copy.remove();
+        gsap.set(name, { clearProps: "visibility" });
+    };
+    tl.from(copy, { ...scramble(chars), onComplete: done }, position);
+}
+
 // El resto del hero aparece igual en todas las skins; la foto entra desde su lado.
 function revealRest(tl: gsap.core.Timeline, wide: boolean, photoFrom: -1 | 1) {
     tl.from([".hero-role", ".hero-loc", ".hero-sum", ".hero-cta"], { opacity: 0, y: 12, duration: 0.5, stagger: 0.08 }, "-=0.4")
@@ -22,15 +42,15 @@ const introPresets: Record<string, (tl: gsap.core.Timeline, ctx: IntroContext) =
                 onUpdate() { prompt.textContent = full.slice(0, Math.round(Number(gsap.getProperty(prompt, "--typed")))); },
             });
         }
-        tl.from(".hero-name", scramble("01<>/#$%_"), "+=0.1");
+        scrambleName(tl, "01<>/#$%_", "+=0.1");
         revealRest(tl, wide, -1);
     },
     // Arranque de HUD: las esquinas de la foto se dibujan, la línea del adorno se extiende y el
     // nombre se descifra con caracteres de HUD. La foto está a la derecha: entra desde ahí.
     tactical(tl, { wide }) {
         tl.fromTo(".photo-window", { "--corner-size": "0px" }, { "--corner-size": "38px", duration: 0.4, ease: "power3.out" })
-            .fromTo(".hero .prompt", { "--kicker-line": "0px" }, { "--kicker-line": "26px", duration: 0.35 }, "<0.1")
-            .from(".hero-name", scramble("0123456789/◆"), "-=0.1");
+            .fromTo(".hero .prompt", { "--kicker-line": "0px" }, { "--kicker-line": "26px", duration: 0.35 }, "<0.1");
+        scrambleName(tl, "0123456789/◆", "-=0.1");
         revealRest(tl, wide, 1);
     },
     // Pantalla de selección: el panel diagonal barre desde la derecha, la foto entra tras él, el
@@ -60,8 +80,12 @@ export function initMotion(): void {
         const preset = introPresets[skin];
         if (preset) preset(tl, ctx);
         else introPresets.terminal(tl, { ...ctx, prompt: null });
-        // Al revertir (p. ej. si se activa el movimiento reducido) el prompt vuelve a estar completo.
-        return () => { if (prompt) prompt.textContent = full; };
+        // Al revertir (p. ej. si se activa el movimiento reducido) el prompt vuelve a estar completo
+        // y desaparece la copia del nombre que se estaba descifrando.
+        return () => {
+            if (prompt) prompt.textContent = full;
+            document.querySelector(".hero-name-scramble")?.remove();
+        };
     });
 
     mm.add({ ok: "(prefers-reduced-motion: no-preference)", wide: "(min-width: 768px)" }, (ctx) => {
