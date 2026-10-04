@@ -63,3 +63,12 @@
 :root[data-skin="game"] [data-for-skin="game"] {
     display: revert-layer;
 }
+
+/* Copia del nombre que descifra la intro (src/scripts/motion.ts): ocupa la caja del titular sin
+   moverla. El texto descifrado no tiene espacios: se parte donde haga falta y lo que sobra se recorta. */
+.hero-name-scramble {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+}

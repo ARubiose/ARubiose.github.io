@@ -154,7 +154,8 @@
     position: absolute;
     visibility: hidden;
 }
-[data-skin="tactical"] .hero-name {
+[data-skin="tactical"] .hero-name,
+[data-skin="tactical"] .hero-name-scramble {
     letter-spacing: -0.01em;
 }
 [data-skin="tactical"] .hero-role {
