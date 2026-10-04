@@ -11,6 +11,7 @@ highlights:
   - Diseño de sistemas escalables, asumiendo funciones de arquitecto de software.
   - Desarrollo, pruebas y despliegue con Docker, pytest y CI/CD en GitHub Actions.
   - Interfaces web con HTML, CSS, JavaScript y React.
+  - Participación en Skin AI Mobile, la app de SKIN AI en React Native certificada como software de dispositivo médico.
 skills: [python, fastapi, django, celery, redis, software-architecture, docker, pytest, github-actions, react, web-fundamentals]
 tags: [backend, python, arquitectura]
 en:
@@ -21,8 +22,9 @@ en:
     - Designed scalable systems, acting as software architect.
     - Development, testing and deployment with Docker, pytest and CI/CD on GitHub Actions.
     - Web interfaces with HTML, CSS, JavaScript and React.
-sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf]
-updated: 2026-10-02
+    - Worked on Skin AI Mobile, SKIN AI's React Native app certified as medical-device software.
+sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf, "humano (2026-10-04)", "https://www.zalcu.com/post/la-revolución-de-la-dermatología-el-dermatoscopio-patentado-de-skin-ai-con-tecnología-de-zalcu-tech (2026-10-04)"]
+updated: 2026-10-04
 ---
 
 # Zalcu Technologies
@@ -39,6 +41,10 @@ asíncrona. Usó [Docker](../skills/docker.md), [pytest](../skills/pytest.md) y
 [React](../skills/react.md) y [HTML, CSS y JavaScript](../skills/web-fundamentals.md) en el
 frontend.
 
+Entre los proyectos para clientes participó en Skin AI Mobile, la aplicación de
+[SKIN AI](skin-ai.md) en React Native que integra su modelo de IA para analizar imágenes
+dermatológicas y está certificada como software de dispositivo médico.
+
 > ⚠️ Conflicto: el CV titula el puesto «Software developer/architect» y LinkedIn
 > «Desarrollador de software». Se sigue el CV.
 
@@ -46,10 +52,12 @@ frontend.
 
 - [Arquitectura de software](../skills/software-architecture.md)
 - [HTML, CSS y JavaScript](../skills/web-fundamentals.md)
-- [SKIN AI](skin-ai.md) (puesto siguiente)
+- [SKIN AI](skin-ai.md) (puesto siguiente; antes, cliente de Zalcu)
 - [Gofore](gofore.md) (puesto anterior)
 
 ## Fuentes
 
 - raw/assets/Curriculum_Vitae___English_Variation.pdf: cargo, descripción y logros
 - raw/assets/Linkedin_profile.pdf: meses de inicio y fin
+- humano (2026-10-04): participación en el proyecto de SKIN AI
+- https://www.zalcu.com/post/la-revolución-de-la-dermatología-el-dermatoscopio-patentado-de-skin-ai-con-tecnología-de-zalcu-tech (2026-10-04): caso de éxito de Skin AI Mobile
