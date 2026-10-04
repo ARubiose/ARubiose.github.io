@@ -10,6 +10,9 @@ interface Props {
     description: string;
 }
 const { locale, title, description } = Astro.props;
+// Las vistas previas al compartir (LinkedIn, WhatsApp…) exigen URLs absolutas.
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL("/og-image.png", Astro.site).href;
 ---
 
 <!doctype html>
@@ -24,6 +27,13 @@ const { locale, title, description } = Astro.props;
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:locale" content={locale === "es" ? "es_ES" : "en_US"} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="627" />
+        <meta property="og:image:alt" content={title} />
+        <meta name="twitter:card" content="summary_large_image" />
         <Font cssVariable="--font-space-grotesk" preload />
         <Font cssVariable="--font-ibm-plex-mono" preload />
         {/* Fuentes de Táctico y Juego, sin precarga: solo se descargan si la skin activa las usa. */}

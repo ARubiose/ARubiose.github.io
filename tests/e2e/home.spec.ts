@@ -30,6 +30,21 @@ for (const p of pages) {
             }
         });
 
+        test("la vista previa al compartir apunta a una imagen absoluta que existe", async ({ page, request }) => {
+            await page.goto(p.path);
+            const meta = (sel: string) => page.locator(`meta[${sel}]`).getAttribute("content");
+            const image = await meta('property="og:image"');
+            expect(image).toBe("https://arubiose.github.io/og-image.png");
+            expect(await meta('property="og:image:width"')).toBe("1200");
+            expect(await meta('property="og:image:height"')).toBe("627");
+            expect(await meta('property="og:image:alt"')).toMatch(/\S/);
+            expect(await meta('property="og:url"')).toBe(`https://arubiose.github.io${p.path}`);
+            expect(await meta('name="twitter:card"')).toBe("summary_large_image");
+            const res = await request.get(new URL(image!).pathname);
+            expect(res.status()).toBe(200);
+            expect(res.headers()["content-type"]).toBe("image/png");
+        });
+
         test("no se cuelan valores sin resolver", async ({ page }) => {
             await page.goto(p.path);
             const text = await page.locator("body").innerText();
