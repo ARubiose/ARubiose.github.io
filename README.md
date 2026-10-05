@@ -22,7 +22,7 @@ El portfolio (`src/`) presenta ese contenido como sitio web en español e inglé
 ## Requisitos previos
 
 - **Node.js** 24 o superior (`engines` en `package.json`). El proyecto fija Node 24 en `.nvmrc`: `nvm use`
-- **pnpm** 11 (`corepack enable` o `npm i -g pnpm`)
+- **pnpm** 12 (`corepack enable` o `npm i -g pnpm`)
 - **Claude Code** para las operaciones de la wiki (`npm i -g @anthropic-ai/claude-code`)
 - Opcional: **Obsidian** para navegar `wiki/` como un grafo
 
@@ -43,7 +43,7 @@ pnpm test:e2e     # build + Playwright (escritorio y móvil), axe, regresión vi
 pnpm test:visual:update   # regenera las capturas de referencia tras un cambio de diseño intencionado
 ```
 
-pnpm 11 solo ejecuta scripts de instalación de los paquetes aprobados en
+pnpm 12 solo ejecuta scripts de instalación de los paquetes aprobados en
 `pnpm-workspace.yaml` (`esbuild`, `sharp`, `@tailwindcss/oxide`). Si una dependencia nueva
 los necesita, apruébala con `pnpm approve-builds`.
 

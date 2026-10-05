@@ -69,7 +69,7 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 - **Tailwind CSS 4.3** como plugin de Vite (`@tailwindcss/vite`), configurado desde CSS
   (`@import "tailwindcss"` + `@theme`), sin `tailwind.config.js`.
 - **TypeScript estricto** (`astro/tsconfigs/strict`).
-- **Node 24** (`.nvmrc` y mínimo en `engines`; Astro 7 exige ≥ 22.12) y **pnpm 11**, que solo ejecuta scripts de
+- **Node 24** (`.nvmrc` y mínimo en `engines`; Astro 7 exige ≥ 22.12) y **pnpm 12**, que solo ejecuta scripts de
   instalación de los paquetes aprobados en `pnpm-workspace.yaml`.
 
 Comportamientos de Astro 7 que hay que tener en cuenta al desarrollar:

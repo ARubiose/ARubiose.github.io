@@ -24,7 +24,7 @@ Las convenciones de la wiki se cargan solas al trabajar en `wiki/` o `raw/`.
 
 ## Portfolio (`src/`)
 
-- Stack: Astro 7, Tailwind CSS 4 (plugin de Vite), pnpm 11, Node 24 (`.nvmrc`; usa `nvm use`). i18n con `es` (por defecto) y `en`.
+- Stack: Astro 7, Tailwind CSS 4 (plugin de Vite), pnpm 12, Node 24 (`.nvmrc`; usa `nvm use`). i18n con `es` (por defecto) y `en`.
 - Alias de importación: `@layouts`, `@sections`, `@components`, `@styles`, `@assets`, `@lib`, `@i18n` (ver `tsconfig.json`).
 - Secciones en `src/sections/`: `intro`, `experience`, `projects`, `skills`, `education`, `contact`.
   Reciben props; `src/layouts/HomePage.astro` carga las colecciones.
