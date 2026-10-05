@@ -1,7 +1,7 @@
 # Diseño: fase 6b, SEO e i18n del despliegue
 
 - Fecha: 2026-10-05
-- Estado: aprobada en conversación; pendiente de revisión escrita
+- Estado: aprobada; implementada
 - Alcance: issue [#1](https://github.com/ARubiose/ARubiose.github.io/issues/1). Completa el
   despliegue de la fase 6 ([system-design.md](../../system-design.md) §3.6) con lo que necesitan
   los buscadores para indexar bien las dos versiones de la portada.
@@ -18,8 +18,8 @@ perfiles de LinkedIn y GitHub.
   `x-default`), con URLs absolutas y recíprocas.
 - La build genera `sitemap-index.xml` y `sitemap-0.xml` con las dos URLs y sus alternativas, y
   `robots.txt` que apunta al índice.
-- Cada página incluye un JSON-LD `Person` válido (schema.org y prueba de resultados enriquecidos
-  de Google), en el idioma de la página.
+- Cada página incluye un JSON-LD `Person` sin errores en validator.schema.org (Google no tiene
+  resultado enriquecido para un `Person` suelto), en el idioma de la página.
 - Todo sale de `site` y de `wiki/public/`: quien use el repo como plantilla obtiene su propio
   SEO cambiando solo su wiki y `site`.
 - Ningún dato privado nuevo en `dist/` (lo vigila el test de privacidad existente).
@@ -71,12 +71,13 @@ colecciones, y el layout solo recibe props.
 | `hasCredential` | `education` con `kind: certificate` → `EducationalOccupationalCredential { name: degree, recognizedBy: Organization { name: institution } }` | traducido |
 | `knowsAbout` | nombres de las habilidades | igual |
 
-El `<script>` lleva `inLanguage` con el código del idioma de la página. Los campos sin datos
+Los campos sin datos
 (sin puesto actual, sin certificaciones, sin habilidades) se omiten, nunca se inventan ni se
 dejan vacíos.
 
-`personJsonLd` recibe la vista ya localizada de `buildHomeView` (más las entradas de formación
-con su `kind`) y la URL de la página y de la imagen; no lee colecciones ni conoce Astro.
+`personJsonLd` recibe los datos de la wiki (`HomeData`), el idioma y las URLs de la página y de
+la imagen; localiza él mismo y no lee colecciones ni conoce Astro. No lleva `inLanguage`: no es
+una propiedad de `Person` en schema.org, y el idioma ya lo da `<html lang>`.
 
 ## 4. Errores
 

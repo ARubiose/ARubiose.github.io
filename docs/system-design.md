@@ -69,6 +69,7 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 - **Tailwind CSS 4.3** como plugin de Vite (`@tailwindcss/vite`), configurado desde CSS
   (`@import "tailwindcss"` + `@theme`), sin `tailwind.config.js`.
 - **TypeScript estricto** (`astro/tsconfigs/strict`).
+- **SEO:** `@astrojs/sitemap` (sitemap con alternativas por idioma); ver §3.8.
 - **Node 24** (`.nvmrc` y mínimo en `engines`; Astro 7 exige ≥ 22.12) y **pnpm 12**, que solo ejecuta scripts de
   instalación de los paquetes aprobados en `pnpm-workspace.yaml`.
 
@@ -214,7 +215,7 @@ Solo necesita lo que está en el repo, porque el portfolio consume únicamente `
 | Contrato | Vitest + Zod | Fixtures válidos/inválidos y toda la wiki pública real | `tests/content/` |
 | Componentes | Vitest + Container API | Secciones y cabecera en ambos idiomas y con listas vacías | `tests/components/` |
 | Privacidad | Vitest | Teléfono, dirección, código postal y nacimiento en `wiki/public/` y `dist/`; credenciales y rutas personales en todos los archivos versionados, los mensajes de commit y las líneas añadidas del historial; en ambos, `wiki/private/forbidden-strings.txt` si existe | `tests/privacy/` |
-| E2E | Playwright + axe | `/` y `/en/` en escritorio (1280) y móvil (390): navegación, menú, visor, creador de personaje, sin JS, movimiento reducido, desbordamiento, CLS, accesibilidad con diálogos abiertos | `tests/e2e/` |
+| E2E | Playwright + axe | `/` y `/en/` en escritorio (1280) y móvil (390): navegación, menú, visor, creador de personaje, sin JS, movimiento reducido, desbordamiento, CLS, accesibilidad con diálogos abiertos; canonical, hreflang, JSON-LD, sitemap y robots | `tests/e2e/` |
 | Regresión visual | Playwright `toHaveScreenshot` | Portada completa en ambos tamaños e idiomas y en las tres skins (12 capturas), con movimiento reducido | `tests/e2e/visual.spec.ts-snapshots/` |
 | Presupuesto | Vitest | JavaScript de la portada ≤ 60 KB comprimido | `tests/perf/` |
 
@@ -232,6 +233,25 @@ las capturas de referencia tras un cambio de diseño intencionado) y `pnpm check
   quitan con `tests/support/render.ts` antes de comprobar el HTML.
 - Las capturas de referencia dependen del entorno (fuentes, renderizado): hay que
   generarlas en el mismo sistema que las compara.
+- Astro guarda las colecciones en `node_modules/.astro/data-store.json` y no lo invalida al
+  cambiar un esquema: tras añadir un campo con valor por defecto, borra ese archivo antes de
+  construir, o las páginas sin cambios conservan los datos antiguos (en CI siempre es limpio).
+
+### 3.8 SEO
+
+Todo sale de `site` y de la wiki pública; no hay datos escritos a mano.
+
+- **`<head>`** (`Layout.astro`): `canonical` (la URL servida), una alternativa `hreflang` por
+  idioma (`localeTags` de `src/i18n/ui.ts`: `es-ES`, `en-US`) más `x-default` al idioma por
+  defecto, y un JSON-LD `Person`.
+- **JSON-LD** (`personJsonLd` en `src/lib/seo.ts`): nombre, cargo, resumen, foto optimizada,
+  localidad, LinkedIn y GitHub (`sameAs`), puesto actual (`worksFor`), instituciones de los
+  títulos (`alumniOf`, `kind: degree`), certificaciones (`hasCredential`, `kind: certificate`)
+  y habilidades (`knowsAbout`). Sin email. `jsonLdScript` escapa `<`.
+- **Sitemap:** `@astrojs/sitemap` con los mismos `localeTags` (`sitemap-index.xml`).
+- **`robots.txt`:** endpoint (`src/pages/robots.txt.ts`) que apunta al sitemap con el dominio
+  de `site`.
+- La imagen al compartir (`public/og-image.png`) es única y no se deriva de la wiki.
 
 ## 4. Capa de contenido
 
@@ -345,6 +365,7 @@ El estado, las fases pendientes, las mejoras aplazadas y las cuestiones abiertas
 | Skins por atributo y tokens `--skin-*` | Un único tema fijo | Añadir skins sin tocar el marcado |
 | Distribución por tokens y variante `timeline-single` | Reglas de skin que pisan utilidades | Cada skin decide la distribución sin romper el orden de capas |
 | Adornos por skin en el diccionario, un span por skin | Textos neutros; cambiarlos con JS | Personalidad por skin, cambio instantáneo y sin depender de JS |
+| Sitemap con `@astrojs/sitemap` | Endpoint propio | Oficial y crece con el proyecto (`filter`, `serialize`, `lastmod`); mismos códigos que el `<head>` |
 | Hoja de ruta en GitHub issues | `docs/tasks.md`; GitHub Project | El archivo crecía sin límite; un Project sobra para una persona. [0005](decisions/0005-roadmap-in-github-issues.md) |
 | GSAP + CSS para animaciones | Solo CSS, Motion | Efectos de terminal (ScrambleText) y ScrollTrigger sin framework de UI |
 | Integridad de `skills` con `findBrokenSkillRefs` | `reference()` de Astro | Los esquemas se prueban sin `astro:content`; el build falla igual |
