@@ -21,7 +21,7 @@ El portfolio (`src/`) presenta ese contenido como sitio web en español e inglé
 
 ## Requisitos previos
 
-- **Node.js** 22.12 o superior. El proyecto fija Node 24 en `.nvmrc`: `nvm use`
+- **Node.js** 24 o superior (`engines` en `package.json`). El proyecto fija Node 24 en `.nvmrc`: `nvm use`
 - **pnpm** 11 (`corepack enable` o `npm i -g pnpm`)
 - **Claude Code** para las operaciones de la wiki (`npm i -g @anthropic-ai/claude-code`)
 - Opcional: **Obsidian** para navegar `wiki/` como un grafo

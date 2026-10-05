@@ -23,6 +23,7 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
 | 2026-10-04 | Fase 6 (1/2): repo público y despliegue en GitHub Pages (`site`, workflow con check, tests y e2e que publica el `dist/` probado), `github-actions` en el proyecto del portfolio | [system-design §3.6](system-design.md#36-build-y-despliegue) |
 | 2026-10-04 | Cuestiones abiertas resueltas: imágenes del contenido en `wiki/public/` vía frontmatter (foto de perfil migrada, optimizada a WebP por Astro), dominio `arubiose.github.io` (repo renombrado a `ARubiose.github.io`), foto alternativa descartada (era idéntica) | decisión [0004](decisions/0004-content-images-in-wiki.md) |
 | 2026-10-04 | Vista previa al compartir: `public/og-image.png` (1200×627, estética Terminal) con `og:image`, `og:url` y `twitter:card` en `Layout.astro` | test «la vista previa al compartir…» en `tests/e2e/home.spec.ts` |
+| 2026-10-05 | Node 24 como mínimo (`engines` ≥ 24; local en 24.21). Se queda en 24 hasta que Node 26 sea LTS | `chore/node-24-minimum` |
 | 2026-10-03 | Test de privacidad ampliado: credenciales y rutas personales en todo el repo y en el historial de git (patrones del agente `opensource-sanitizer` de ECC) | `72f94e1` |
 | 2026-10-03 | Fixes pendientes: alineación del menú móvil, sección activa y saltos del menú fiables (fallaban 1 de cada 40 ejecuciones), JSON Schema del editor alineado con la build. Descartado: respaldo para navegadores sin `@supports selector()` (Tailwind 4 ya exige navegadores posteriores) | `f31f3cb` |
 | 2026-10-03 | Mejoras menores de las revisiones de las fases 1–5: contrato (URLs solo http(s), fechas YAML completas, `url: null`, orden total), skin en `@layer components`, respaldo sin Popover API, intro del hero estable al cambiar de ancho, JSON del creador escapado, tests más estrictos | `85ba009` |
@@ -37,6 +38,9 @@ enlace, y lo aplazado entra en *Pendiente* con su archivo y línea.
   la skill `seo` de ECC, sin instalarla). `site` ya está en `astro.config.mjs`.
 
 ### Mejoras menores
+
+- [ ] Pasar a Node 26 cuando sea LTS (previsto a finales de octubre de 2026): `.nvmrc`
+  línea 1 y `engines.node` en `package.json`; pasar check, build, test y e2e.
 
 - [ ] Sin Popover API se oculta el selector de skin de la cabecera: esos navegadores solo ven la
   skin predeterminada (`src/styles/states.css`, bloque `@supports not selector(:popover-open)`).
