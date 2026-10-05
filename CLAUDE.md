@@ -9,7 +9,7 @@ El repo es **público**: se despliega en GitHub Pages y sirve como plantilla.
 | Ruta | Qué es | En git |
 | --- | --- | --- |
 | `src/` | Sitio Astro | Sí |
-| `docs/` | Conocimiento de desarrollo: [system-design.md](docs/system-design.md), [decisions/](docs/decisions/), [tasks.md](docs/tasks.md) (estado y pendientes) | Sí |
+| `docs/` | Conocimiento de desarrollo: [system-design.md](docs/system-design.md), [decisions/](docs/decisions/). La hoja de ruta está en los GitHub issues | Sí |
 | `wiki/public/` | Contenido publicable que alimenta la web | Sí |
 | `wiki/private/`, `raw/` | Fuentes y datos personales | **No** (`.gitignore`) |
 | `.claude/` | Regla de la wiki (`rules/wiki.md`), skills `ingest`/`query`/`lint`, permisos | Sí |
@@ -42,7 +42,8 @@ Las convenciones de la wiki se cargan solas al trabajar en `wiki/` o `raw/`.
 ## Convenciones
 
 - Nombres de archivos y carpetas en inglés; contenido en español.
-- Al terminar o aplazar trabajo, actualiza `docs/tasks.md`: lo hecho, una línea con su enlace;
-  lo aplazado, con archivo y línea.
+- La hoja de ruta son los GitHub issues ([decisión 0005](docs/decisions/0005-roadmap-in-github-issues.md)).
+  Al terminar trabajo, ciérralo con `Closes #n` en el commit o la PR; lo aplazado se abre como
+  issue con archivo y línea. Los issues son públicos: nada privado en ellos.
 - Si cambia la arquitectura, actualiza `docs/system-design.md`. Si se toma una decisión
   relevante, propón registrarla en `docs/decisions/` (formato en su README).

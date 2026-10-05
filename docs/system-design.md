@@ -52,7 +52,7 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 | Wiki privada | `wiki/private/` | Notas personales, síntesis, log | No |
 | Fuentes | `raw/` | Material original (CV, LinkedIn…) | No |
 | Agente | `.claude/` | Regla de la wiki, skills `ingest`/`query`/`lint`, permisos | Sí |
-| Docs | `docs/` | Este documento, las decisiones (`decisions/`), las tareas (`tasks.md`) y las maquetas (`design/mockups/`) | Sí |
+| Docs | `docs/` | Este documento, las decisiones (`decisions/`) y las maquetas (`design/mockups/`) | Sí |
 
 ## 3. Portfolio (Astro)
 
@@ -319,8 +319,10 @@ carga solo cuando hace falta o que la hace cumplir sin depender del modelo:
 
 ## 7. Estado y hoja de ruta
 
-El estado, las fases pendientes, las mejoras aplazadas y las cuestiones abiertas están en
-[tasks.md](tasks.md), que es la única fuente de la hoja de ruta.
+El estado, las fases pendientes, las mejoras aplazadas y las cuestiones abiertas están en los
+[issues del repositorio](https://github.com/ARubiose/ARubiose.github.io/issues), que son la
+única fuente de la hoja de ruta; lo terminado queda en `git log`
+([0005](decisions/0005-roadmap-in-github-issues.md)).
 
 ## 8. Decisiones
 
@@ -343,6 +345,7 @@ El estado, las fases pendientes, las mejoras aplazadas y las cuestiones abiertas
 | Skins por atributo y tokens `--skin-*` | Un único tema fijo | Añadir skins sin tocar el marcado |
 | Distribución por tokens y variante `timeline-single` | Reglas de skin que pisan utilidades | Cada skin decide la distribución sin romper el orden de capas |
 | Adornos por skin en el diccionario, un span por skin | Textos neutros; cambiarlos con JS | Personalidad por skin, cambio instantáneo y sin depender de JS |
+| Hoja de ruta en GitHub issues | `docs/tasks.md`; GitHub Project | El archivo crecía sin límite; un Project sobra para una persona. [0005](decisions/0005-roadmap-in-github-issues.md) |
 | GSAP + CSS para animaciones | Solo CSS, Motion | Efectos de terminal (ScrambleText) y ScrollTrigger sin framework de UI |
 | Integridad de `skills` con `findBrokenSkillRefs` | `reference()` de Astro | Los esquemas se prueban sin `astro:content`; el build falla igual |
 | XP calculada a partir de los puestos | Niveles escritos a mano | Sin datos inventados |
