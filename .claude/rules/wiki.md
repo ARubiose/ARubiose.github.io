@@ -86,7 +86,7 @@ pública solo lleva la parte publicable. Lo privado sí puede enlazar a lo públ
   | `experience` | `company`, `role`, `start`, `end`, `highlights`, `skills?` (ids de `skills/` usadas) | `role`, `summary`, `highlights` |
   | `project` | `repo`, `url?`, `status` (`active`·`paused`·`done`), `start`, `highlights`, `skills?` | `title`, `summary`, `highlights` |
   | `skill` | `category` (`backend`·`ai`·`frontend`·`devops`·`security`), `icon` (`si:<slug>` de Simple Icons o `ph:<nombre>` de Phosphor) | `summary` |
-  | `education` | `institution`, `degree`, `start`, `end`, `grade?` | `degree`, `summary` |
+  | `education` | `kind?` (`degree` por defecto · `certificate`), `institution`, `degree`, `start`, `end`, `grade?` | `degree`, `summary` |
 
 - **Fechas:** `start`/`end` como `AAAA-MM` o `AAAA`; `end: null` es «actualidad».
 - **Habilidades y XP:** la experiencia de una habilidad no se escribe; el portfolio la calcula

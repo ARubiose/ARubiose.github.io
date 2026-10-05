@@ -1,6 +1,7 @@
 ---
 title: CCNA
 type: education
+kind: certificate
 institution: Universidad Rey Juan Carlos
 degree: Cisco CCNA Routing and Switching
 start: 2017
@@ -12,7 +13,7 @@ en:
   degree: Cisco CCNA Routing and Switching
   summary: Advanced university course in networking with the Cisco CCNA Routing and Switching certification.
 sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf]
-updated: 2026-10-02
+updated: 2026-10-05
 ---
 
 # CCNA
