@@ -45,6 +45,29 @@ for (const p of pages) {
             expect(res.headers()["content-type"]).toBe("image/png");
         });
 
+        test("canonical, alternativas hreflang y JSON-LD Person", async ({ page, request }) => {
+            const site = "https://arubiose.github.io";
+            await page.goto(p.path);
+            await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `${site}${p.path}`);
+            const alternates = await page.locator('link[rel="alternate"][hreflang]').evaluateAll((els) =>
+                els.map((e) => [e.getAttribute("hreflang"), e.getAttribute("href")]),
+            );
+            expect(alternates).toEqual([["es-ES", `${site}/`], ["en-US", `${site}/en/`], ["x-default", `${site}/`]]);
+
+            const scripts = page.locator('script[type="application/ld+json"]');
+            await expect(scripts).toHaveCount(1);
+            const person = JSON.parse((await scripts.textContent())!);
+            expect(person).toMatchObject({ "@context": "https://schema.org", "@type": "Person", url: `${site}${p.path}` });
+            // El cargo es el del hero: mismo dato de la wiki, en el idioma de la página.
+            expect(person.jobTitle).toBe((await page.locator(".hero-role").textContent())?.trim());
+            expect(person).not.toHaveProperty("email");
+            // La wiki tiene títulos (kind: degree por defecto): si falta, la build usó una caché de contenido anterior al esquema.
+            expect(person.alumniOf?.length).toBeGreaterThan(0);
+            const image = await request.get(new URL(person.image).pathname);
+            expect(image.status()).toBe(200);
+            expect(image.headers()["content-type"]).toBe("image/webp");
+        });
+
         test("no se cuelan valores sin resolver", async ({ page }) => {
             await page.goto(p.path);
             const text = await page.locator("body").innerText();
