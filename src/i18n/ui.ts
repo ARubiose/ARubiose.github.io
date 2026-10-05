@@ -1,6 +1,8 @@
 export const locales = ["es", "en"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "es";
+// Códigos BCP 47 para hreflang y el sitemap: una sola fuente para el <head> y la integración.
+export const localeTags: Record<Locale, string> = { es: "es-ES", en: "en-US" };
 
 export const ui = {
     es: {

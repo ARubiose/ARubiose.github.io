@@ -6,6 +6,7 @@ import { iconExists } from "./icons";
 export const skillCategories = ["backend", "ai", "frontend", "devops", "security"] as const;
 export type SkillCategory = (typeof skillCategories)[number];
 export const projectStatuses = ["active", "paused", "done"] as const;
+export const educationKinds = ["degree", "certificate"] as const;
 
 const text = z.string().trim().min(1);
 // z.url() acepta cualquier esquema (javascript:, data:…); los enlaces del sitio solo pueden ser web.
@@ -92,6 +93,8 @@ export const educationSchema = z
     .object({
         ...meta,
         type: z.literal("education"),
+        // degree: título o estancia académica (alumniOf); certificate: certificación (hasCredential).
+        kind: z.enum(educationKinds).default("degree"),
         institution: text,
         degree: text,
         start: yearMonth,

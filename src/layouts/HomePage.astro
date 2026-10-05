@@ -1,9 +1,11 @@
 ---
 import { getCollection, getEntry } from "astro:content";
-import { getRelativeLocaleUrl } from "astro:i18n";
+import { getImage } from "astro:assets";
+import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from "astro:i18n";
 import { locales, type Locale } from "@i18n/ui";
 import { buildHomeView, handleFromName, shortNameFromName } from "@lib/home";
 import { findBrokenSkillRefs } from "@lib/skills";
+import { alternateLinks, personJsonLd, requireSite } from "@lib/seo";
 import Layout from "./Layout.astro";
 import Header from "@components/Header.astro";
 import Intro from "@sections/intro.astro";
@@ -34,22 +36,25 @@ const broken = findBrokenSkillRefs(
 if (broken.length) throw new Error(`Habilidades inexistentes en la wiki: ${broken.map((b) => `${b.entry} → ${b.skill}`).join(", ")}`);
 
 const now = new Date().toISOString().slice(0, 7);
-const view = buildHomeView(
-    {
-        profile: profile.data,
-        experience: experienceEntries.map(({ id, data }) => ({ id, data })),
-        projects: projectEntries.map(({ id, data }) => ({ id, data })),
-        skills: skillEntries.map(({ id, data }) => ({ id, data })),
-        education: educationEntries.map(({ id, data }) => ({ id, data })),
-    },
-    locale,
-    now,
-);
+const data = {
+    profile: profile.data,
+    experience: experienceEntries.map(({ id, data }) => ({ id, data })),
+    projects: projectEntries.map(({ id, data }) => ({ id, data })),
+    skills: skillEntries.map(({ id, data }) => ({ id, data })),
+    education: educationEntries.map(({ id, data }) => ({ id, data })),
+};
+const view = buildHomeView(data, locale, now);
 
 const urls = Object.fromEntries(locales.map((l) => [l, getRelativeLocaleUrl(l, "")])) as Record<Locale, string>;
+
+// SEO: URLs absolutas de cada idioma y foto optimizada (nunca el original de la wiki).
+const site = requireSite(Astro.site);
+const absoluteUrls = Object.fromEntries(locales.map((l) => [l, getAbsoluteLocaleUrl(l, "")])) as Record<Locale, string>;
+const photo = await getImage({ src: profile.data.photo, width: 400, format: "webp" });
+const jsonLd = personJsonLd(data, locale, { url: absoluteUrls[locale], image: new URL(photo.src, site).href });
 ---
 
-<Layout locale={locale} title={`${view.profile.name} · ${view.profile.headline}`} description={view.profile.summary}>
+<Layout locale={locale} title={`${view.profile.name} · ${view.profile.headline}`} description={view.profile.summary} alternates={alternateLinks(absoluteUrls)} jsonLd={jsonLd}>
     <Header locale={locale} sections={view.sections} urls={urls} handle={handleFromName(view.profile.name)} shortName={shortNameFromName(view.profile.name)} />
     <main class="mx-auto max-w-6xl px-4 md:px-10">
         <Intro profile={view.profile} locale={locale} />

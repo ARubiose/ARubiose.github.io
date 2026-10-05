@@ -1,6 +1,7 @@
 ---
 title: IELTS
 type: education
+kind: certificate
 institution: British Council
 degree: IELTS (nivel B2 de inglés)
 start: 2017
@@ -11,7 +12,7 @@ en:
   degree: IELTS (English, B2 level)
   summary: B2-level English language certification.
 sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf]
-updated: 2026-10-02
+updated: 2026-10-05
 ---
 
 # IELTS

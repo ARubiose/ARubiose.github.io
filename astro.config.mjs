@@ -1,6 +1,8 @@
 // @ts-check
 import { defineConfig, fontProviders } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
+import sitemap from "@astrojs/sitemap";
+import { defaultLocale, localeTags } from "./src/i18n/ui.ts";
 
 // https://astro.build/config
 export default defineConfig({
@@ -9,6 +11,8 @@ export default defineConfig({
         locales: ["en", "es"],
         defaultLocale: "es",
     },
+    // Mismos códigos que el <head> (localeTags): sitemap y hreflang no pueden contradecirse.
+    integrations: [sitemap({ i18n: { defaultLocale, locales: localeTags } })],
     fonts: [
         {
             provider: fontProviders.fontsource(),

@@ -25,6 +25,7 @@ describe("fixtures válidos", () => {
 
 // Ruta del error que debe dar cada fixture: falla por lo que dice su nombre y no por otra cosa.
 const invalidPaths: Record<string, (string | number)[]> = {
+    "bad-education-kind.md": ["kind"],
     "bad-email.md": ["links", "email"],
     "bad-icon-format.md": ["icon"],
     "bad-month.md": ["start"],
@@ -75,6 +76,13 @@ test("url: null equivale a omitirla", () => {
 test("los años sin mes se normalizan a string", () => {
     const result = validate(join(FIXTURES, "valid/education-year-only.md"));
     expect(result.success && result.data).toMatchObject({ start: "2015", end: "2020", grade: "8.55" });
+});
+
+test("kind de formación: degree por defecto, certificate si se indica", () => {
+    const degree = validate(join(FIXTURES, "valid/education-year-only.md"));
+    expect(degree.success && degree.data).toMatchObject({ kind: "degree" });
+    const certificate = validate(join(FIXTURES, "valid/education-certificate.md"));
+    expect(certificate.success && certificate.data).toMatchObject({ kind: "certificate" });
 });
 
 describe("JSON Schema del editor (como lo genera Astro)", () => {
