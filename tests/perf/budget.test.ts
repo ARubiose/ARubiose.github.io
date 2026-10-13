@@ -3,13 +3,20 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { gzipSync } from "node:zlib";
 import { expect, test } from "vitest";
+import { pagesTarget } from "../../src/lib/site";
 
 const DIST = join(import.meta.dirname, "../../dist");
 const BUDGET_KB = 60;
 
-/** Scripts propios de la página; los de terceros (analítica) no salen de dist/ ni cuentan. */
-function localScripts(html: string): string[] {
-    return [...html.matchAll(/<script[^>]*src="(\/[^/"][^"]*\.js)"/g)].map((m) => m[1]);
+// Con base (repo de plantilla con nombre propio), los src llevan /<repo>/ delante; dist/ no.
+const BASE = pagesTarget(process.env).base;
+
+/** Scripts propios de la página, relativos a dist/; los de terceros (analítica) no salen de dist/ ni cuentan. */
+function localScripts(html: string, base = BASE): string[] {
+    return [...html.matchAll(/<script[^>]*src="(\/[^/"][^"]*\.js)"/g)]
+        .map((m) => m[1])
+        .filter((src) => src.startsWith(base))
+        .map((src) => `/${src.slice(base.length)}`);
 }
 
 /** Scripts de la página y todo lo que importan de forma estática, a cualquier profundidad. */
@@ -51,5 +58,10 @@ test("el grafo sigue imports estáticos a cualquier profundidad e ignora los din
 
 test("solo cuenta los scripts servidos desde dist/, no los de terceros como el beacon de Cloudflare", () => {
     const html = '<script type="module" src="/_astro/page.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js"></script>';
-    expect(localScripts(html)).toEqual(["/_astro/page.js"]);
+    expect(localScripts(html, "/")).toEqual(["/_astro/page.js"]);
+});
+
+test("los scripts con base se resuelven dentro de dist/", () => {
+    const html = '<script type="module" src="/demo/_astro/a.js"></script><script src="https://static.cloudflareinsights.com/beacon.min.js"></script>';
+    expect(localScripts(html, "/demo/")).toEqual(["/_astro/a.js"]);
 });

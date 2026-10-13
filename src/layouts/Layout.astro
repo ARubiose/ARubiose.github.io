@@ -18,7 +18,8 @@ const { locale, title, description, alternates = [], jsonLd, analytics } = Astro
 const site = requireSite(Astro.site);
 // Las vistas previas al compartir (LinkedIn, WhatsApp…) y los buscadores exigen URLs absolutas.
 const pageUrl = new URL(Astro.url.pathname, site).href;
-const ogImage = new URL("/og-image.png", site).href;
+const base = import.meta.env.BASE_URL;
+const ogImage = new URL(`${base}og-image.png`, site).href;
 ---
 
 <!doctype html>
@@ -27,7 +28,7 @@ const ogImage = new URL("/og-image.png", site).href;
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="dark" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
         <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="canonical" href={pageUrl} />

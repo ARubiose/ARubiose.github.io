@@ -9,7 +9,8 @@
     "astro": "astro",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test && vitest run tests/privacy tests/perf",
+    "test:e2e": "playwright test && pnpm test:build && vitest run tests/privacy tests/perf",
+    "test:build": "vitest run --config vitest.build.config.ts",
     "check": "astro check",
     "test:visual:update": "playwright test tests/e2e/visual.spec.ts --update-snapshots"
   },
