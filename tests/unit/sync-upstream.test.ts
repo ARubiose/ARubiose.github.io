@@ -80,6 +80,23 @@ describe("sync-upstream", () => {
         expect(run.stdout).toContain("src/a.ts");
     });
 
+    test("una rama local con barra (feat/x) no se confunde con un remoto", () => {
+        const tpl = template();
+        const site = mkdtempSync(join(tmpdir(), "site-"));
+        git(site, "clone", "-q", tpl, ".");
+        commit(site, { "wiki/public/profile.md": "me\n" }, "mine");
+        git(site, "fetch", "-q", "origin");
+        git(site, "branch", "feat/tpl", "origin/main");
+        git(site, "switch", "-q", "feat/tpl");
+        commit(site, { "src/a.ts": "v2\n", "wiki/public/profile.md": "ada 2\n" }, "v2");
+        git(site, "switch", "-q", "main");
+
+        const run = spawnSync("node", [SCRIPT, "feat/tpl"], { cwd: site, env: ENV, encoding: "utf8" });
+        expect(run.status, run.stderr).toBe(0);
+        expect(read(site, "src/a.ts")).toBe("v2\n");
+        expect(read(site, "wiki/public/profile.md")).toBe("me\n");
+    });
+
     test("con cambios sin commit no empieza", () => {
         const tpl = template();
         const site = mkdtempSync(join(tmpdir(), "site-"));
