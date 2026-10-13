@@ -49,7 +49,7 @@ describe("Experience", () => {
 
 test("Education muestra la nota", async () => {
     const html = clean(await container.renderToString(Education, {
-        props: { items: [item({ id: "upm", file: "upm.md", end: "2022", current: false, period: "2020 - 2022", note: "Average grade: 8.55", highlights: [] })], locale: "en" },
+        props: { items: [item({ id: "example-uni", file: "example-uni.md", end: "2022", current: false, period: "2020 - 2022", note: "Average grade: 8.55", highlights: [] })], locale: "en" },
     }));
     expect(html).toContain('id="education"');
     expect(html).toContain("Average grade: 8.55");
@@ -75,7 +75,7 @@ describe("Projects", () => {
 
 const skill = (id: string, title: string, category: "backend" | "ai", over = {}) => ({
     id, title, category, summary: `${title} summary.`, icon: "si:python", months: 46, xp: "3 years 10 months",
-    xpShort: "3.8 years", since: 2022, usedIn: [{ id: "zalcu", name: "Zalcu Technologies", role: "Developer" }], ...over,
+    xpShort: "3.8 years", since: 2022, usedIn: [{ id: "analytical", name: "Analytical Engines Ltd", role: "Developer" }], ...over,
 });
 
 test("Skills: los datos del creador no pueden cerrar su <script>", async () => {
@@ -101,15 +101,15 @@ test("Skills sin JS: todas las categorías, XP, desde y dónde se usó cada habi
         ],
         profile: { name: "Ada", headline: "Engineer", photo },
         professionalXp: "5.3 years",
-        usage: { python: ["zalcu"] },
-        entryNames: { zalcu: "Zalcu Technologies" },
+        usage: { python: ["analytical"] },
+        entryNames: { analytical: "Analytical Engines Ltd" },
     };
     const html = clean(await container.renderToString(Skills, { props }));
     expect(html).toContain('id="skills"');
     expect(html).toMatch(/<h3 class="panel-title[^"]*">Backend<\/h3>/);
     expect(html).toMatch(/<h3 class="panel-title[^"]*">Artificial intelligence<\/h3>/);
     expect(html).toContain("3 years 10 months");
-    expect(html).toContain("Zalcu Technologies");
+    expect(html).toContain("Analytical Engines Ltd");
     expect(html).toContain("no recorded use");
     expect(html).toMatch(/data-tabs[^>]*hidden|hidden[^>]*data-tabs/);
     expect(html).toContain('data-cap="6"');
@@ -164,7 +164,7 @@ describe.each<Locale>(["es", "en"])("en %s", (locale) => {
     const sections = [
         { name: "Experience", component: Experience, title: t("section.experience"), full: { items: [item()] }, empty: { items: [] } },
         { name: "Projects", component: Projects, title: t("section.projects"), full: { items: [project] }, empty: { items: [] } },
-        { name: "Education", component: Education, title: t("section.education"), full: { items: [item({ id: "upm", file: "upm.md" })] }, empty: { items: [] } },
+        { name: "Education", component: Education, title: t("section.education"), full: { items: [item({ id: "example-uni", file: "example-uni.md" })] }, empty: { items: [] } },
         {
             name: "Skills", component: Skills, title: t("section.skills"),
             full: skillsProps([{ category: "backend", label: "Backend", items: [skill("python", "Python", "backend")] }]),

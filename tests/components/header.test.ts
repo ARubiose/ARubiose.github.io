@@ -29,7 +29,7 @@ test("el prompt usa el handle recibido, no un nombre fijo", async () => {
     const container = await AstroContainer.create();
     const html = clean(await container.renderToString(Header, { props: { locale: "es", urls, sections: [], handle: "ada", shortName: "ADA" } }));
     expect(html).toMatch(/data-for-skin="terminal"[^>]*>ada@portfolio:~\$</);
-    expect(html).not.toContain("alvaro@");
+    expect(html).not.toContain("inigo@");
 });
 
 test("selector de skin en la cabecera y en el menú: oculto sin JS, un botón por skin", async () => {

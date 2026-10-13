@@ -45,11 +45,11 @@ describe("skillUsage", () => {
     test("invierte entradas → habilidades en habilidad → entradas", () => {
         expect(
             skillUsage([
-                { id: "zalcu", skills: ["python", "docker"] },
-                { id: "gofore", skills: ["python"] },
-                { id: "oesia" },
+                { id: "analytical", skills: ["python", "docker"] },
+                { id: "difference", skills: ["python"] },
+                { id: "jacquard" },
             ]),
-        ).toEqual({ python: ["zalcu", "gofore"], docker: ["zalcu"] });
+        ).toEqual({ python: ["analytical", "difference"], docker: ["analytical"] });
     });
 });
 
@@ -75,19 +75,19 @@ describe("formatXp", () => {
 });
 
 describe("rankCombination", () => {
-    const usage = { fastapi: ["skin-ai", "zalcu"], celery: ["zalcu"], docker: ["zalcu"], expo: ["skin-ai"] };
+    const usage = { fastapi: ["note-engine", "analytical"], celery: ["analytical"], docker: ["analytical"], expo: ["note-engine"] };
 
     test("ordena por aciertos y omite entradas sin ninguno", () => {
         expect(rankCombination(["fastapi", "celery", "docker"], usage)).toEqual([
-            { id: "zalcu", hits: 3 },
-            { id: "skin-ai", hits: 1 },
+            { id: "analytical", hits: 3 },
+            { id: "note-engine", hits: 1 },
         ]);
     });
 
     test("empate: conserva el orden de aparición", () => {
         expect(rankCombination(["expo", "celery"], usage)).toEqual([
-            { id: "skin-ai", hits: 1 },
-            { id: "zalcu", hits: 1 },
+            { id: "note-engine", hits: 1 },
+            { id: "analytical", hits: 1 },
         ]);
     });
 
@@ -110,12 +110,12 @@ describe("findBrokenSkillRefs", () => {
         expect(
             findBrokenSkillRefs(
                 [
-                    { id: "zalcu", skills: ["python", "cobol"] },
-                    { id: "oesia", skills: ["osint"] },
-                    { id: "gofore" },
+                    { id: "analytical", skills: ["python", "cobol"] },
+                    { id: "jacquard", skills: ["osint"] },
+                    { id: "difference" },
                 ],
                 ["python", "osint"],
             ),
-        ).toEqual([{ entry: "zalcu", skill: "cobol" }]);
+        ).toEqual([{ entry: "analytical", skill: "cobol" }]);
     });
 });

@@ -52,7 +52,7 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 | Wiki privada | `wiki/private/` | Notas personales, síntesis, log | No |
 | Fuentes | `raw/` | Material original (CV, LinkedIn…) | No |
 | Agente | `.claude/` | Regla de la wiki, skills `ingest`/`query`/`lint`, permisos | Sí |
-| Docs | `docs/` | Este documento, las decisiones (`decisions/`) y las maquetas (`design/mockups/`) | Sí |
+| Docs | `docs/` | Este documento, las decisiones (`decisions/`) y la guía de uso (`guide.md`, `guide.es.md`) | Sí |
 
 ## 3. Portfolio (Astro)
 
@@ -197,14 +197,19 @@ procesar (`favicon.svg`).
 
 ### 3.6 Build y despliegue
 
-`pnpm build` genera HTML estático en `dist/`. Se publica en **GitHub Pages**
-(`https://arubiose.github.io`, repo de usuario `ARubiose.github.io`, sin `base`) con el
-workflow `.github/workflows/deploy.yml`:
+`pnpm build` genera HTML estático en `dist/`. Se publica en **GitHub Pages** con el workflow
+`.github/workflows/deploy.yml`. `site` y `base` se deducen de `GITHUB_REPOSITORY` en
+`src/lib/site.ts` (`pagesTarget`): un repo `<owner>.github.io` se publica en la raíz y
+cualquier otro en `/<repo>/` (la demo de la plantilla está en
+`https://arubiose.github.io/llm-wiki-portfolio/`). `SITE_URL` y `BASE_PATH` (variables del repo, que `deploy.yml` ya pasa) lo fuerzan, y sin
+nada de eso (desarrollo local) es `http://localhost:4321`. Todas las URLs internas usan
+`import.meta.env.BASE_URL` o las funciones de `astro:i18n`.
 
 - En cada push y PR ejecuta `pnpm check`, `pnpm test` y `pnpm test:e2e`, con el historial
   completo de git para el test de privacidad.
-- En `main`, sube como artefacto de Pages el mismo `dist/` que han construido y escaneado los
-  e2e, y lo despliega con `actions/deploy-pages`. Si falla un test, no se publica nada.
+- En `main`, sube como artefacto de Pages el mismo `dist/` que han construido el smoke y el
+  escaneo (los e2e construyen el fixture aparte, en `.fixture-dist/`), y lo despliega con
+  `actions/deploy-pages`. Si falla un test, no se publica nada.
 
 Solo necesita lo que está en el repo, porque el portfolio consume únicamente `wiki/public/`.
 
@@ -216,12 +221,15 @@ Solo necesita lo que está en el repo, porque el portfolio consume únicamente `
 | Contrato | Vitest + Zod | Fixtures válidos/inválidos y toda la wiki pública real | `tests/content/` |
 | Componentes | Vitest + Container API | Secciones y cabecera en ambos idiomas y con listas vacías | `tests/components/` |
 | Privacidad | Vitest | Teléfono, dirección, código postal y nacimiento en `wiki/public/` y `dist/`; credenciales y rutas personales en todos los archivos versionados, los mensajes de commit y las líneas añadidas del historial; en ambos, `wiki/private/forbidden-strings.txt` si existe | `tests/privacy/` |
-| E2E | Playwright + axe | `/` y `/en/` en escritorio (1280) y móvil (390): navegación, menú, visor, creador de personaje, sin JS, movimiento reducido, desbordamiento, CLS, accesibilidad con diálogos abiertos; canonical, hreflang, JSON-LD, sitemap y robots | `tests/e2e/` |
+| E2E | Playwright + axe | `/` y `/en/` en escritorio (1280) y móvil (390): navegación, menú, visor, creador de personaje, sin JS, movimiento reducido, desbordamiento, CLS, accesibilidad con diálogos abiertos; canonical, hreflang, JSON-LD, sitemap y robots. Sobre el fixture `tests/fixtures/site/` (Ada), construido con `WIKI_DIR` en `.fixture-dist/` | `tests/e2e/` |
 | Regresión visual | Playwright `toHaveScreenshot` | Portada completa en ambos tamaños e idiomas y en las tres skins (12 capturas), con movimiento reducido | `tests/e2e/visual.spec.ts-snapshots/` |
 | Presupuesto | Vitest | JavaScript de la portada ≤ 60 KB comprimido | `tests/perf/` |
+| Smoke | Playwright | Contenido real (`wiki/public/`) con su `base`: `/` y `/en/` cargan sin errores, con `h1`, secciones con contenido y sin desbordamiento | `tests/smoke/` |
+| Build con `base` | Vitest | Construido bajo `/demo/`, ninguna URL interna apunta a la raíz del dominio | `tests/build/` |
 
-Scripts: `pnpm test` (todo salvo E2E), `pnpm test:e2e` (build + preview + Playwright, y
-después la privacidad y el presupuesto sobre `dist/`), `pnpm test:visual:update` (regenera
+Scripts: `pnpm test` (todo salvo E2E y build), `pnpm test:e2e` (Playwright sobre el fixture,
+smoke sobre el build real, el test de build con `base` y después la privacidad y el
+presupuesto sobre `dist/`), `pnpm test:build` (solo el de `base`), `pnpm test:visual:update` (regenera
 las capturas de referencia tras un cambio de diseño intencionado) y `pnpm check`
 (`astro check`). Notas de entorno:
 
@@ -237,6 +245,13 @@ las capturas de referencia tras un cambio de diseño intencionado) y `pnpm check
 - Astro guarda las colecciones en `node_modules/.astro/data-store.json` y no lo invalida al
   cambiar un esquema: tras añadir un campo con valor por defecto, borra ese archivo antes de
   construir, o las páginas sin cambios conservan los datos antiguos (en CI siempre es limpio).
+  Cada `WIKI_DIR` tiene su propia caché (`buildDirs` en `src/lib/site.ts`), para que un build
+  del fixture no deje sus colecciones en el build real.
+- La XP y el año de la ficha se calculan con el mes del build (`buildMonth`). El build del
+  fixture lo fija con `BUILD_DATE` (`playwright.config.ts`): sin eso, las capturas cambiarían
+  con el paso del tiempo y romperían el CI de todos los sitios sin que nadie tocara nada.
+- Vitest pone en `process.env` las variables de Vite (`BASE_URL`…); `tests/build/` las quita
+  antes de lanzar `astro build`, porque pisarían la `base`.
 
 ### 3.8 SEO
 
@@ -269,6 +284,26 @@ Opcional y desactivada por defecto, para que la plantilla no envíe nada sin con
   comprueba que el aviso aparece si y solo si está el beacon; Playwright resuelve
   `static.cloudflareinsights.com` a nada para no contar las pruebas como visitas, y el
   presupuesto de JS solo cuenta scripts servidos desde `dist/`.
+
+### 3.10 Plantilla y sitios derivados
+
+El código vive en la plantilla `ARubiose/llm-wiki-portfolio`, con contenido ficticio (Ada) y
+una demo en Pages. Cada sitio derivado tiene su propio repo y trae las mejoras con
+`pnpm sync:upstream` ([guía](guide.es.md), [0006](decisions/0006-template-and-upstream.md)).
+
+- **Historial:** el sitio del autor comparte historial con la plantilla (nació de este mismo
+  repo). Un repo creado con «Use this template» no lo comparte: su primer merge necesita
+  `--allow-unrelated-histories` (el script lo añade solo si no hay ancestro común).
+- **Archivos de contenido:** son los únicos que difieren entre la plantilla y un sitio
+  derivado: `wiki/public/**`, `wiki/index.md` y `public/og-image.png`. `pnpm sync:upstream`
+  (`scripts/sync-upstream.mjs`) hace el merge sin commit y los deja exactamente como estaban
+  en `HEAD`, quitando también las páginas que solo trae la plantilla. Un driver `merge=ours`
+  no basta: solo actúa cuando los dos lados tocaron el mismo archivo, así que una página nueva
+  de Ada entraría sin conflicto.
+- **Todo lo demás es compartido** (código, tests, `CLAUDE.md`, `docs/`) y se cambia en la
+  plantilla; un cambio local dará conflictos al traer `upstream`.
+- **Tests:** los e2e y las capturas usan `tests/fixtures/site/` (`WIKI_DIR`), así que
+  cambiar el contenido no exige tocarlos (§3.7).
 
 ## 4. Capa de contenido
 
@@ -357,7 +392,7 @@ carga solo cuando hace falta o que la hace cumplir sin depender del modelo:
 ## 7. Estado y hoja de ruta
 
 El estado, las fases pendientes, las mejoras aplazadas y las cuestiones abiertas están en los
-[issues del repositorio](https://github.com/ARubiose/ARubiose.github.io/issues), que son la
+issues de cada repositorio (la plantilla y cada sitio derivado tienen los suyos), que son la
 única fuente de la hoja de ruta; lo terminado queda en `git log`
 ([0005](decisions/0005-roadmap-in-github-issues.md)).
 
@@ -387,6 +422,7 @@ El estado, las fases pendientes, las mejoras aplazadas y las cuestiones abiertas
 | GSAP + CSS para animaciones | Solo CSS, Motion | Efectos de terminal (ScrambleText) y ScrollTrigger sin framework de UI |
 | Integridad de `skills` con `findBrokenSkillRefs` | `reference()` de Astro | Los esquemas se prueban sin `astro:content`; el build falla igual |
 | XP calculada a partir de los puestos | Niveles escritos a mano | Sin datos inventados |
+| Plantilla y sitios derivados con `upstream`; e2e sobre un fixture fijo | Un solo repo con el contenido del autor | Reutilizable sin tocar código ni tests. [0006](decisions/0006-template-and-upstream.md) |
 
 ## 9. Referencias
 

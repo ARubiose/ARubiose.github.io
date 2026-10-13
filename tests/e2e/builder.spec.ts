@@ -33,12 +33,12 @@ test.describe("creador de personaje", () => {
         await expect(page.locator('[data-equip="fastapi"]')).toHaveAttribute("aria-pressed", "false");
     });
 
-    test("FastAPI + Celery + Docker se combinaron en Zalcu (3/3)", async ({ page }) => {
+    test("FastAPI + Celery + Docker se combinaron en Analytical Engines (3/3)", async ({ page }) => {
         await equip(page, "fastapi");
         await equip(page, "celery");
         await tab(page, "devops");
         await equip(page, "docker");
-        await expect(page.locator("[data-combo] .combo-row").first()).toContainText("Zalcu Technologies");
+        await expect(page.locator("[data-combo] .combo-row").first()).toContainText("Analytical Engines Ltd");
         await expect(page.locator("[data-combo] .combo-row").first()).toContainText("3/3");
     });
 

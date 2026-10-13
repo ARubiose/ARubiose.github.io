@@ -3,10 +3,18 @@ import { defineConfig, envField, fontProviders } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import { defaultLocale, localeTags } from "./src/i18n/ui.ts";
+import { buildDirs, pagesTarget } from "./src/lib/site.ts";
+
+// site y base salen del entorno (GITHUB_REPOSITORY en Actions): la plantilla funciona con cualquier nombre de repo.
+const { site, base } = pagesTarget(process.env);
+const { outDir, cacheDir } = buildDirs(process.env);
 
 // https://astro.build/config
 export default defineConfig({
-    site: "https://arubiose.github.io",
+    site,
+    base,
+    outDir,
+    cacheDir,
     i18n: {
         locales: ["en", "es"],
         defaultLocale: "es",

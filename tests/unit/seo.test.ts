@@ -26,7 +26,11 @@ describe("requireSite", () => {
 
 describe("robotsTxt", () => {
     test("permite todo y apunta al índice del sitemap con el dominio de site", () => {
-        expect(robotsTxt(SITE)).toBe("User-agent: *\nAllow: /\n\nSitemap: https://ada.example.dev/sitemap-index.xml\n");
+        expect(robotsTxt(SITE, "/")).toBe("User-agent: *\nAllow: /\n\nSitemap: https://ada.example.dev/sitemap-index.xml\n");
+    });
+
+    test("con base, el sitemap cuelga de la subruta", () => {
+        expect(robotsTxt(new URL("https://ada.github.io"), "/demo/")).toBe("User-agent: *\nAllow: /\n\nSitemap: https://ada.github.io/demo/sitemap-index.xml\n");
     });
 });
 

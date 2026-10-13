@@ -10,11 +10,11 @@ test("Icon pinta el SVG en línea y oculto a lectores", async () => {
 
 test("Window pinta barra con archivo (oculto a lectores), etiqueta y contenido", async () => {
     const html = await render(Window, {
-        props: { file: "zalcu.log", tag: "EN CURSO" },
+        props: { file: "analytical.log", tag: "EN CURSO" },
         slots: { default: "<p>Contenido</p>" },
     });
     expect(html).toContain('class="window');
-    expect(html).toMatch(/<span aria-hidden="true" class="window-file">zalcu\.log<\/span>/);
+    expect(html).toMatch(/<span aria-hidden="true" class="window-file">analytical\.log<\/span>/);
     expect(html).toContain("EN CURSO");
     expect(html).toContain("<p>Contenido</p>");
 });

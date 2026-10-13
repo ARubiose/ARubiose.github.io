@@ -18,8 +18,8 @@ export function alternateLinks(urls: Record<Locale, string>): AlternateLink[] {
     ];
 }
 
-export function robotsTxt(site: URL): string {
-    return `User-agent: *\nAllow: /\n\nSitemap: ${new URL("sitemap-index.xml", site).href}\n`;
+export function robotsTxt(site: URL, base: string): string {
+    return `User-agent: *\nAllow: /\n\nSitemap: ${new URL(`${base}sitemap-index.xml`, site).href}\n`;
 }
 
 /** JSON para un <script>: escapa `<` para que ningún texto pueda cerrar la etiqueta ni abrir un comentario. */

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { skinOf } from "./support";
+import { FIXTURE_NAME, skinOf } from "./support";
 
 test.describe("sin animaciones", () => {
     test.use({ reducedMotion: "reduce" });
@@ -44,13 +44,13 @@ test("cruzar 768 px durante la intro no la repite ni corta el prompt", async ({ 
     // A mitad de la escritura: el prompt ya empezó, pero aún no está completo.
     await expect.poll(() => prompt.textContent(), { intervals: [10] }).toMatch(/^w[a-z]{0,4}$/);
     await page.setViewportSize({ width: 600, height: 800 });
-    await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+    await expect(page.locator(".hero-name")).toHaveText(FIXTURE_NAME, { timeout: 6000 });
     await expect(prompt).toHaveText("whoami");
 });
 
 test("con animaciones, la intro termina con el nombre completo y la foto visible", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+    await expect(page.locator(".hero-name")).toHaveText(FIXTURE_NAME, { timeout: 6000 });
     // Opacidad efectiva de la foto (la suya y la de sus contenedores): una transición CSS en la imagen
     // hacía que la intro de Juego la dejara a 0.
     await expect.poll(() => page.locator(".photo-window img").evaluate((img) => {
@@ -85,7 +85,7 @@ test("la intro no cambia la altura de la página: un salto del menú a mitad de 
 test("Táctico: la intro termina con el nombre completo, las esquinas dibujadas y sin prompt escrito", async ({ page }, info) => {
     test.skip(skinOf(info.project.name) !== "tactical");
     await page.goto("/");
-    await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+    await expect(page.locator(".hero-name")).toHaveText(FIXTURE_NAME, { timeout: 6000 });
     await expect.poll(() => page.locator(".photo-window").evaluate((el) => getComputedStyle(el, "::before").width), { timeout: 6000 }).toBe("38px");
     await expect(page.locator('.hero .prompt [data-for-skin="terminal"]')).toHaveText("whoami");
 });
@@ -120,7 +120,7 @@ test("una skin sin preset de intro usa la de Terminal sin escribir el prompt", a
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("/");
-    await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+    await expect(page.locator(".hero-name")).toHaveText(FIXTURE_NAME, { timeout: 6000 });
     await expect(page.locator('.hero .prompt [data-for-skin="terminal"]')).toHaveText("whoami");
     expect(errors).toEqual([]);
 });
@@ -132,7 +132,7 @@ for (const target of ["tactical", "game"]) {
         // Centrada: con scrollIntoViewIfNeeded una tarjeta puede quedar visible pero bajo la línea de disparo.
         const center = (el: Element) => el.scrollIntoView({ block: "center", behavior: "instant" });
         await page.goto("/");
-        await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+        await expect(page.locator(".hero-name")).toHaveText(FIXTURE_NAME, { timeout: 6000 });
         for (const card of await page.locator(".t-card").all()) {
             await card.evaluate(center);
             await expect(card).toHaveCSS("opacity", "1");
@@ -178,7 +178,7 @@ test("Juego: el panel del hero barre, el nombre queda completo y el prompt sin e
         reveals.add(await page.locator(".photo-window").evaluate((el) => getComputedStyle(el).getPropertyValue("--panel-reveal").trim()));
         return reveals.has("1") && [...reveals].some((v) => v !== "1");
     }, { intervals: [16], timeout: 4000 }).toBe(true);
-    await expect(page.locator(".hero-name")).toHaveText("Álvaro Rubio Segovia", { timeout: 6000 });
+    await expect(page.locator(".hero-name")).toHaveText(FIXTURE_NAME, { timeout: 6000 });
     await expect(page.locator(".hero-name")).toHaveCSS("opacity", "1");
     await expect(page.locator('.hero .prompt [data-for-skin="terminal"]')).toHaveText("whoami");
 });
