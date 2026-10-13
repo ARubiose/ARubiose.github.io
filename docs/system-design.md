@@ -70,6 +70,7 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
   (`@import "tailwindcss"` + `@theme`), sin `tailwind.config.js`.
 - **TypeScript estricto** (`astro/tsconfigs/strict`).
 - **SEO:** `@astrojs/sitemap` (sitemap con alternativas por idioma); ver §3.8.
+- **Analítica opcional:** Cloudflare Web Analytics; ver §3.9.
 - **Node 24** (`.nvmrc` y mínimo en `engines`; Astro 7 exige ≥ 22.12) y **pnpm 12**, que solo ejecuta scripts de
   instalación de los paquetes aprobados en `pnpm-workspace.yaml`.
 
@@ -252,6 +253,22 @@ Todo sale de `site` y de la wiki pública; no hay datos escritos a mano.
 - **`robots.txt`:** endpoint (`src/pages/robots.txt.ts`) que apunta al sitemap con el dominio
   de `site`.
 - La imagen al compartir (`public/og-image.png`) es única y no se deriva de la wiki.
+
+### 3.9 Analítica
+
+Opcional y desactivada por defecto, para que la plantilla no envíe nada sin configurarla.
+
+- **Variable:** `PUBLIC_CF_ANALYTICS_TOKEN`, declarada en el esquema `env` de
+  `astro.config.mjs` (`astro:env/client`, pública y opcional). En CI sale de la variable del
+  repo `CF_ANALYTICS_TOKEN`.
+- **Activación** (`analyticsBeacon` en `src/lib/analytics.ts`): token no vacío y build de
+  producción. `HomePage.astro` calcula el resultado una vez y lo pasa a `Layout.astro`, que
+  añade el `beacon.min.js` diferido de Cloudflare, y a `Footer.astro`, que muestra el aviso
+  `footer.analytics` (marcado con `data-analytics-note`).
+- **Tests:** las capturas visuales ocultan el aviso para valer con y sin token; un e2e
+  comprueba que el aviso aparece si y solo si está el beacon; Playwright resuelve
+  `static.cloudflareinsights.com` a nada para no contar las pruebas como visitas, y el
+  presupuesto de JS solo cuenta scripts servidos desde `dist/`.
 
 ## 4. Capa de contenido
 

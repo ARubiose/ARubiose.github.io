@@ -6,6 +6,8 @@ import { locales, type Locale } from "@i18n/ui";
 import { buildHomeView, handleFromName, shortNameFromName } from "@lib/home";
 import { findBrokenSkillRefs } from "@lib/skills";
 import { alternateLinks, personJsonLd, requireSite } from "@lib/seo";
+import { analyticsBeacon } from "@lib/analytics";
+import { PUBLIC_CF_ANALYTICS_TOKEN } from "astro:env/client";
 import Layout from "./Layout.astro";
 import Header from "@components/Header.astro";
 import Intro from "@sections/intro.astro";
@@ -52,9 +54,11 @@ const site = requireSite(Astro.site);
 const absoluteUrls = Object.fromEntries(locales.map((l) => [l, getAbsoluteLocaleUrl(l, "")])) as Record<Locale, string>;
 const photo = await getImage({ src: profile.data.photo, width: 400, format: "webp" });
 const jsonLd = personJsonLd(data, locale, { url: absoluteUrls[locale], image: new URL(photo.src, site).href });
+
+const analytics = analyticsBeacon(PUBLIC_CF_ANALYTICS_TOKEN, import.meta.env.PROD);
 ---
 
-<Layout locale={locale} title={`${view.profile.name} · ${view.profile.headline}`} description={view.profile.summary} alternates={alternateLinks(absoluteUrls)} jsonLd={jsonLd}>
+<Layout locale={locale} title={`${view.profile.name} · ${view.profile.headline}`} description={view.profile.summary} alternates={alternateLinks(absoluteUrls)} jsonLd={jsonLd} analytics={analytics}>
     <Header locale={locale} sections={view.sections} urls={urls} handle={handleFromName(view.profile.name)} shortName={shortNameFromName(view.profile.name)} />
     <main class="mx-auto max-w-6xl px-4 md:px-10">
         <Intro profile={view.profile} locale={locale} />
@@ -64,7 +68,7 @@ const jsonLd = personJsonLd(data, locale, { url: absoluteUrls[locale], image: ne
         <Education items={view.education} locale={locale} />
         <Contact links={view.profile.links} locale={locale} />
     </main>
-    <Footer locale={locale} repo={view.siteRepo} />
+    <Footer locale={locale} repo={view.siteRepo} analytics={analytics !== null} />
 </Layout>
 
 <script>

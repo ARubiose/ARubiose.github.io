@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 4322;
+// Las mismas variables que ve la build (.env), para que los tests sepan si la analítica debe estar.
+try { process.loadEnvFile(); } catch { /* sin .env: solo el entorno */ }
 // Proyectos por skin: la skin ya está guardada en localStorage antes de cargar la página.
 const stored = (skin: string) => ({ cookies: [], origins: [{ origin: `http://127.0.0.1:${PORT}`, localStorage: [{ name: "skin", value: skin }] }] });
 const desktop = { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 800 } };
@@ -8,7 +10,8 @@ const mobile = { ...devices["Desktop Chrome"], viewport: { width: 390, height: 8
 
 export default defineConfig({
     testDir: "tests/e2e",
-    use: { baseURL: `http://127.0.0.1:${PORT}` },
+    // Si la build lleva el token de analítica, las pruebas no deben contar como visitas.
+    use: { baseURL: `http://127.0.0.1:${PORT}`, launchOptions: { args: ["--host-resolver-rules=MAP static.cloudflareinsights.com ~NOTFOUND"] } },
     projects: [
         { name: "desktop", use: desktop },
         { name: "mobile", use: mobile },

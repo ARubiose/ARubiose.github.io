@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, fontProviders } from "astro/config";
+import { defineConfig, envField, fontProviders } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import { defaultLocale, localeTags } from "./src/i18n/ui.ts";
@@ -13,6 +13,12 @@ export default defineConfig({
     },
     // Mismos códigos que el <head> (localeTags): sitemap y hreflang no pueden contradecirse.
     integrations: [sitemap({ i18n: { defaultLocale, locales: localeTags } })],
+    env: {
+        schema: {
+            // Token de Cloudflare Web Analytics. Es público (va en el HTML); sin él no hay analítica.
+            PUBLIC_CF_ANALYTICS_TOKEN: envField.string({ context: "client", access: "public", optional: true }),
+        },
+    },
     fonts: [
         {
             provider: fontProviders.fontsource(),

@@ -76,6 +76,24 @@ duda, a privado. Antes de cada commit conviene pasar `/lint`, que busca fugas.
 Haz un fork o pulsa *Use this template*, borra el contenido de `wiki/public/`, deja tus
 fuentes en `raw/` y ejecuta `/ingest`.
 
+### Analítica (opcional)
+
+El sitio puede contar visitas con [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/),
+que es gratis, no usa cookies y no necesita banner de consentimiento. Viene **desactivada**: sin
+token no se carga ningún script ni se envía nada.
+
+1. En Cloudflare: *Analytics & Logs → Web Analytics → Add a site*, con tu dominio de GitHub
+   Pages. Copia el `token` del fragmento que te da.
+2. En GitHub: *Settings → Secrets and variables → Actions → Variables*, crea
+   `CF_ANALYTICS_TOKEN` con ese valor. Es una variable y no un secreto porque el token acaba
+   en el HTML público.
+3. El siguiente despliegue carga el script y añade al pie una línea que avisa de la analítica.
+
+Solo se activa en builds de producción. Para probarlo en local, copia `.env.example` a `.env`,
+rellena `PUBLIC_CF_ANALYTICS_TOKEN` y ejecuta `pnpm build && pnpm preview`. Las visitas
+al preview local también llegan a Cloudflare (como `localhost`); para no mezclarlas con las
+reales, usa un token de prueba.
+
 ## Estructura
 
 ```text

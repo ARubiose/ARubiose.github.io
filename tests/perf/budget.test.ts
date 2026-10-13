@@ -7,6 +7,11 @@ import { expect, test } from "vitest";
 const DIST = join(import.meta.dirname, "../../dist");
 const BUDGET_KB = 60;
 
+/** Scripts propios de la página; los de terceros (analítica) no salen de dist/ ni cuentan. */
+function localScripts(html: string): string[] {
+    return [...html.matchAll(/<script[^>]*src="(\/[^/"][^"]*\.js)"/g)].map((m) => m[1]);
+}
+
 /** Scripts de la página y todo lo que importan de forma estática, a cualquier profundidad. */
 function staticGraph(entries: string[], root = DIST): Set<string> {
     const seen = new Set<string>();
@@ -24,7 +29,8 @@ function staticGraph(entries: string[], root = DIST): Set<string> {
 
 test.skipIf(!existsSync(join(DIST, "index.html")) && !process.env.CI)(`JS de la portada ≤ ${BUDGET_KB} KB comprimido`, () => {
     const html = readFileSync(join(DIST, "index.html"), "utf8");
-    const scripts = [...html.matchAll(/<script[^>]*src="([^"]+\.js)"/g)].map((m) => m[1]);
+    const scripts = localScripts(html);
+    expect(scripts.length, "no se encontró ningún script propio: el presupuesto no mediría nada").toBeGreaterThan(0);
     const total = [...staticGraph(scripts)].reduce((sum, s) => sum + gzipSync(readFileSync(join(DIST, s))).length, 0);
     expect(total / 1024).toBeLessThanOrEqual(BUDGET_KB);
 });
@@ -41,4 +47,9 @@ test("el grafo sigue imports estáticos a cualquier profundidad e ignora los din
     };
     for (const [file, code] of Object.entries(files)) writeFileSync(join(root, file), code);
     expect([...staticGraph(["/_astro/page.js"], root)].sort()).toEqual(["/_astro/a.js", "/_astro/b.js", "/_astro/page.js", "/_astro/side.js"]);
+});
+
+test("solo cuenta los scripts servidos desde dist/, no los de terceros como el beacon de Cloudflare", () => {
+    const html = '<script type="module" src="/_astro/page.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js"></script>';
+    expect(localScripts(html)).toEqual(["/_astro/page.js"]);
 });
