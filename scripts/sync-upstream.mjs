@@ -20,8 +20,9 @@ const fail = (message) => {
 
 if (git("status", "--porcelain")) fail("Hay cambios sin commit: haz commit o stash antes de traer upstream.");
 
-const [remote] = ref.split("/");
-if (ref.includes("/") && spawnSync("git", ["fetch", "-q", remote], { stdio: "inherit" }).status !== 0) fail(`No se pudo hacer fetch de «${remote}».`);
+// Solo se hace fetch si la ref empieza por un remoto que existe (feat/x es una rama local).
+const remote = git("remote").split("\n").find((r) => r && ref.startsWith(`${r}/`));
+if (remote && spawnSync("git", ["fetch", "-q", remote], { stdio: "inherit" }).status !== 0) fail(`No se pudo hacer fetch de «${remote}».`);
 
 // Un repo creado con «Use this template» no comparte historial con la plantilla.
 const related = ok("merge-base", "HEAD", ref);
