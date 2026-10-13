@@ -7,6 +7,7 @@ import { buildHomeView, handleFromName, shortNameFromName } from "@lib/home";
 import { findBrokenSkillRefs } from "@lib/skills";
 import { alternateLinks, personJsonLd, requireSite } from "@lib/seo";
 import { analyticsBeacon } from "@lib/analytics";
+import { buildMonth } from "@lib/site";
 import { PUBLIC_CF_ANALYTICS_TOKEN } from "astro:env/client";
 import Layout from "./Layout.astro";
 import Header from "@components/Header.astro";
@@ -37,7 +38,7 @@ const broken = findBrokenSkillRefs(
 );
 if (broken.length) throw new Error(`Habilidades inexistentes en la wiki: ${broken.map((b) => `${b.entry} → ${b.skill}`).join(", ")}`);
 
-const now = new Date().toISOString().slice(0, 7);
+const now = buildMonth(process.env);
 const data = {
     profile: profile.data,
     experience: experienceEntries.map(({ id, data }) => ({ id, data })),

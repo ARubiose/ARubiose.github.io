@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { buildDirs, pagesTarget } from "@lib/site";
+import { buildDirs, buildMonth, pagesTarget } from "@lib/site";
 
 describe("pagesTarget", () => {
     test("repo de usuario <owner>.github.io: raíz", () => {
@@ -12,6 +12,10 @@ describe("pagesTarget", () => {
 
     test("cualquier otro repo: subruta /<repo>/", () => {
         expect(pagesTarget({ GITHUB_REPOSITORY: "AdaExample/llm-wiki-portfolio" })).toEqual({ site: "https://adaexample.github.io", base: "/llm-wiki-portfolio/" });
+    });
+
+    test("la base conserva las mayúsculas del repo (la ruta de Pages las respeta)", () => {
+        expect(pagesTarget({ GITHUB_REPOSITORY: "AdaExample/My-Portfolio" })).toEqual({ site: "https://adaexample.github.io", base: "/My-Portfolio/" });
     });
 
     test("SITE_URL y BASE_PATH tienen prioridad y se normalizan", () => {
@@ -42,5 +46,19 @@ describe("buildDirs", () => {
 
     test("las rutas absolutas se respetan", () => {
         expect(buildDirs({ OUT_DIR: "/tmp/base-x/" }).outDir).toBe("/tmp/base-x");
+    });
+});
+
+describe("buildMonth", () => {
+    test("sin BUILD_DATE, el mes de la fecha dada (AAAA-MM)", () => {
+        expect(buildMonth({}, new Date("2027-03-15T12:00:00Z"))).toBe("2027-03");
+    });
+
+    test("BUILD_DATE la fija: el fixture de los e2e no envejece", () => {
+        expect(buildMonth({ BUILD_DATE: "2026-10" }, new Date("2030-01-01T00:00:00Z"))).toBe("2026-10");
+    });
+
+    test("un BUILD_DATE mal escrito falla en vez de calcular con basura", () => {
+        expect(() => buildMonth({ BUILD_DATE: "oct 2026" })).toThrow(/BUILD_DATE/);
     });
 });

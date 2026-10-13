@@ -201,7 +201,7 @@ procesar (`favicon.svg`).
 `.github/workflows/deploy.yml`. `site` y `base` se deducen de `GITHUB_REPOSITORY` en
 `src/lib/site.ts` (`pagesTarget`): un repo `<owner>.github.io` se publica en la raíz y
 cualquier otro en `/<repo>/` (la demo de la plantilla está en
-`https://arubiose.github.io/llm-wiki-portfolio/`). `SITE_URL` y `BASE_PATH` lo fuerzan, y sin
+`https://arubiose.github.io/llm-wiki-portfolio/`). `SITE_URL` y `BASE_PATH` (variables del repo, que `deploy.yml` ya pasa) lo fuerzan, y sin
 nada de eso (desarrollo local) es `http://localhost:4321`. Todas las URLs internas usan
 `import.meta.env.BASE_URL` o las funciones de `astro:i18n`.
 
@@ -247,6 +247,9 @@ las capturas de referencia tras un cambio de diseño intencionado) y `pnpm check
   construir, o las páginas sin cambios conservan los datos antiguos (en CI siempre es limpio).
   Cada `WIKI_DIR` tiene su propia caché (`buildDirs` en `src/lib/site.ts`), para que un build
   del fixture no deje sus colecciones en el build real.
+- La XP y el año de la ficha se calculan con el mes del build (`buildMonth`). El build del
+  fixture lo fija con `BUILD_DATE` (`playwright.config.ts`): sin eso, las capturas cambiarían
+  con el paso del tiempo y romperían el CI de todos los sitios sin que nadie tocara nada.
 - Vitest pone en `process.env` las variables de Vite (`BASE_URL`…); `tests/build/` las quita
   antes de lanzar `astro build`, porque pisarían la `base`.
 
@@ -286,15 +289,17 @@ Opcional y desactivada por defecto, para que la plantilla no envíe nada sin con
 
 El código vive en la plantilla `ARubiose/llm-wiki-portfolio`, con contenido ficticio (Ada) y
 una demo en Pages. Cada sitio derivado tiene su propio repo y trae las mejoras con
-`git pull upstream main` ([guía](guide.es.md), [0006](decisions/0006-template-and-upstream.md)).
+`pnpm sync:upstream` ([guía](guide.es.md), [0006](decisions/0006-template-and-upstream.md)).
 
 - **Historial:** el sitio del autor comparte historial con la plantilla (nació de este mismo
   repo). Un repo creado con «Use this template» no lo comparte: su primer merge necesita
-  `--allow-unrelated-histories`.
+  `--allow-unrelated-histories` (el script lo añade solo si no hay ancestro común).
 - **Archivos de contenido:** son los únicos que difieren entre la plantilla y un sitio
-  derivado: `wiki/public/**`, `wiki/index.md` y `public/og-image.png`. En cada sitio derivado
-  se protegen con `merge=ours` en `.gitattributes`, más `git config merge.ours.driver true`,
-  que es configuración local y hay que repetir en cada clon.
+  derivado: `wiki/public/**`, `wiki/index.md` y `public/og-image.png`. `pnpm sync:upstream`
+  (`scripts/sync-upstream.mjs`) hace el merge sin commit y los deja exactamente como estaban
+  en `HEAD`, quitando también las páginas que solo trae la plantilla. Un driver `merge=ours`
+  no basta: solo actúa cuando los dos lados tocaron el mismo archivo, así que una página nueva
+  de Ada entraría sin conflicto.
 - **Todo lo demás es compartido** (código, tests, `CLAUDE.md`, `docs/`) y se cambia en la
   plantilla; un cambio local dará conflictos al traer `upstream`.
 - **Tests:** los e2e y las capturas usan `tests/fixtures/site/` (`WIKI_DIR`), así que

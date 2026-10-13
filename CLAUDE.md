@@ -3,7 +3,7 @@
 Portfolio en **Astro 7 + Tailwind 4** cuyo contenido sale de una base de conocimiento
 mantenida por el agente (adaptación de la *LLM Wiki* de Karpathy a Claude Code). Es la
 plantilla `ARubiose/llm-wiki-portfolio`: los sitios creados desde ella traen sus mejoras con
-`git pull upstream main` ([guía](docs/guide.es.md)). El repo es **público** y se despliega en
+`pnpm sync:upstream` ([guía](docs/guide.es.md)). El repo es **público** y se despliega en
 GitHub Pages.
 
 ## Mapa del repo

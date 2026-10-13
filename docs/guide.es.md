@@ -15,8 +15,8 @@ mejoras de la plantilla después.
 
    No hay que editar nada: `site` y `base` se deducen del nombre del repo en Actions
    (`GITHUB_REPOSITORY`, ver `src/lib/site.ts`). Para un dominio propio, crea las variables
-   del repo `SITE_URL` (por ejemplo `https://ada.dev`) y, si hace falta, `BASE_PATH`, y
-   añádelas al `env` del job `test` de `.github/workflows/deploy.yml`.
+   del repo `SITE_URL` (por ejemplo `https://ada.dev`) y, si hace falta, `BASE_PATH`
+   (*Settings → Secrets and variables → Actions → Variables*); el workflow ya las lee.
 3. En *Settings → Pages*, elige **Source: GitHub Actions**. El siguiente push a `main` pasa
    los tests y despliega.
 
@@ -91,30 +91,34 @@ ejecuta `pnpm build && pnpm preview`, mejor con un token de prueba.
 
 ## 6. Trae las mejoras de la plantilla
 
-Tu repo funciona por su cuenta. Para traer las mejoras de la plantilla:
+Tu repo funciona por su cuenta. Para traer las mejoras de la plantilla, añádela una vez como
+remoto:
 
 ```sh
 git remote add upstream https://github.com/ARubiose/llm-wiki-portfolio.git
-printf 'wiki/public/** merge=ours\nwiki/index.md merge=ours\npublic/og-image.png merge=ours\n' > .gitattributes
-git config merge.ours.driver true    # configuración local, no se versiona: repítelo en cada clon
-git add .gitattributes && git commit -m "chore: Keep my content on template merges"
-git fetch upstream
-git merge upstream/main --allow-unrelated-histories   # solo la primera vez
 ```
 
-`--allow-unrelated-histories` hace falta una vez porque *Use this template* crea el repo sin
-el historial de la plantilla. En ese primer merge, resuelve cada conflicto quedándote con tu
-versión del contenido (`git checkout --ours <ruta>`) y con la de la plantilla en todo lo
-demás (`git checkout --theirs <ruta>`); después, `pnpm test && pnpm test:e2e` y commit.
-
-A partir de ahí basta con:
+Y después, cada vez:
 
 ```sh
-git pull upstream main
+pnpm sync:upstream
 ```
 
-`merge=ours` conserva tu versión de los archivos de contenido cuando los dos lados los han
-cambiado. Solo actúa cuando hay algo que fusionar, por eso el primer merge se revisa a mano.
+El script (`scripts/sync-upstream.mjs`) hace fetch de `upstream`, fusiona `upstream/main` sin
+hacer commit y deja tu contenido exactamente como estaba: `wiki/public/`, `wiki/index.md` y
+`public/og-image.png`. Los cambios de la plantilla en Ada se descartan, y también las páginas
+que añada (nunca llegan a tu web). La primera vez añade `--allow-unrelated-histories`, porque
+*Use this template* crea el repo sin el historial de la plantilla.
+
+Si hay conflictos en archivos de código, resuélvelos (normalmente con la versión de la
+plantilla, `git checkout --theirs <ruta>`) y después:
+
+```sh
+pnpm test && pnpm test:e2e
+git commit
+```
+
+No uses un `git pull upstream main` a secas: metería en tu web las páginas nuevas de Ada.
 
 Haz las mejoras de código en la plantilla (o mándalas como pull request), no en tu copia: un
-cambio local en un archivo compartido dará conflictos al traer `upstream`.
+cambio local en un archivo compartido dará conflictos al sincronizar.

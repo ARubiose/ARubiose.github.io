@@ -13,9 +13,10 @@ los sitios derivados, que traen las mejoras desde un remoto `upstream`. El sitio
 comparte historial con la plantilla. `site` y `base` se deducen del repo. Los e2e y las
 capturas corren sobre un fixture fijo; el contenido real lo validan los esquemas, la
 privacidad, el presupuesto y un smoke genérico. Los archivos de contenido se protegen con
-`merge=ours`.
+`pnpm sync:upstream`, que fusiona sin commit y los restaura desde `HEAD` (un driver
+`merge=ours` dejaría entrar las páginas nuevas de Ada, porque no hay conflicto).
 
 ## Consecuencias
 Cambiar el contenido no exige tocar tests y la plantilla funciona con cualquier nombre de repo.
 Se pierde la regresión visual del contenido real. Las mejoras deben hacerse en la plantilla, y
-cada clon tiene que configurar el driver `merge.ours` a mano.
+hay que sincronizar con el script, no con un `git pull upstream` a secas.

@@ -14,8 +14,8 @@ template's improvements afterwards.
 
    You don't need to edit anything: `site` and `base` are derived from the repo name in
    Actions (`GITHUB_REPOSITORY`, see `src/lib/site.ts`). For a custom domain, set the
-   repository variables `SITE_URL` (e.g. `https://ada.dev`) and, if needed, `BASE_PATH`, and
-   add them to the `env` of the `test` job in `.github/workflows/deploy.yml`.
+   repository variables `SITE_URL` (e.g. `https://ada.dev`) and, if needed, `BASE_PATH`
+   (*Settings → Secrets and variables → Actions → Variables*); the workflow already reads them.
 3. In *Settings → Pages*, set **Source: GitHub Actions**. The next push to `main` runs the
    tests and deploys.
 
@@ -89,31 +89,35 @@ To try it locally, copy `.env.example` to `.env`, fill in `PUBLIC_CF_ANALYTICS_T
 
 ## 6. Get template updates
 
-Your repo keeps working on its own. To bring in the template's improvements:
+Your repo keeps working on its own. To bring in the template's improvements, add the
+template as a remote once:
 
 ```sh
 git remote add upstream https://github.com/ARubiose/llm-wiki-portfolio.git
-printf 'wiki/public/** merge=ours\nwiki/index.md merge=ours\npublic/og-image.png merge=ours\n' > .gitattributes
-git config merge.ours.driver true    # local setting, not versioned: repeat it in every clone
-git add .gitattributes && git commit -m "chore: Keep my content on template merges"
-git fetch upstream
-git merge upstream/main --allow-unrelated-histories   # only the first time
 ```
 
-`--allow-unrelated-histories` is needed once because *Use this template* creates a repo
-without the template's history. In that first merge, resolve each conflict keeping your
-version of the content (`git checkout --ours <path>`) and the template's version of
-everything else (`git checkout --theirs <path>`), then run `pnpm test && pnpm test:e2e` and
-commit.
-
-From then on it is just:
+Then, every time:
 
 ```sh
-git pull upstream main
+pnpm sync:upstream
 ```
 
-`merge=ours` keeps your version of the content files whenever both sides changed them. It
-only acts when there is something to merge, which is why the first merge is reviewed by hand.
+The script (`scripts/sync-upstream.mjs`) fetches `upstream`, merges `upstream/main` without
+committing and puts your content back exactly as it was: `wiki/public/`, `wiki/index.md` and
+`public/og-image.png`. Changes the template made to Ada are dropped, and so are pages the
+template adds (they never reach your site). The first time it also passes
+`--allow-unrelated-histories`, because *Use this template* creates a repo without the
+template's history.
+
+If code files conflict, resolve them (usually with the template's version,
+`git checkout --theirs <path>`), then:
+
+```sh
+pnpm test && pnpm test:e2e
+git commit
+```
+
+Don't use a plain `git pull upstream main`: it would bring Ada's new pages into your site.
 
 Make your code improvements in the template (or send them as a pull request), not in your
-copy: a local change to a shared file will conflict when you pull.
+copy: a local change to a shared file will conflict when you sync.
