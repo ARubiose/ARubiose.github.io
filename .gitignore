@@ -1,0 +1,46 @@
+# build output
+dist/
+.fixture-dist/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.production
+.env.local
+.env.*.local
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+
+# LLM Wiki: contenido personal (solo se versiona el esqueleto)
+raw/*
+!raw/README.md
+!raw/assets/
+raw/assets/*
+!raw/assets/.gitkeep
+wiki/private/**
+!wiki/private/
+!wiki/private/README.md
+!wiki/private/*/
+!wiki/private/*/.gitkeep
+
+# tests
+test-results/
+playwright-report/
+
+# herramientas locales de agentes (brainstorming, ledgers)
+.superpowers/

@@ -1,0 +1,21 @@
+---
+import Adorn from "@components/Adorn.astro";
+import Timeline from "@components/Timeline.astro";
+import type { Locale } from "@i18n/ui";
+import { useTranslations } from "@i18n/utils";
+import type { HomeView } from "@lib/home";
+
+interface Props {
+    items: HomeView["education"];
+    locale: Locale;
+}
+const { items, locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+{items.length > 0 && (
+    <section id="education" class="mt-11 md:mt-18">
+        <h2 class="section-title mb-4 text-(length:--section-title-size) md:mb-5 md:text-(length:--section-title-size-md)">{t("section.education")}<Adorn name="sectionSub.education" locale={locale} class="section-sub" /></h2>
+        <Timeline items={items} locale={locale} currentTag={t("timeline.current")} />
+    </section>
+)}

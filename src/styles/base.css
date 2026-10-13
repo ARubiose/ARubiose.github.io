@@ -1,0 +1,92 @@
+/* En la capa base para que las utilidades de Tailwind puedan sobrescribir el reset. */
+@layer base {
+    :root {
+        --header-h: 52px;
+        /* Tokens de distribución: valores de Terminal; cada skin puede redefinirlos. */
+        --hero-cols: 340px 1fr;
+        --hero-photo-order: 0;
+        --hero-photo-max: none;
+        /* Separación entre la foto y el texto del hero en móvil. */
+        --hero-gap: 1.5rem;
+        /* Tipografía del nombre del hero y de los titulares de sección (valores de Terminal). */
+        --hero-name-size: 38px;
+        --hero-name-size-md: 58px;
+        --hero-name-leading: 1.04;
+        --hero-name-weight: 700;
+        --section-title-size: 26px;
+        --section-title-size-md: 30px;
+        /* Nombre o prompt de la cabecera. */
+        --handle-size: 13px;
+        --handle-size-md: 13px;
+        /* Enlaces del menú móvil (los de text-2xl y border-line). */
+        --menu-link-size: 1.5rem;
+        --menu-link-leading: calc(2 / 1.5);
+        --menu-link-border: var(--skin-line);
+        /* Inventario del creador en escritorio: rejilla de tarjetas. */
+        --inventory-cols: repeat(auto-fill, minmax(150px, 1fr));
+        --inventory-gap: 0.625rem;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        background: var(--skin-bg);
+        color: var(--skin-text);
+        font-family: var(--skin-font-mono);
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        min-height: 100dvh;
+        overflow-x: clip;
+        /* Contenedor de consultas: 100cqw es el ancho de la página sin la barra de desplazamiento
+           (100vw la incluye y un elemento que lo use ensancha la página). */
+        container-type: inline-size;
+    }
+
+    [id] {
+        scroll-margin-top: calc(var(--header-h) + 16px);
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    button {
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: 0;
+        cursor: pointer;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--skin-accent);
+        outline-offset: 3px;
+    }
+
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}

@@ -1,0 +1,26 @@
+---
+import Adorn from "@components/Adorn.astro";
+import SkillBuilder from "@components/SkillBuilder.astro";
+import type { Locale } from "@i18n/ui";
+import { useTranslations } from "@i18n/utils";
+import type { HomeView } from "@lib/home";
+
+interface Props {
+    groups: HomeView["skillGroups"];
+    locale: Locale;
+    profile: Pick<HomeView["profile"], "name" | "headline" | "photo">;
+    professionalXp: string;
+    usage: HomeView["usage"];
+    entryNames: HomeView["entryNames"];
+}
+const { groups, locale, ...rest } = Astro.props;
+const t = useTranslations(locale);
+---
+
+{groups.length > 0 && (
+    <section id="skills" class="mt-11 md:mt-18">
+        <h2 class="section-title mb-1.5 text-(length:--section-title-size) md:text-(length:--section-title-size-md)">{t("section.skills")}<Adorn name="sectionSub.skills" locale={locale} class="section-sub" /></h2>
+        <p class="mb-5 text-muted">{t("skills.lead")}</p>
+        <SkillBuilder locale={locale} groups={groups} {...rest} />
+    </section>
+)}

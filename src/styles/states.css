@@ -1,0 +1,74 @@
+/* Reglas de estado de los componentes mejorados con JS. Van fuera de capas a propósito:
+   tienen que ganar a utilidades como `hidden`. No dependen de la skin. */
+
+[data-builder].is-enhanced .panel-title,
+[data-builder].is-enhanced .skill-detail {
+    display: none;
+}
+[data-builder].is-enhanced .skill-panel:not([data-active]) {
+    display: none;
+}
+/* Más específico que la regla que oculta los detalles dentro del inventario mejorado */
+[data-builder].is-enhanced [data-inspector-body] .skill-detail,
+[data-builder].is-enhanced [data-sheet-body] .skill-detail {
+    display: block;
+    border: 0;
+    padding: 0;
+}
+[data-inspector-body] .detail-head,
+[data-sheet-body] .detail-head {
+    display: flex;
+    margin-bottom: 14px;
+}
+.tabbar[data-more-l] .edge-l,
+.tabbar[data-more-r] .edge-r {
+    display: flex;
+}
+
+/* Sin Popover API el atributo popover no oculta nada y el menú móvil quedaría siempre abierto:
+   se oculta junto con su botón y la cabecera muestra la navegación y el idioma en línea. */
+@supports not selector(:popover-open) {
+    .site-menu,
+    .menu-toggle {
+        display: none;
+    }
+    .site-nav {
+        display: block;
+    }
+    .header-lang {
+        display: flex;
+    }
+    /* En la cabecera móvil no cabe también el selector: sin Popover API se queda la skin predeterminada. */
+    .header-lang [data-skin-switcher] {
+        display: none;
+    }
+    .site-nav {
+        min-width: 0;
+        overflow-x: auto;
+    }
+}
+
+/* Adornos por skin: ocultos por defecto (una skin fuera del registro no muestra ninguno) y cada skin
+   muestra solo los suyos. revert-layer devuelve el display que les den la skin o las utilidades, que
+   van en capas. Una regla por skin del registro (tests/unit/skins.test.ts comprueba que no falte ninguna). */
+[data-for-skin] {
+    display: none;
+}
+:root[data-skin="terminal"] [data-for-skin="terminal"] {
+    display: revert-layer;
+}
+:root[data-skin="tactical"] [data-for-skin="tactical"] {
+    display: revert-layer;
+}
+:root[data-skin="game"] [data-for-skin="game"] {
+    display: revert-layer;
+}
+
+/* Copia del nombre que descifra la intro (src/scripts/motion.ts): ocupa la caja del titular sin
+   moverla. El texto descifrado no tiene espacios: se parte donde haga falta y lo que sobra se recorta. */
+.hero-name-scramble {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+}

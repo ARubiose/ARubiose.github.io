@@ -1,0 +1,109 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { describe, expect, test } from "vitest";
+import { applySkin, defaultSkin, resolveSkin, SKIN_STORAGE_KEY, skinBootScript, skinRegistry, skins, timelineOf } from "@lib/skins";
+
+test("la skin por defecto es terminal y está registrada", () => {
+    expect(defaultSkin).toBe("terminal");
+    expect(skins).toContain(defaultSkin);
+});
+
+test("resolveSkin acepta una skin registrada", () => {
+    expect(resolveSkin("terminal")).toBe("terminal");
+});
+
+test("resolveSkin vuelve a la predeterminada con valores desconocidos o vacíos", () => {
+    expect(resolveSkin(null)).toBe(defaultSkin);
+    expect(resolveSkin("")).toBe(defaultSkin);
+    expect(resolveSkin("retirada")).toBe(defaultSkin);
+});
+
+test("el registro deriva los ids y cada skin declara muestra y modo de línea de tiempo", () => {
+    expect(skins).toEqual(skinRegistry.map((s) => s.id));
+    for (const s of skinRegistry) {
+        expect(s.swatch).toMatch(/^#[0-9a-f]{6}$/i);
+        expect(["alternate", "single"]).toContain(s.timeline);
+    }
+});
+
+test("timelineOf: el modo de cada skin; una desconocida usa el de la predeterminada", () => {
+    expect(timelineOf("terminal")).toBe("alternate");
+    expect(timelineOf("foo")).toBe(timelineOf(defaultSkin));
+});
+
+describe("skinBootScript", () => {
+    // Ejecuta el script en línea del <head> con un localStorage y un documento simulados.
+    function boot(stored: string | null | Error) {
+        const root = { dataset: {} as Record<string, string> };
+        const localStorage = {
+            getItem: (key: string) => {
+                if (stored instanceof Error) throw stored;
+                return key === SKIN_STORAGE_KEY ? stored : null;
+            },
+        };
+        new Function("localStorage", "document", skinBootScript())(localStorage, { documentElement: root });
+        return root.dataset;
+    }
+
+    test("aplica la skin guardada y su modo de línea de tiempo", () => {
+        expect(boot("terminal")).toEqual({ skin: "terminal", timeline: "alternate" });
+    });
+
+    test("aplica una skin guardada que no es la predeterminada", () => {
+        expect(boot("tactical")).toEqual({ skin: "tactical", timeline: "single" });
+        expect(boot("game")).toEqual({ skin: "game", timeline: "single" });
+    });
+
+    test("con un valor desconocido aplica la predeterminada y su modo", () => {
+        expect(boot("tactical-retirada")).toEqual({ skin: defaultSkin, timeline: timelineOf(defaultSkin) });
+        expect(boot(null)).toEqual({ skin: defaultSkin, timeline: timelineOf(defaultSkin) });
+    });
+
+    test("sin acceso a localStorage no rompe la página", () => {
+        expect(() => boot(new Error("SecurityError"))).not.toThrow();
+    });
+});
+
+test("states.css oculta los adornos por defecto y muestra los de cada skin registrada", () => {
+    const css = readFileSync(join(import.meta.dirname, "../../src/styles/states.css"), "utf8");
+    expect(css).toMatch(/^\[data-for-skin\] \{\s*display: none;/m);
+    for (const skin of skins) {
+        expect(css, skin).toContain(`:root[data-skin="${skin}"] [data-for-skin="${skin}"] {\n    display: revert-layer;`);
+    }
+});
+
+test("Táctico está registrada con su muestra y modo single", () => {
+    expect(skinRegistry.find((s) => s.id === "tactical")).toEqual({ id: "tactical", swatch: "#f0a83a", timeline: "single" });
+});
+
+test("Juego está registrada con su muestra y modo single", () => {
+    expect(skinRegistry.find((s) => s.id === "game")).toEqual({ id: "game", swatch: "#ec4c56", timeline: "single" });
+});
+
+describe("applySkin", () => {
+    test("aplica Juego con su modo", () => {
+        const root = { dataset: {} as DOMStringMap };
+        expect(applySkin(root, "game")).toBe("game");
+        expect(root.dataset).toEqual({ skin: "game", timeline: "single" });
+    });
+
+    test("escribe la skin y su modo, la guarda y la devuelve", () => {
+        const root = { dataset: {} as DOMStringMap };
+        const saved: Record<string, string> = {};
+        expect(applySkin(root, "tactical", { setItem: (k, v) => (saved[k] = v) })).toBe("tactical");
+        expect(root.dataset).toEqual({ skin: "tactical", timeline: "single" });
+        expect(saved[SKIN_STORAGE_KEY]).toBe("tactical");
+    });
+
+    test("una skin desconocida aplica la predeterminada", () => {
+        const root = { dataset: {} as DOMStringMap };
+        expect(applySkin(root, "foo")).toBe(defaultSkin);
+    });
+
+    test("si guardar falla, la skin se aplica igualmente", () => {
+        const root = { dataset: {} as DOMStringMap };
+        const blocked = { setItem: () => { throw new Error("QuotaExceededError"); } };
+        expect(() => applySkin(root, "tactical", blocked)).not.toThrow();
+        expect(root.dataset.skin).toBe("tactical");
+    });
+});

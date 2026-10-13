@@ -1,0 +1,105 @@
+import { expect, test } from "vitest";
+import { buildHomeView, shortNameFromName, displayUrl, handleFromName, type HomeData } from "@lib/home";
+
+const meta = { tags: [], sources: ["x"], updated: new Date("2026-10-02") };
+const NOW = "2026-10";
+
+const data: HomeData = {
+    profile: {
+        ...meta, type: "profile", title: "Perfil", name: "Ada", headline: "Ingeniera", location: "Londres", summary: "Resumen",
+        photo: { src: "/ada.jpg", width: 1, height: 1, format: "jpg" },
+        links: { email: "a@example.com", linkedin: "https://www.linkedin.com/in/ada/", github: "https://github.com/ada" },
+        en: { headline: "Engineer", summary: "Summary" },
+    },
+    experience: [
+        { id: "old", data: { ...meta, type: "experience", title: "Old", company: "Old Co", role: "Becaria", start: "2020-01", end: "2020-07", summary: "s", highlights: [], skills: ["python"], en: { role: "Intern", summary: "s", highlights: [] } } },
+        { id: "new", data: { ...meta, type: "experience", title: "New", company: "New Co", role: "Ingeniera", start: "2026-06", end: null, summary: "s", highlights: [], skills: ["python", "expo"], en: { role: "Engineer", summary: "s", highlights: [] } } },
+    ],
+    projects: [
+        { id: "site", data: { ...meta, type: "project", title: "Web", repo: "https://github.com/ada/my-site", status: "active", start: "2025-01", summary: "s", highlights: [], skills: ["python"], en: { title: "Site", summary: "s", highlights: [] } } },
+    ],
+    skills: [
+        { id: "python", data: { ...meta, type: "skill", title: "Python", category: "backend", icon: "si:python", summary: "s", en: { summary: "s" } } },
+        { id: "expo", data: { ...meta, type: "skill", title: "Expo", category: "frontend", icon: "si:expo", summary: "s", en: { summary: "s" } } },
+        { id: "cobol", data: { ...meta, type: "skill", title: "COBOL", category: "backend", icon: "ph:robot", summary: "s", en: { summary: "s" } } },
+    ],
+    education: [],
+};
+
+test("timeline: orden, archivo, periodo y vigente", () => {
+    const view = buildHomeView(data, "en", NOW);
+    expect(view.experience.map((e) => e.id)).toEqual(["new", "old"]);
+    expect(view.experience[0]).toMatchObject({ file: "new.log", title: "Engineer", subtitle: "New Co", period: "Jun 2026 - present", current: true, duration: "" });
+    expect(view.experience[1]).toMatchObject({ current: false, duration: "6 months" });
+});
+
+test("proyectos: archivo README a partir del repo", () => {
+    expect(buildHomeView(data, "es", NOW).projects[0]).toMatchObject({ file: "my-site/README.md", statusLabel: "En desarrollo" });
+});
+
+test.each(["https://github.com/ada/my-site.git", "https://github.com/ada/my-site/"])("el README ignora .git y la barra final: %s", (repo) => {
+    const project = { ...data.projects[0], data: { ...data.projects[0].data, repo } };
+    expect(buildHomeView({ ...data, projects: [project] }, "es", NOW).projects[0].file).toBe("my-site/README.md");
+});
+
+test("habilidades: XP por unión de usos, desde y dónde se usó", () => {
+    const view = buildHomeView(data, "es", NOW);
+    const python = view.skillGroups.flatMap((g) => g.items).find((s) => s.id === "python")!;
+    expect(python.since).toBe(2020);
+    expect(python.usedIn.map((u) => u.id)).toEqual(["experience/new", "project/site", "experience/old"]);
+    expect(python.months).toBeGreaterThan(6);
+});
+
+test("habilidad sin uso: «sin uso registrado» y sin año", () => {
+    const cobol = buildHomeView(data, "es", NOW).skillGroups.flatMap((g) => g.items).find((s) => s.id === "cobol")!;
+    expect(cobol).toMatchObject({ months: 0, xp: "sin uso registrado", xpShort: "sin uso registrado", since: null, usedIn: [] });
+});
+
+test("XP profesional solo cuenta puestos", () => {
+    expect(buildHomeView(data, "es", NOW).professionalXp).toBe("10 meses");
+});
+
+test("datos para el cliente: uso y nombres", () => {
+    const view = buildHomeView(data, "es", NOW);
+    expect(view.usage).toEqual({ python: ["experience/old", "experience/new", "project/site"], expo: ["experience/new"] });
+    expect(view.entryNames).toEqual({ "experience/old": "Old Co", "experience/new": "New Co", "project/site": "Web" });
+});
+
+test("las secciones vacías no aparecen en la navegación", () => {
+    expect(buildHomeView(data, "es", NOW).sections.map((s) => s.id)).toEqual(["experience", "projects", "skills", "contact"]);
+});
+
+test("displayUrl quita protocolo y barra final", () => {
+    expect(displayUrl("https://www.linkedin.com/in/ada/")).toBe("linkedin.com/in/ada");
+    expect(displayUrl("https://github.com/ada")).toBe("github.com/ada");
+});
+
+test("un puesto y un proyecto con el mismo id no se pisan", () => {
+    const clash: HomeData = {
+        ...data,
+        experience: [data.experience[0]],
+        projects: [{ id: "old", data: { ...data.projects[0].data, title: "Old project", start: "2025-01" } }],
+    };
+    const view = buildHomeView(clash, "es", NOW);
+    const python = view.skillGroups.flatMap((g) => g.items).find((s) => s.id === "python")!;
+    expect(python.usedIn.map((u) => u.name).sort()).toEqual(["Old Co", "Old project"]);
+    expect(Object.values(view.entryNames).sort()).toEqual(["Old Co", "Old project"]);
+});
+
+test("el pie enlaza el repo del sitio (links.source) o, si no hay, el GitHub del perfil", () => {
+    expect(buildHomeView(data, "es", NOW).siteRepo).toBe("https://github.com/ada");
+    const withSource: HomeData = { ...data, profile: { ...data.profile, links: { ...data.profile.links, source: "https://github.com/ada/this-site" } } };
+    expect(buildHomeView(withSource, "es", NOW).siteRepo).toBe("https://github.com/ada/this-site");
+});
+
+test("handle del prompt: primer nombre en minúsculas y sin tildes", () => {
+    expect(handleFromName("Íñigo Montoya Ruiz")).toBe("inigo");
+    expect(handleFromName("Ada Lovelace")).toBe("ada");
+    expect(handleFromName("  Zoë  ")).toBe("zoe");
+});
+
+test("nombre corto de Juego: dos primeras palabras en mayúsculas", () => {
+    expect(shortNameFromName("Íñigo Montoya Ruiz")).toBe("ÍÑIGO MONTOYA");
+    expect(shortNameFromName("  Ada  ")).toBe("ADA");
+    expect(shortNameFromName("ada   lovelace byron")).toBe("ADA LOVELACE");
+});

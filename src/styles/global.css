@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@import "./base.css";
+/* En la capa de componentes: las utilidades de Tailwind (border-b-0…) ganan a la decoración de la skin. */
+@import "./skins/terminal.css" layer(components);
+@import "./skins/tactical.css" layer(components);
+@import "./skins/game.css" layer(components);
+@import "./states.css";
+
+/* Tokens semánticos: apuntan a variables que define cada skin. */
+@theme inline {
+    --color-bg: var(--skin-bg);
+    --color-surface: var(--skin-surface);
+    --color-surface-2: var(--skin-surface-2);
+    --color-line: var(--skin-line);
+    --color-text: var(--skin-text);
+    --color-body: var(--skin-body);
+    --color-muted: var(--skin-muted);
+    --color-accent: var(--skin-accent);
+    --color-accent-ink: var(--skin-accent-ink);
+    --color-warn: var(--skin-warn);
+    --font-display: var(--skin-font-display);
+    --font-mono: var(--skin-font-mono);
+    --font-body: var(--skin-font-body, var(--skin-font-mono));
+    --radius-skin: var(--skin-radius);
+}
+
+/* Modo de línea de tiempo de la skin (data-timeline en <html>): en "single", eje a la izquierda
+   y tarjetas en una columna también en escritorio. */
+@custom-variant timeline-single (&:where([data-timeline="single"] *));
