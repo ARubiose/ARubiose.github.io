@@ -17,6 +17,9 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # Analítica opcional: variable del repo (no secreto, el token va en el HTML). Vacía, no se carga nada.
+    env:
+      PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.CF_ANALYTICS_TOKEN }}
     steps:
       # Historial completo: el test de privacidad también revisa el historial de git.
       - uses: actions/checkout@v7

@@ -30,6 +30,12 @@ for (const p of pages) {
             }
         });
 
+        test("el pie avisa de la analítica si y solo si se carga el beacon de Cloudflare", async ({ page }) => {
+            await page.goto(p.path);
+            const beacon = await page.locator('script[src*="cloudflareinsights"]').count();
+            await expect(page.locator("footer [data-analytics-note]")).toHaveCount(beacon);
+        });
+
         test("la vista previa al compartir apunta a una imagen absoluta que existe", async ({ page, request }) => {
             await page.goto(p.path);
             const meta = (sel: string) => page.locator(`meta[${sel}]`).getAttribute("content");

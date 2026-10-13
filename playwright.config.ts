@@ -8,7 +8,8 @@ const mobile = { ...devices["Desktop Chrome"], viewport: { width: 390, height: 8
 
 export default defineConfig({
     testDir: "tests/e2e",
-    use: { baseURL: `http://127.0.0.1:${PORT}` },
+    // Si la build lleva el token de analítica, las pruebas no deben contar como visitas.
+    use: { baseURL: `http://127.0.0.1:${PORT}`, launchOptions: { args: ["--host-resolver-rules=MAP static.cloudflareinsights.com ~NOTFOUND"] } },
     projects: [
         { name: "desktop", use: desktop },
         { name: "mobile", use: mobile },
