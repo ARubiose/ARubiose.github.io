@@ -90,7 +90,9 @@ token no se carga ningún script ni se envía nada.
 3. El siguiente despliegue carga el script y añade al pie una línea que avisa de la analítica.
 
 Solo se activa en builds de producción. Para probarlo en local, copia `.env.example` a `.env`,
-rellena `PUBLIC_CF_ANALYTICS_TOKEN` y ejecuta `pnpm build && pnpm preview`.
+rellena `PUBLIC_CF_ANALYTICS_TOKEN` y ejecuta `pnpm build && pnpm preview`. Las visitas
+al preview local también llegan a Cloudflare (como `localhost`); para no mezclarlas con las
+reales, usa un token de prueba.
 
 ## Estructura
 

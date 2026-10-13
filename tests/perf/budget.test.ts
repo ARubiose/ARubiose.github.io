@@ -30,6 +30,7 @@ function staticGraph(entries: string[], root = DIST): Set<string> {
 test.skipIf(!existsSync(join(DIST, "index.html")) && !process.env.CI)(`JS de la portada ≤ ${BUDGET_KB} KB comprimido`, () => {
     const html = readFileSync(join(DIST, "index.html"), "utf8");
     const scripts = localScripts(html);
+    expect(scripts.length, "no se encontró ningún script propio: el presupuesto no mediría nada").toBeGreaterThan(0);
     const total = [...staticGraph(scripts)].reduce((sum, s) => sum + gzipSync(readFileSync(join(DIST, s))).length, 0);
     expect(total / 1024).toBeLessThanOrEqual(BUDGET_KB);
 });
