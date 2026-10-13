@@ -198,3 +198,20 @@ variable de Actions `CF_ANALYTICS_TOKEN`.
 - **Divergencia de archivos compartidos**: un cambio hecho directamente en el repo personal en
   un archivo compartido dará conflictos al hacer pull. La regla de `CLAUDE.md` es que las
   mejoras se hacen en la plantilla.
+
+## 7. Cambios durante la ejecución
+
+- **Plantilla sin historial** (decisión del autor al publicar): `llm-wiki-portfolio` arranca con
+  un único commit, con el árbol de la rama de generalización. El repo personal registró ese
+  commit como ancestro con un merge sin cambios, así que los siguientes syncs son merges
+  normales.
+- **`pnpm sync:upstream` en lugar de `merge=ours`:** la revisión final demostró que un driver
+  `merge=ours` deja entrar las páginas nuevas de Ada, porque no hay conflicto.
+  `scripts/sync-upstream.mjs` fusiona sin commit y restaura el contenido desde `HEAD`. No hay
+  `.gitattributes`.
+- **`public/favicon.svg` se comparte** (es el logo de Astro) y **`wiki/index.md` es contenido**.
+- **`deploy.yml` sí cambia:** lee `SITE_URL` y `BASE_PATH` de las variables del repo, para que
+  un dominio propio no obligue a editar un archivo compartido.
+- **`BUILD_DATE`** fija el mes del build del fixture, para que las capturas no caduquen.
+- `docs/superpowers/` y `docs/design/mockups/` no están en la plantilla. Al sincronizar, el
+  script no los toca porque solo existen aquí.
