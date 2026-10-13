@@ -3,23 +3,14 @@ title: Celery
 type: skill
 category: backend
 icon: si:celery
-summary: Colas de tareas para procesar archivos de forma asíncrona con FastAPI y Django.
+summary: Colas de tareas asíncronas.
 tags: []
 en:
-  summary: Task queues for asynchronous file processing with FastAPI and Django.
-sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf]
-updated: 2026-10-02
+  summary: Asynchronous task queues.
+sources: ["humano (2026-10-13)"]
+updated: 2026-10-13
 ---
 
 # Celery
 
-Colas de tareas para procesar archivos de forma asíncrona con FastAPI y Django.
-
-## Relacionado
-
-- [Zalcu Technologies](../experience/zalcu.md)
-
-## Fuentes
-
-- raw/assets/Curriculum_Vitae___English_Variation.pdf
-- raw/assets/Linkedin_profile.pdf
+Colas de tareas asíncronas.

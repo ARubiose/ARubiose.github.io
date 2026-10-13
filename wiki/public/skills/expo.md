@@ -3,22 +3,14 @@ title: Expo
 type: skill
 category: frontend
 icon: si:expo
-summary: Aplicaciones web y móviles multiplataforma.
+summary: Apps web y móviles multiplataforma.
 tags: []
 en:
   summary: Cross-platform web and mobile apps.
-sources: ["humano (2026-10-02)"]
-updated: 2026-10-02
+sources: ["humano (2026-10-13)"]
+updated: 2026-10-13
 ---
 
 # Expo
 
-Aplicaciones web y móviles multiplataforma.
-
-## Relacionado
-
-- [SKIN AI](../experience/skin-ai.md)
-
-## Fuentes
-
-- humano (2026-10-02)
+Apps web y móviles multiplataforma.

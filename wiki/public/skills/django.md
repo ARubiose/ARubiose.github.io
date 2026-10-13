@@ -3,23 +3,14 @@ title: Django
 type: skill
 category: backend
 icon: si:django
-summary: Framework web en Python, usado junto a Celery y Redis para procesar archivos.
+summary: Framework web en Python.
 tags: []
 en:
-  summary: Python web framework, used with Celery and Redis for file processing.
-sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf]
-updated: 2026-10-02
+  summary: Python web framework.
+sources: ["humano (2026-10-13)"]
+updated: 2026-10-13
 ---
 
 # Django
 
-Framework web en Python, usado junto a Celery y Redis para procesar archivos.
-
-## Relacionado
-
-- [Zalcu Technologies](../experience/zalcu.md)
-
-## Fuentes
-
-- raw/assets/Curriculum_Vitae___English_Variation.pdf
-- raw/assets/Linkedin_profile.pdf
+Framework web en Python.

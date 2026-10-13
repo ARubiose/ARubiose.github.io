@@ -4,43 +4,42 @@ Catálogo de las páginas **públicas** (`wiki/public/`), mantenido por el LLM e
 `ingest`. Las privadas tienen su propio índice en `wiki/private/index.md`, que no está en git. Convenciones en
 [.claude/rules/wiki.md](../.claude/rules/wiki.md).
 
+> Contenido ficticio de demostración (Ada). Sustitúyelo con `/ingest`.
+
 ## Perfil
 
-- [Perfil](public/profile.md) — Ingeniero de software que hoy aplica inteligencia artificial a la salud capilar en SKIN AI, con una base sólida en backend con Python, arquitectura de sistemas y visión por computador.
+- [Perfil](public/profile.md) — Ingeniera de software que diseña backends en Python y aplica visión por computador.
 
 ## Experiencia
 
-- [Gofore](public/experience/gofore.md) — Investigación en métodos de visión por computador basados en deep learning para tecnologías de apoyo a personas ciegas o con baja visión.
-- [Oesia](public/experience/oesia.md) — Prácticas en el centro de operaciones de seguridad (SOC), con desarrollo de herramientas en Python.
-- [SKIN AI](public/experience/skin-ai.md) — Desarrollo de una aplicación web y móvil que reconoce enfermedades capilares con inteligencia artificial, dentro de una plataforma de dermatología con IA validada clínicamente.
-- [Zalcu Technologies](public/experience/zalcu.md) — Diseño e implementación de sistemas backend escalables y eficientes, con responsabilidades propias de un arquitecto de software.
+- [Analytical Engines Ltd](public/experience/analytical-engines.md) — Backends en Python para procesar archivos de forma asíncrona.
+- [Difference Labs](public/experience/difference-labs.md) — Modelos de visión por computador y agentes LLM para prototipos de investigación.
+- [Jacquard Security](public/experience/jacquard-security.md) — Prácticas en un equipo de seguridad, con herramientas OSINT en Python.
 
 ## Proyectos
 
-- [Portfolio con LLM Wiki](public/projects/portfolio-llm-wiki.md) — Portfolio personal en Astro cuyo contenido mantiene un agente LLM como una wiki de conocimiento, siguiendo el patrón LLM Wiki de Andrej Karpathy.
+- [Motor de notas](public/projects/note-engine.md) — App multiplataforma que organiza notas con un agente LLM.
 
 ## Habilidades
 
-- [Celery](public/skills/celery.md) — Colas de tareas para procesar archivos de forma asíncrona con FastAPI y Django.
-- [Deep learning y visión por computador](public/skills/computer-vision.md) — Modelos de visión con deep learning, como segmentación semántica para tecnologías de apoyo.
-- [Django](public/skills/django.md) — Framework web en Python, usado junto a Celery y Redis para procesar archivos.
-- [Docker](public/skills/docker.md) — Contenedores para desarrollo, pruebas y despliegue.
-- [Expo](public/skills/expo.md) — Aplicaciones web y móviles multiplataforma.
-- [FastAPI](public/skills/fastapi.md) — Framework de APIs en Python para el procesamiento asíncrono en Zalcu y el backend de SKIN AI.
+- [Agentes LLM](public/skills/llm-agents.md) — Agentes que usan herramientas y memoria.
+- [Arquitectura de software](public/skills/software-architecture.md) — Diseño de sistemas escalables.
+- [Celery](public/skills/celery.md) — Colas de tareas asíncronas.
+- [Deep learning y visión por computador](public/skills/computer-vision.md) — Modelos de visión con deep learning.
+- [Django](public/skills/django.md) — Framework web en Python.
+- [Docker](public/skills/docker.md) — Contenedores para desarrollo y despliegue.
+- [Expo](public/skills/expo.md) — Apps web y móviles multiplataforma.
+- [FastAPI](public/skills/fastapi.md) — APIs asíncronas en Python.
 - [GitHub Actions](public/skills/github-actions.md) — Pipelines de CI/CD.
-- [Agentes LLM](public/skills/llm-agents.md) — Diseño de flujos con agentes LLM, como la wiki mantenida por Claude Code de este portfolio.
-- [OSINT y ciberseguridad](public/skills/osint.md) — Monitorización y análisis de fuentes abiertas, y herramientas de seguridad en Python.
-- [pytest](public/skills/pytest.md) — Tests automatizados en Python.
-- [Python](public/skills/python.md) — Lenguaje principal en backend, investigación de machine learning y herramientas de ciberseguridad.
-- [React](public/skills/react.md) — Interfaces web dinámicas y fáciles de usar.
-- [Redis](public/skills/redis.md) — Broker de mensajes para las tareas asíncronas de Celery.
-- [Arquitectura de software](public/skills/software-architecture.md) — Diseño de sistemas escalables y eficientes, con responsabilidades de arquitecto.
-- [HTML, CSS y JavaScript](public/skills/web-fundamentals.md) — Fundamentos del desarrollo web.
+- [HTML, CSS y JavaScript](public/skills/web-fundamentals.md) — Fundamentos de la web.
+- [OSINT y ciberseguridad](public/skills/osint.md) — Investigación en fuentes abiertas.
+- [pytest](public/skills/pytest.md) — Tests en Python.
+- [Python](public/skills/python.md) — Lenguaje principal en backend y datos.
+- [React](public/skills/react.md) — Interfaces web con componentes.
+- [Redis](public/skills/redis.md) — Broker de mensajes y caché.
 
 ## Formación
 
-- [CCNA](public/education/ccna.md) — Curso universitario avanzado de redes con la certificación Cisco CCNA Routing and Switching.
-- [Erasmus en Groningen](public/education/groningen-erasmus.md) — Curso de intercambio Erasmus+ en la Universidad de Groningen, con asignaturas de último año del grado en Computing Science.
-- [IELTS](public/education/ielts.md) — Certificación de inglés de nivel B2.
-- [Máster EMSE](public/education/upm-emse.md) — Máster europeo en ingeniería del software, base del enfoque estructurado con el que aborda los problemas.
-- [Doble grado URJC](public/education/urjc-double-degree.md) — Doble grado con orientación a ciberseguridad y ciencia de datos.
+- [Grado en Ingeniería Informática](public/education/university-of-example.md) — Grado con orientación a sistemas y datos.
+- [Máster en Ingeniería del Software](public/education/example-institute.md) — Máster en diseño y arquitectura de software.
+- [Certificación en arquitectura cloud](public/education/cloud-certificate.md) — Certificación en diseño de sistemas en la nube.

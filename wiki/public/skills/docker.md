@@ -3,23 +3,14 @@ title: Docker
 type: skill
 category: devops
 icon: si:docker
-summary: Contenedores para desarrollo, pruebas y despliegue.
+summary: Contenedores para desarrollo y despliegue.
 tags: []
 en:
-  summary: Containers for development, testing and deployment.
-sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf]
-updated: 2026-10-02
+  summary: Containers for development and deployment.
+sources: ["humano (2026-10-13)"]
+updated: 2026-10-13
 ---
 
 # Docker
 
-Contenedores para desarrollo, pruebas y despliegue.
-
-## Relacionado
-
-- [Zalcu Technologies](../experience/zalcu.md)
-
-## Fuentes
-
-- raw/assets/Curriculum_Vitae___English_Variation.pdf
-- raw/assets/Linkedin_profile.pdf
+Contenedores para desarrollo y despliegue.
