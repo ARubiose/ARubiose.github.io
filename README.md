@@ -1,130 +1,131 @@
-# Portfolio + LLM Wiki
+**English** · [Español](README.es.md)
 
-Portfolio personal hecho con **Astro** cuyo contenido sale de una **base de conocimiento
-mantenida por un agente LLM**, siguiendo el patrón *LLM Wiki* de Andrej Karpathy.
+# LLM Wiki Portfolio
 
-## Qué hace el agente
+An **Astro** portfolio template whose content comes from a **knowledge base maintained by an
+LLM agent** (Claude Code), following Andrej Karpathy's *LLM Wiki* pattern.
 
-Tú dejas material en bruto (CV, exportación de LinkedIn, notas de proyectos) en `raw/` o le
-pasas URLs públicas, cuyos datos validas antes de que entren en la wiki.
-El agente (Claude Code) lo convierte en una wiki
-estructurada en `wiki/`: una página por puesto, proyecto, habilidad y formación, enlazadas
-entre sí, con un índice y un registro de cambios. Tiene tres operaciones:
+**Live demo:** https://arubiose.github.io/llm-wiki-portfolio/ (fictitious content)
 
-| Comando | Qué hace |
+## Quick start
+
+1. Click **Use this template** → *Create a new repository*.
+2. Run it locally:
+
+   ```sh
+   nvm use
+   pnpm install
+   pnpm dev          # http://localhost:4321, showing the demo profile (Ada)
+   ```
+
+3. Follow the [guide](docs/guide.md) to replace the demo content with yours and publish it on
+   GitHub Pages.
+
+## What the agent does
+
+You drop raw material (CV, LinkedIn export, project notes) into `raw/`, or give it public
+URLs whose data you validate before it enters the wiki. The agent (Claude Code) turns it into
+a structured wiki in `wiki/`: one page per role, project, skill and degree, linked together,
+with an index and a change log. It has three operations:
+
+| Command | What it does |
 | --- | --- |
-| `/ingest raw/<archivo>` o `/ingest <URL>` | Lee una fuente nueva y crea o actualiza las páginas afectadas |
-| `/query <pregunta>` | Responde a partir de la wiki y puede guardar la respuesta como síntesis |
-| `/lint` | Busca enlaces rotos, páginas huérfanas, contradicciones y huecos |
+| `/ingest raw/<file>` or `/ingest <URL>` | Reads a new source and creates or updates the affected pages |
+| `/query <question>` | Answers from the wiki and can save the answer as a synthesis |
+| `/lint` | Looks for broken links, orphan pages, contradictions and gaps |
 
-El portfolio (`src/`) presenta ese contenido como sitio web en español e inglés.
+The portfolio (`src/`) renders that content as a website in Spanish and English, with three
+visual skins (Terminal, Tactical and Game).
 
-## Requisitos previos
+## Prerequisites
 
-- **Node.js** 24 o superior (`engines` en `package.json`). El proyecto fija Node 24 en `.nvmrc`: `nvm use`
-- **pnpm** 12 (`corepack enable` o `npm i -g pnpm`)
-- **Claude Code** para las operaciones de la wiki (`npm i -g @anthropic-ai/claude-code`)
-- Opcional: **Obsidian** para navegar `wiki/` como un grafo
+- **Node.js** 24 or later (`engines` in `package.json`). The project pins Node 24 in `.nvmrc`: `nvm use`
+- **pnpm** 12 (`corepack enable` or `npm i -g pnpm`)
+- **Claude Code** for the wiki operations (`npm i -g @anthropic-ai/claude-code`)
+- Optional: **Obsidian** to browse `wiki/` as a graph
 
-## Puesta en marcha
+## Development
+
+Tests (the first time, `pnpm exec playwright install chromium`):
 
 ```sh
-nvm use
-pnpm install
-pnpm dev          # http://localhost:4321
+pnpm check        # types (astro check)
+pnpm test         # unit, content contract, components and privacy
+pnpm test:e2e     # Playwright on the demo content, smoke test on yours, privacy and JS budget
+pnpm test:visual:update   # regenerates the reference screenshots after an intentional design change
 ```
 
-Tests (la primera vez, `pnpm exec playwright install chromium`):
+pnpm 12 only runs install scripts for the packages approved in `pnpm-workspace.yaml`
+(`esbuild`, `sharp`, `@tailwindcss/oxide`). If a new dependency needs them, approve it with
+`pnpm approve-builds`.
+
+To feed the wiki, copy your sources (CV, LinkedIn export, notes…) to `raw/` and run:
 
 ```sh
-pnpm check        # tipos (astro check)
-pnpm test         # unitarios, contrato de contenido, componentes y privacidad
-pnpm test:e2e     # build + Playwright (escritorio y móvil), axe, regresión visual, privacidad y presupuesto de JS
-pnpm test:visual:update   # regenera las capturas de referencia tras un cambio de diseño intencionado
-```
-
-pnpm 12 solo ejecuta scripts de instalación de los paquetes aprobados en
-`pnpm-workspace.yaml` (`esbuild`, `sharp`, `@tailwindcss/oxide`). Si una dependencia nueva
-los necesita, apruébala con `pnpm approve-builds`.
-
-Para alimentar la wiki:
-
-```sh
-cp ~/Descargas/cv.pdf raw/cv-2026.pdf
 claude
-> /ingest raw/cv-2026.pdf
+> /ingest raw/<file>
 ```
 
-Revisa los cambios con `git diff wiki/` y haz commit.
+Review the changes with `git diff wiki/` and commit.
 
-### Público y privado
+### Public and private
 
-El repo es público (se despliega en GitHub Pages y sirve como plantilla), así que la wiki
-está dividida:
+The repo is public (it deploys to GitHub Pages), so the wiki is split:
 
-- **Se versiona:** el código y la configuración del agente (`src/`, `docs/`, `CLAUDE.md`,
-  `.claude/`) y `wiki/public/`, que contiene lo mismo que muestra la web.
-- **🔒 Solo en local (`.gitignore`):** `raw/` y `wiki/private/`, con datos de contacto,
-  notas personales, síntesis y el log. **Haz tú la copia de seguridad** (carpeta
-  sincronizada, disco externo…), porque git no la guarda.
+- **Versioned:** the code and the agent configuration (`src/`, `docs/`, `CLAUDE.md`,
+  `.claude/`) and `wiki/public/`, which holds what the website shows.
+- **🔒 Local only (`.gitignore`):** `raw/` and `wiki/private/`, with contact details, personal
+  notes, syntheses and the log. **Back them up yourself** (synced folder, external drive…),
+  because git does not keep them.
 
-El agente decide qué va a cada lado según la regla de privacidad de [.claude/rules/wiki.md](.claude/rules/wiki.md); ante la
-duda, a privado. Antes de cada commit conviene pasar `/lint`, que busca fugas.
+The agent decides what goes where following the privacy rule in
+[.claude/rules/wiki.md](.claude/rules/wiki.md); when in doubt, private. Run `/lint` before each
+commit: it looks for leaks.
 
-### Usarlo como plantilla
+### Analytics (optional)
 
-Haz un fork o pulsa *Use this template*, borra el contenido de `wiki/public/`, deja tus
-fuentes en `raw/` y ejecuta `/ingest`.
+The site can count visits with [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/),
+which is free, cookieless and needs no consent banner. It is **off** by default: without a
+token no script is loaded and nothing is sent. See the [guide](docs/guide.md#5-optional-analytics).
 
-### Analítica (opcional)
-
-El sitio puede contar visitas con [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/),
-que es gratis, no usa cookies y no necesita banner de consentimiento. Viene **desactivada**: sin
-token no se carga ningún script ni se envía nada.
-
-1. En Cloudflare: *Analytics & Logs → Web Analytics → Add a site*, con tu dominio de GitHub
-   Pages. Copia el `token` del fragmento que te da.
-2. En GitHub: *Settings → Secrets and variables → Actions → Variables*, crea
-   `CF_ANALYTICS_TOKEN` con ese valor. Es una variable y no un secreto porque el token acaba
-   en el HTML público.
-3. El siguiente despliegue carga el script y añade al pie una línea que avisa de la analítica.
-
-Solo se activa en builds de producción. Para probarlo en local, copia `.env.example` a `.env`,
-rellena `PUBLIC_CF_ANALYTICS_TOKEN` y ejecuta `pnpm build && pnpm preview`. Las visitas
-al preview local también llegan a Cloudflare (como `localhost`); para no mezclarlas con las
-reales, usa un token de prueba.
-
-## Estructura
+## Structure
 
 ```text
 .
-├── CLAUDE.md               # Instrucciones generales para el agente
-├── raw/                    # 🔒 Fuentes inmutables (las escribes tú)
-├── wiki/                   # Base de conocimiento (la escribe el agente)
-│   ├── index.md            #   catálogo de páginas públicas
-│   ├── public/             #   publicable: profile.md, experience/, projects/, skills/, education/
+├── CLAUDE.md               # General instructions for the agent
+├── raw/                    # 🔒 Immutable sources (you write them)
+├── wiki/                   # Knowledge base (the agent writes it)
+│   ├── index.md            #   catalog of public pages
+│   ├── public/             #   publishable: profile.md, experience/, projects/, skills/, education/
 │   └── private/            #   🔒 index.md, log.md, notes/, synthesis/
 ├── .claude/
-│   ├── rules/wiki.md       # convenciones de la wiki (se cargan al tocar wiki/ o raw/)
+│   ├── rules/wiki.md       # wiki conventions (loaded when touching wiki/ or raw/)
 │   ├── skills/             # /ingest, /query, /lint
-│   └── settings.json       # permisos: raw/ es de solo lectura
+│   └── settings.json       # permissions: raw/ is read-only
 ├── docs/
-│   ├── system-design.md    # Flujo, patrones de diseño y módulos
-│   └── decisions/          # Decisiones de arquitectura
-└── src/                    # Portfolio Astro
-    ├── layouts/  components/  sections/  pages/  styles/
+│   ├── guide.md            # How to use the template
+│   ├── system-design.md    # Flow, design patterns and modules (Spanish)
+│   └── decisions/          # Architecture decisions (Spanish)
+├── tests/                  # Unit, contract, components, privacy, e2e, smoke
+└── src/                    # Astro portfolio
 ```
 
 ## Scripts
 
-| Comando | Acción |
+| Command | Action |
 | --- | --- |
-| `pnpm dev` | Servidor de desarrollo en `localhost:4321` |
-| `pnpm build` | Genera el sitio en `dist/` |
-| `pnpm preview` | Sirve la build localmente |
+| `pnpm dev` | Development server at `localhost:4321` |
+| `pnpm build` | Builds the site into `dist/` |
+| `pnpm preview` | Serves the build locally |
 
-## Más información
+## More information
 
-- [docs/system-design.md](docs/system-design.md): arquitectura y patrones
-- [.claude/rules/wiki.md](.claude/rules/wiki.md): convenciones de la wiki
-- [CLAUDE.md](CLAUDE.md): instrucciones generales para el agente
+- [docs/guide.md](docs/guide.md): using the template, step by step
+- [docs/system-design.md](docs/system-design.md): architecture and patterns
+- [.claude/rules/wiki.md](.claude/rules/wiki.md): wiki conventions
+- [CLAUDE.md](CLAUDE.md): general instructions for the agent
+
+## License
+
+Code under the [MIT license](LICENSE). The content in `wiki/public/` and the images in
+`public/` belong to whoever publishes the site; in this template they are fictitious.
