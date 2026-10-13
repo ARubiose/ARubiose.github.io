@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const SITE = "https://arubiose.github.io";
+import { FIXTURE_SITE as SITE } from "./support";
 const locs = (xml: string) => [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
 
 test.describe("indexación", () => {

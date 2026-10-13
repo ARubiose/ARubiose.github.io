@@ -93,7 +93,7 @@ test("el foco se distingue del fondo en la pestaña seleccionada y en la skin ac
 // Plantilla: el nombre puede traer palabras muy largas, que a 50-84 px en mayúsculas no caben.
 test("un nombre con una palabra muy larga no desborda ni aplasta la foto", async ({ page }, info) => {
     await page.goto("/");
-    await page.locator(".hero-name").evaluate((el) => { el.textContent = "Supercalifragilisticoexpialidoso Rubio"; });
+    await page.locator(".hero-name").evaluate((el) => { el.textContent = "Supercalifragilisticoexpialidoso Lovelace"; });
     const [name, hero, photo] = await Promise.all([".hero-name", "#about", ".photo-window"].map((s) => page.locator(s).boundingBox()));
     expect(name!.x + name!.width).toBeLessThanOrEqual(hero!.x + hero!.width + 1);
     if (info.project.name.startsWith("desktop")) expect(photo!.width).toBeGreaterThan(250);

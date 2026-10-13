@@ -15,7 +15,7 @@ test("construido con base, ninguna URL interna apunta a la raíz del dominio", (
     execFileSync("pnpm", ["exec", "astro", "build"], {
         cwd: ROOT,
         stdio: "pipe",
-        env: { ...cleanEnv, WIKI_DIR: "wiki/public", OUT_DIR: out, SITE_URL: "https://ada.github.io", BASE_PATH: "/demo/" },
+        env: { ...cleanEnv, WIKI_DIR: "tests/fixtures/site", OUT_DIR: out, SITE_URL: "https://ada.github.io", BASE_PATH: "/demo/" },
     });
     const pages = readdirSync(out, { recursive: true, encoding: "utf8" }).filter((f) => f.endsWith(".html"));
     expect(pages.length).toBeGreaterThan(1);

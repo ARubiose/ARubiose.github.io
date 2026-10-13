@@ -7,8 +7,11 @@ import {
     projectSchema,
     skillSchema,
 } from "@lib/schemas";
+import { buildDirs } from "@lib/site";
 
-const wiki = (pattern: string, base: string) => glob({ pattern, base: `./wiki/public/${base}` });
+// WIKI_DIR permite construir otra wiki (los e2e usan tests/fixtures/site); por defecto, wiki/public.
+const { wikiDir } = buildDirs(process.env);
+const wiki = (pattern: string, base: string) => glob({ pattern, base: `${wikiDir}/${base}` });
 
 export const collections = {
     profile: defineCollection({ loader: wiki("profile.md", ""), schema: ({ image }) => profileSchema.extend({ photo: image() }) }),

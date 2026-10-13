@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { FIXTURE_SITE } from "./support";
 
 const pages = [
     { path: "/", lang: "es", other: "/en/", otherLabel: "English" },
@@ -42,11 +43,11 @@ for (const p of pages) {
             await page.goto(p.path);
             const meta = (sel: string) => page.locator(`meta[${sel}]`).getAttribute("content");
             const image = await meta('property="og:image"');
-            expect(image).toBe("https://arubiose.github.io/og-image.png");
+            expect(image).toBe(`${FIXTURE_SITE}/og-image.png`);
             expect(await meta('property="og:image:width"')).toBe("1200");
             expect(await meta('property="og:image:height"')).toBe("627");
             expect(await meta('property="og:image:alt"')).toMatch(/\S/);
-            expect(await meta('property="og:url"')).toBe(`https://arubiose.github.io${p.path}`);
+            expect(await meta('property="og:url"')).toBe(`${FIXTURE_SITE}${p.path}`);
             expect(await meta('name="twitter:card"')).toBe("summary_large_image");
             const res = await request.get(new URL(image!).pathname);
             expect(res.status()).toBe(200);
@@ -54,7 +55,7 @@ for (const p of pages) {
         });
 
         test("canonical, alternativas hreflang y JSON-LD Person", async ({ page, request }) => {
-            const site = "https://arubiose.github.io";
+            const site = FIXTURE_SITE;
             await page.goto(p.path);
             await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `${site}${p.path}`);
             const alternates = await page.locator('link[rel="alternate"][hreflang]').evaluateAll((els) =>
