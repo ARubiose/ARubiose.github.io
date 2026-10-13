@@ -7,11 +7,11 @@ describe("pagesTarget", () => {
     });
 
     test("sin distinguir mayúsculas y con el owner en minúsculas", () => {
-        expect(pagesTarget({ GITHUB_REPOSITORY: "ARubiose/ARubiose.github.io" })).toEqual({ site: "https://arubiose.github.io", base: "/" });
+        expect(pagesTarget({ GITHUB_REPOSITORY: "AdaExample/AdaExample.GitHub.io" })).toEqual({ site: "https://adaexample.github.io", base: "/" });
     });
 
     test("cualquier otro repo: subruta /<repo>/", () => {
-        expect(pagesTarget({ GITHUB_REPOSITORY: "ARubiose/llm-wiki-portfolio" })).toEqual({ site: "https://arubiose.github.io", base: "/llm-wiki-portfolio/" });
+        expect(pagesTarget({ GITHUB_REPOSITORY: "AdaExample/llm-wiki-portfolio" })).toEqual({ site: "https://adaexample.github.io", base: "/llm-wiki-portfolio/" });
     });
 
     test("SITE_URL y BASE_PATH tienen prioridad y se normalizan", () => {

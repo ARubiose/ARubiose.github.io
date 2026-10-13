@@ -93,13 +93,13 @@ test("el pie enlaza el repo del sitio (links.source) o, si no hay, el GitHub del
 });
 
 test("handle del prompt: primer nombre en minúsculas y sin tildes", () => {
-    expect(handleFromName("Álvaro Rubio Segovia")).toBe("alvaro");
+    expect(handleFromName("Íñigo Montoya Ruiz")).toBe("inigo");
     expect(handleFromName("Ada Lovelace")).toBe("ada");
     expect(handleFromName("  Zoë  ")).toBe("zoe");
 });
 
 test("nombre corto de Juego: dos primeras palabras en mayúsculas", () => {
-    expect(shortNameFromName("Álvaro Rubio Segovia")).toBe("ÁLVARO RUBIO");
+    expect(shortNameFromName("Íñigo Montoya Ruiz")).toBe("ÍÑIGO MONTOYA");
     expect(shortNameFromName("  Ada  ")).toBe("ADA");
     expect(shortNameFromName("ada   lovelace byron")).toBe("ADA LOVELACE");
 });

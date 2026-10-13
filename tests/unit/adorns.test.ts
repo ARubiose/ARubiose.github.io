@@ -41,9 +41,9 @@ describe("adornTexts", () => {
     });
 
     test("[[…]] marca un fragmento: el texto lo incluye y las partes lo separan", () => {
-        const tactical = adornTexts("handle", "es", { first: "ÁLVARO", second: "RUBIO" }).find((a) => a.skin === "tactical")!;
-        expect(tactical.text).toBe("ÁLVARO // RUBIO");
-        expect(tactical.parts).toEqual([{ text: "ÁLVARO " }, { text: "//", mark: true }, { text: " RUBIO" }]);
+        const tactical = adornTexts("handle", "es", { first: "ÍÑIGO", second: "MONTOYA" }).find((a) => a.skin === "tactical")!;
+        expect(tactical.text).toBe("ÍÑIGO // MONTOYA");
+        expect(tactical.parts).toEqual([{ text: "ÍÑIGO " }, { text: "//", mark: true }, { text: " MONTOYA" }]);
     });
 
     test("una marca que se queda en un extremo (variable vacía) desaparece", () => {

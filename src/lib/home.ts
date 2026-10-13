@@ -43,7 +43,7 @@ export function handleFromName(name: string): string {
     return (name.trim().split(/\s+/)[0] ?? "").normalize("NFD").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 }
 
-/** Nombre corto de la cabecera: dos primeras palabras del nombre, en mayúsculas («ÁLVARO RUBIO»). */
+/** Nombre corto de la cabecera: dos primeras palabras del nombre, en mayúsculas («ADA LOVELACE»). */
 export function shortNameFromName(name: string): string {
     return name.trim().split(/\s+/).slice(0, 2).join(" ").toLocaleUpperCase("es");
 }
