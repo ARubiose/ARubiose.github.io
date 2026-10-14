@@ -111,10 +111,11 @@ Lógica pura en `src/lib/project-details.ts`, usada por la build y por los tests
 - `pairDetails(projectIds, detailIds)`: empareja por slug los ids de la colección
   (`<slug>/es`, `<slug>/en`); devuelve los pares y los errores (idioma que falta, carpeta sin
   ficha `<slug>.md`).
-- `bodyIssues(markdown)`: analiza el cuerpo con `mdast-util-from-markdown` +
-  `micromark-extension-gfm`/`mdast-util-gfm` (los mismos analizadores que usa Astro; pasan a
-  dependencias directas) y recorre el árbol: nodos `html`, `link`, `linkReference`→`definition`,
-  `image` y `heading`. Devuelve cada incumplimiento de §3.3 con su línea.
+- `bodyIssues(markdown)` (asíncrona): analiza el cuerpo con `markdownToMdast` de `satteri`,
+  el procesador de Markdown de Astro 7 (vía `@astrojs/markdown-satteri`). Pasa a dependencia
+  directa con la misma versión que trae Astro, para validar con el mismo analizador que
+  renderiza. Recorre el árbol: nodos `html`, `link`, `definition` (destino de los
+  `linkReference`), `image` y `heading`. Devuelve cada incumplimiento de §3.3 con su línea.
 - `detailUrl(slug, locale, base)`: URL de la página por idioma, con el `base` del sitio.
 
 Las dos rutas llaman a `loadProjectDetails()` (helper de `src/lib/`, junto a la carga de la
