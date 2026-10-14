@@ -111,15 +111,17 @@ Lógica pura en `src/lib/project-details.ts`, usada por la build y por los tests
 - `pairDetails(projectIds, detailIds)`: empareja por slug los ids de la colección
   (`<slug>/es`, `<slug>/en`); devuelve los pares y los errores (idioma que falta, carpeta sin
   ficha `<slug>.md`).
-- `bodyIssues(markdown)` (asíncrona): analiza el cuerpo con `markdownToMdast` de `satteri`,
+- `bodyIssues(markdown)` (síncrona): analiza el cuerpo con `markdownToMdast` de `satteri`,
   el procesador de Markdown de Astro 7 (vía `@astrojs/markdown-satteri`). Pasa a dependencia
   directa con la misma versión que trae Astro, para validar con el mismo analizador que
   renderiza. Recorre el árbol: nodos `html`, `link`, `definition` (destino de los
-  `linkReference`), `image` y `heading`. Devuelve cada incumplimiento de §3.3 con su línea.
+  `linkReference`), `image` y `heading`. Devuelve cada incumplimiento de §3.3 con su línea, contada desde el inicio del archivo (se suma el desfase del frontmatter, porque `entry.body` lo excluye).
 - `detailUrl(slug, locale, base)`: URL de la página por idioma, con el `base` del sitio.
 
-Las dos rutas llaman a `loadProjectDetails()` (helper de `src/lib/`, junto a la carga de la
-portada), que ejecuta `pairDetails` y `bodyIssues` sobre todos los detalles y lanza un error
+Las dos rutas llaman a `loadProjectDetails()`. Los cargadores que importan `astro:content`
+(`loadProjectDetails()`, `loadHomeData()`) viven en un módulo aparte, `src/lib/content.ts`, que
+no importan los tests unitarios ni los de contrato; `project-details.ts` y `home.ts` siguen
+siendo puros. `loadProjectDetails()`, que ejecuta `pairDetails` y `bodyIssues` sobre todos los detalles y lanza un error
 con archivo, línea y motivo si hay alguno. La build falla así aunque nadie ejecute los tests.
 Los tests de contrato ejecutan lo mismo sobre la wiki real y sobre el fixture.
 
@@ -137,7 +139,7 @@ con `locale` y `slug`.
   `[]` y `"/"`), opcionales para no romper los fixtures de `tests/unit/home.test.ts`.
   `buildHomeView` rellena `detailUrl?` en cada `ProjectView` con `detailUrl()`.
 - La carga de colecciones que hoy hace `HomePage.astro` pasa a un helper compartido
-  (`loadHomeData()`), que también usa `ProjectPage`. `ProjectPage` llama a `buildHomeView`
+  (`loadHomeData()` en `src/lib/content.ts`), que también usa `ProjectPage`. `ProjectPage` llama a `buildHomeView`
   igual que la portada y toma de ahí las secciones y el handle de la cabecera, `siteRepo` y
   la analítica del pie, y el `ProjectView` localizado del proyecto.
 - **Habilidades:** la cabecera del proyecto muestra sus `skills` como chips de texto con el
@@ -186,8 +188,8 @@ compone:
     una excepción a la norma de imágenes.
   - El español y el inglés se escriben a la vez.
   - En `wiki/index.md`, cada detalle tiene una línea en la sección de proyectos (enlazando a
-    `es.md`), y la ficha lo enlaza en su `## Relacionado`. Así `lint` no lo marca como
-    huérfano.
+    `es.md`), y la ficha enlaza `es.md` y `en.md` en su `## Relacionado`. Así `lint` no
+    marca ninguno como huérfano.
 - **Skill nueva `detail`** (`.claude/skills/detail/SKILL.md`), para peticiones como «escribe
   el detalle de X» o «actualiza el detalle de X»:
   1. Lee la ficha, las páginas que enlaza y sus fuentes.
@@ -241,6 +243,8 @@ compone:
 
 - **`CLAUDE.md`** (plantilla): la línea «el contenido se deriva solo del frontmatter» pasa a
   mencionar la excepción del detalle, y la lista de skills incluye `detail`.
+- **`.claude/rules/wiki.md`** (línea de skills) y **`docs/system-design.md`** (tabla del mapa,
+  §5.1 y §5.2): añaden la skill `detail` junto a `ingest`, `query` y `lint`.
 - **`docs/system-design.md`:**
   - §4.2: añade la colección nueva a la tabla y explica la excepción al contrato.
   - §3.7: actualiza el número de capturas, el presupuesto (todas las páginas), el smoke
