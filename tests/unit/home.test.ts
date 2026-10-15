@@ -103,3 +103,10 @@ test("nombre corto de Juego: dos primeras palabras en mayúsculas", () => {
     expect(shortNameFromName("  Ada  ")).toBe("ADA");
     expect(shortNameFromName("ada   lovelace byron")).toBe("ADA LOVELACE");
 });
+
+test("proyectos: detailUrl solo si el proyecto tiene detalle, con base e idioma", () => {
+    expect(buildHomeView(data, "es", NOW).projects[0].detailUrl).toBeUndefined();
+    const withDetail = { ...data, detailSlugs: ["site"], base: "/repo/" };
+    expect(buildHomeView(withDetail, "es", NOW).projects[0].detailUrl).toBe("/repo/projects/site/");
+    expect(buildHomeView(withDetail, "en", NOW).projects[0].detailUrl).toBe("/repo/en/projects/site/");
+});

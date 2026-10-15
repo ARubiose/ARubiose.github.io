@@ -8,9 +8,10 @@ interface Props {
     project: ProjectView;
     repoLabel: string;
     visitLabel: string;
+    moreLabel: string;
     locale: Locale;
 }
-const { project, repoLabel, visitLabel, locale } = Astro.props;
+const { project, repoLabel, visitLabel, moreLabel, locale } = Astro.props;
 ---
 
 <Window file={project.file} as="article" class="reveal">
@@ -22,6 +23,7 @@ const { project, repoLabel, visitLabel, locale } = Astro.props;
         <p class="mt-2.5 max-w-[78ch] text-[13.5px] text-body md:text-[14.5px]">{project.summary}</p>
         {project.highlights.length > 0 && <ul class="marker-list mt-3 grid gap-1.5 text-[13px] text-body md:text-[14px]">{project.highlights.map((h) => <li>{h}</li>)}</ul>}
         <p class="mt-4 flex gap-4.5 text-accent">
+            {project.detailUrl && <a class="border-b border-accent" href={project.detailUrl}>{moreLabel}</a>}
             <a class="border-b border-accent" href={project.repo} target="_blank" rel="noopener">{repoLabel}</a>
             {project.url && <a class="border-b border-accent" href={project.url} target="_blank" rel="noopener">{visitLabel}</a>}
         </p>
