@@ -53,3 +53,12 @@ test("la cabecera pasa el nombre corto a los adornos", async () => {
     // Táctico usa las dos palabras con «//» marcado entre ellas.
     expect(html).toMatch(/data-for-skin="tactical"[^>]*>ADA <span class="adorn-mark">\/\/<\/span> L</);
 });
+
+test("con sectionHref, las secciones apuntan a la portada (página de detalle)", async () => {
+    const container = await AstroContainer.create();
+    const html = clean(await container.renderToString(Header, {
+        props: { locale: "en", urls, sections: [{ id: "projects", label: "Projects" }], sectionHref: "/en/" },
+    }));
+    expect(html.match(/href="\/en\/#projects"/g)).toHaveLength(2);
+    expect(html).not.toMatch(/href="#projects"/);
+});
