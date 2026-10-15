@@ -1,8 +1,9 @@
 // Carga de colecciones compartida por la portada y el detalle. Importa astro:content: no lo usan los tests de Vitest.
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { getCollection, getEntry } from "astro:content";
 import type { HomeData } from "./home";
-import { bodyIssues, lineOffset, pairDetails } from "./project-details";
+import { bodyIssues, lineOffset, pairDetails, svgIssues } from "./project-details";
 import { findBrokenSkillRefs } from "./skills";
 
 /** Slugs con detalle válido; la build falla con archivo, línea y motivo si alguno incumple el contrato. */
@@ -15,7 +16,12 @@ export async function loadProjectDetails(): Promise<string[]> {
         const raw = d.filePath ? readFileSync(d.filePath, "utf8") : body;
         return bodyIssues(body, lineOffset(raw, body)).map((i) => `${d.filePath}:${i.line} ${i.message}`);
     });
-    const all = [...errors, ...issues];
+    // Los SVG se copian tal cual al sitio: sin scripts ni recursos externos.
+    const folders = [...new Set(details.flatMap((d) => (d.filePath ? [dirname(d.filePath)] : [])))];
+    const svgs = folders.flatMap((dir) =>
+        readdirSync(dir).filter((f) => f.toLowerCase().endsWith(".svg")).flatMap((f) => svgIssues(readFileSync(join(dir, f), "utf8")).map((m) => `${join(dir, f)}: ${m}`)),
+    );
+    const all = [...errors, ...issues, ...svgs];
     if (all.length) throw new Error(`Detalles de proyecto inválidos:\n${all.join("\n")}`);
     return slugs;
 }

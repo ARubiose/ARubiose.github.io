@@ -2,7 +2,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { describe, expect, test } from "vitest";
 import matter from "gray-matter";
-import { bodyIssues, lineOffset, pairDetails } from "@lib/project-details";
+import { bodyIssues, lineOffset, pairDetails, svgIssues } from "@lib/project-details";
 import { projectDetailSchema, schemasByType } from "@lib/schemas";
 import { findBrokenSkillRefs } from "@lib/skills";
 import { readFrontmatter } from "../support/frontmatter";
@@ -72,6 +72,14 @@ for (const [label, WIKI] of Object.entries(WIKIS)) {
             test("cada carpeta tiene ficha y los dos idiomas", () => {
                 expect(pairDetails(projectIds, detailIds).errors).toEqual([]);
             });
+
+            for (const slug of detailFolders) {
+                for (const svg of readdirSync(join(dir, slug)).filter((f) => f.toLowerCase().endsWith(".svg"))) {
+                    test(`${slug}/${svg} sin contenido activo ni externo`, () => {
+                        expect(svgIssues(readFileSync(join(dir, slug, svg), "utf8"))).toEqual([]);
+                    });
+                }
+            }
 
             for (const id of detailIds) {
                 test(`${id}.md cumple el contrato y las normas del cuerpo`, () => {

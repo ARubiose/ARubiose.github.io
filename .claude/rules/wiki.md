@@ -144,7 +144,9 @@ Página opcional que explica un proyecto en profundidad. Es la única página p�
   lleva `## Relacionado` ni `## Fuentes`, porque las fuentes van en el frontmatter.
   - Enlaces: solo `http(s)://` o anclas `#…`; ni páginas de la wiki ni `mailto:`.
   - Imágenes: `./archivo.ext` dentro de la carpeta (`jpg`, `jpeg`, `png`, `webp`, `avif`,
-    `svg`), siempre con texto alternativo. Los diagramas son imágenes; no hay Mermaid.
+    `svg`), con nombres sencillos (letras, números, `.`, `_`, `-`) y siempre con texto
+    alternativo. Los SVG no llevan scripts, atributos `on*`, `foreignObject` ni recursos
+    externos. Los diagramas son imágenes; no hay Mermaid.
   - La build falla si algo de esto no se cumple.
 - **Enlaces de entrada:** la ficha enlaza `es.md` y `en.md` en su `## Relacionado`, y
   `wiki/index.md` tiene una línea por detalle debajo de su proyecto.

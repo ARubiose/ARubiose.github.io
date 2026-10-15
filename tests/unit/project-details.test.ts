@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { bodyIssues, detailUrl, lineOffset, pairDetails } from "@lib/project-details";
+import { bodyIssues, detailUrl, lineOffset, pairDetails, svgIssues } from "@lib/project-details";
 
 describe("pairDetails", () => {
     test("empareja es y en de un proyecto que existe", () => {
@@ -89,6 +89,21 @@ describe("bodyIssues", () => {
         expect(messages(md).some((m) => m.startsWith(prefix))).toBe(true);
     });
 
+    test.each([
+        "./%2e%2e/%2e%2e/private/x.jpg",
+        "./%2E%2E/x.png",
+        "./a%2fb.png",
+        "./a\\..\\b.png",
+    ])("rechaza rutas de imagen codificadas o con barras invertidas: %s", (url) => {
+        expect(messages(`![a](${url})`).some((m) => m.startsWith("Imagen no permitida"))).toBe(true);
+    });
+
+    test("imagen por referencia: aplica las reglas de imagen a su definición", () => {
+        expect(messages("![][px]\n\n[px]: https://tracker.example/p.gif").some((m) => m.startsWith("Imagen no permitida"))).toBe(true);
+        expect(messages("![][r]\n\n[r]: ./x.svg")).toContain("Imagen sin texto alternativo: ./x.svg");
+        expect(bodyIssues("![Logo][r]\n\n[r]: ./x.svg")).toEqual([]);
+    });
+
     test("rechaza el h1: el título lo pone la página", () => {
         expect(messages("# Título")).toContain("Sin # h1: el título sale de `title`");
     });
@@ -128,5 +143,21 @@ describe("detailUrl", () => {
 
     test("base por defecto: raíz", () => {
         expect(detailUrl("site", "es")).toBe("/projects/site/");
+    });
+});
+
+describe("svgIssues", () => {
+    test("un SVG estático no da avisos", () => {
+        expect(svgIssues('<svg xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="#fff"/><text>App</text></svg>')).toEqual([]);
+    });
+
+    test.each([
+        ['<svg><script>alert(1)</script></svg>', "<script"],
+        ['<svg><rect onload="alert(1)"/></svg>', "atributo on*"],
+        ['<svg><foreignObject><div>x</div></foreignObject></svg>', "<foreignObject"],
+        ['<svg><a href="javascript:alert(1)"><text>x</text></a></svg>', "javascript:"],
+        ['<svg><image href="https://tracker.example/p.png"/></svg>', "recurso externo"],
+    ])("rechaza contenido activo o externo: %s", (svg, what) => {
+        expect(svgIssues(svg).some((m) => m.includes(what))).toBe(true);
     });
 });
