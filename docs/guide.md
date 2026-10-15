@@ -50,6 +50,10 @@ alone.
    - The image shown when the link is shared: `public/og-image.png`, 1200×627.
 5. Run `pnpm build`. If a page is missing a field or a date is wrong, the Zod schemas
    (`src/lib/schemas.ts`) fail the build and say which file and field.
+6. Project detail page (optional): `/detail <slug>`. The agent proposes an outline, drafts
+   `wiki/public/projects/<slug>/es.md` and `en.md` and shows them to you before writing. The
+   project card will show "Read more". The build fails if a language is missing or the body
+   has HTML, links into the wiki or images from outside its folder.
 
 ## 4. Tests
 

@@ -7,7 +7,7 @@ paths:
 # Convenciones de la LLM Wiki
 
 Se cargan automáticamente al trabajar con `wiki/` o `raw/`. Las operaciones están en las
-skills `ingest`, `query` y `lint`.
+skills `ingest`, `query`, `lint` y `detail`.
 
 ## Capas
 
@@ -36,6 +36,8 @@ wiki/
 
 No crees carpetas nuevas sin proponerlo antes. Las imágenes del contenido van junto a la
 página que las usa y se referencian desde su frontmatter con una ruta relativa (`./foto.jpg`).
+Excepción: las imágenes de un detalle de proyecto se referencian desde su cuerpo (ver
+*Detalles de proyecto*).
 
 ## Fuentes
 
@@ -74,9 +76,9 @@ pública solo lleva la parte publicable. Lo privado sí puede enlazar a lo públ
 
 - **Nombre:** `kebab-case.md` en inglés (`acme-corp.md`, `typescript.md`). Contenido en español.
 - **Frontmatter obligatorio** (comunes): `title`, `type` (`profile` | `experience` |
-  `project` | `skill` | `education` | `note` | `synthesis`), `summary`, `tags`, `sources`,
-  `updated`. El portfolio usa **solo el frontmatter**; el cuerpo es prosa de wiki y no se
-  publica.
+  `project` | `project-detail` | `skill` | `education` | `note` | `synthesis`), `summary`,
+  `tags`, `sources`, `updated`. El portfolio usa **solo el frontmatter**; el cuerpo es prosa
+  de wiki y no se publica, salvo en los detalles de proyecto.
 - **Campos por tipo** (los esquemas Zod de `src/lib/schemas.ts` son la referencia exacta;
   si una página pública no los cumple, la build falla):
 
@@ -85,6 +87,7 @@ pública solo lleva la parte publicable. Lo privado sí puede enlazar a lo públ
   | `profile` | `name`, `headline`, `location`, `photo` (ruta relativa: `./profile.jpg`), `links: {email, linkedin, github, source?}` (`source`: repo de este sitio, enlazado en el pie) | `headline`, `summary` |
   | `experience` | `company`, `role`, `start`, `end`, `highlights`, `skills?` (ids de `skills/` usadas) | `role`, `summary`, `highlights` |
   | `project` | `repo`, `url?`, `status` (`active`·`paused`·`done`), `start`, `highlights`, `skills?` | `title`, `summary`, `highlights` |
+  | `project-detail` | (solo los comunes; `tags` opcional) | — (un archivo por idioma) |
   | `skill` | `category` (`backend`·`ai`·`frontend`·`devops`·`security`), `icon` (`si:<slug>` de Simple Icons o `ph:<nombre>` de Phosphor) | `summary` |
   | `education` | `kind?` (`degree` por defecto · `certificate`), `institution`, `degree`, `start`, `end`, `grade?` | `degree`, `summary` |
 
@@ -124,7 +127,30 @@ pública solo lleva la parte publicable. Lo privado sí puede enlazar a lo públ
   *Fuentes*). Lo inferido se
   marca con `> ⚠️ Inferido:`; las discrepancias entre fuentes, con `> ⚠️ Conflicto:` citando
   ambas, y se avisa al humano.
-- **Cierre:** cada página termina con `## Relacionado` y `## Fuentes`.
+- **Cierre:** cada página termina con `## Relacionado` y `## Fuentes`, salvo los detalles de
+  proyecto.
+
+## Detalles de proyecto
+
+Página opcional que explica un proyecto en profundidad. Es la única página pública cuyo
+**cuerpo se publica**: es texto escrito para la web, no prosa de wiki.
+
+- **Ubicación:** `public/projects/<slug>/es.md` y `en.md`, junto a la ficha
+  `public/projects/<slug>.md`, que tiene que existir. Siempre los dos idiomas a la vez. Las
+  imágenes van en la misma carpeta.
+- **Frontmatter:** `title` (el `h1` de la página), `type: project-detail`, `summary`
+  (meta description), `sources`, `updated`; `tags` opcional. Sin bloque `en:`.
+- **Cuerpo:** Markdown sin HTML crudo. Los encabezados empiezan en `##` (sin `# h1`) y no
+  lleva `## Relacionado` ni `## Fuentes`, porque las fuentes van en el frontmatter.
+  - Enlaces: solo `http(s)://` o anclas `#…`; ni páginas de la wiki ni `mailto:`.
+  - Imágenes: `./archivo.ext` dentro de la carpeta (`jpg`, `jpeg`, `png`, `webp`, `avif`,
+    `svg`), siempre con texto alternativo. Los diagramas son imágenes; no hay Mermaid.
+  - La build falla si algo de esto no se cumple.
+- **Enlaces de entrada:** la ficha enlaza `es.md` y `en.md` en su `## Relacionado`, y
+  `wiki/index.md` tiene una línea por detalle debajo de su proyecto.
+- **Privacidad:** la regla de privacidad se aplica igual. Las imágenes se versionan en un
+  repo público y el humano las revisa siempre.
+- Se redactan con la skill `detail`.
 
 ## Índices
 
@@ -138,7 +164,7 @@ estructura, una línea por página:
 ## Log
 
 `wiki/private/log.md`, append-only, lo más reciente al final. Operaciones: `init`,
-`ingest`, `query`, `lint`, `schema`.
+`ingest`, `query`, `lint`, `detail`, `schema`.
 
 ```markdown
 ## [2026-10-01] ingest | CV 2026

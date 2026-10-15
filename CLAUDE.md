@@ -14,7 +14,7 @@ GitHub Pages.
 | `docs/` | Conocimiento de desarrollo: [system-design.md](docs/system-design.md), [decisions/](docs/decisions/) y la guía de uso ([guide.md](docs/guide.md)). La hoja de ruta está en los GitHub issues | Sí |
 | `wiki/public/` | Contenido publicable que alimenta la web | Sí |
 | `wiki/private/`, `raw/` | Fuentes y datos personales | **No** (`.gitignore`) |
-| `.claude/` | Regla de la wiki (`rules/wiki.md`), skills `ingest`/`query`/`lint`, permisos | Sí |
+| `.claude/` | Regla de la wiki (`rules/wiki.md`), skills `ingest`/`query`/`lint`/`detail`, permisos | Sí |
 
 Las convenciones de la wiki se cargan solas al trabajar en `wiki/` o `raw/`.
 
@@ -30,8 +30,9 @@ Las convenciones de la wiki se cargan solas al trabajar en `wiki/` o `raw/`.
 - Alias de importación: `@layouts`, `@sections`, `@components`, `@styles`, `@assets`, `@lib`, `@i18n` (ver `tsconfig.json`).
 - Secciones en `src/sections/`: `intro`, `experience`, `projects`, `skills`, `education`, `contact`.
   Reciben props; `src/layouts/HomePage.astro` carga las colecciones.
-- El contenido se deriva **solo** de `wiki/public/` (solo el frontmatter); lo único escrito a
-  mano es el diccionario de interfaz `src/i18n/ui.ts`. El contrato son los esquemas Zod de
+- El contenido se deriva **solo** de `wiki/public/`: el frontmatter y, en los detalles de
+  proyecto (`projects/<slug>/{es,en}.md`), también el cuerpo. Lo único escrito a mano es el
+  diccionario de interfaz `src/i18n/ui.ts`. El contrato son los esquemas Zod de
   `src/lib/schemas.ts`. El directorio se puede cambiar con `WIKI_DIR`, y `site`/`base` se
   deducen del repo (`src/lib/site.ts`).
 - Los e2e y las capturas usan el fixture fijo `tests/fixtures/site/` (Ada); el contenido real
