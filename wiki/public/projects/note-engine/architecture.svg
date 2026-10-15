@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" width="640" height="160" font-family="sans-serif" font-size="16">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3f3f46"/></marker></defs>
+  <rect width="640" height="160" fill="#f4f4f5"/>
+  <g fill="#ffffff" stroke="#3f3f46" stroke-width="2">
+    <rect x="20" y="50" width="160" height="60" rx="8"/>
+    <rect x="240" y="50" width="160" height="60" rx="8"/>
+    <rect x="460" y="50" width="160" height="60" rx="8"/>
+  </g>
+  <g fill="#18181b" text-anchor="middle">
+    <text x="100" y="86">App (Expo)</text>
+    <text x="320" y="86">API (FastAPI)</text>
+    <text x="540" y="86">Agente LLM</text>
+  </g>
+  <g stroke="#3f3f46" stroke-width="2" marker-end="url(#a)">
+    <line x1="180" y1="80" x2="236" y2="80"/>
+    <line x1="400" y1="80" x2="456" y2="80"/>
+  </g>
+</svg>

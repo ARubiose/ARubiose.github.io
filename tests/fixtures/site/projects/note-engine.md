@@ -21,3 +21,7 @@ updated: 2026-10-13
 # Motor de notas
 
 Proyecto ficticio de la demo.
+
+## Relacionado
+
+- Detalle: [español](note-engine/es.md) · [English](note-engine/en.md)

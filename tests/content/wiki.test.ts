@@ -1,7 +1,9 @@
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { describe, expect, test } from "vitest";
-import { schemasByType } from "@lib/schemas";
+import matter from "gray-matter";
+import { bodyIssues, lineOffset, pairDetails } from "@lib/project-details";
+import { projectDetailSchema, schemasByType } from "@lib/schemas";
 import { findBrokenSkillRefs } from "@lib/skills";
 import { readFrontmatter } from "../support/frontmatter";
 
@@ -60,5 +62,38 @@ for (const [label, WIKI] of Object.entries(WIKIS)) {
             );
             expect(findBrokenSkillRefs(entries, ids("skills"))).toEqual([]);
         });
+
+        describe("detalles de proyecto", () => {
+            const dir = join(WIKI, "projects");
+            const detailFolders = existsSync(dir) ? readdirSync(dir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name) : [];
+            const detailIds = detailFolders.flatMap((slug) => readdirSync(join(dir, slug)).filter((f) => /^(es|en)\.md$/.test(f)).map((f) => `${slug}/${f.replace(/\.md$/, "")}`));
+            const projectIds = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, "")) : [];
+
+            test("cada carpeta tiene ficha y los dos idiomas", () => {
+                expect(pairDetails(projectIds, detailIds).errors).toEqual([]);
+            });
+
+            for (const id of detailIds) {
+                test(`${id}.md cumple el contrato y las normas del cuerpo`, () => {
+                    const raw = readFileSync(join(dir, `${id}.md`), "utf8");
+                    const { data, content } = matter(raw);
+                    expect(data.type).toBe("project-detail");
+                    expect(projectDetailSchema.safeParse(data).error?.issues ?? []).toEqual([]);
+                    expect(bodyIssues(content, lineOffset(raw, content))).toEqual([]);
+                });
+
+                test(`${id}.md: las imágenes existen junto al detalle`, () => {
+                    const { content } = matter(readFileSync(join(dir, `${id}.md`), "utf8"));
+                    for (const [, src] of content.matchAll(/!\[[^\]]*\]\((\.\/[^)\s]+)\)/g)) {
+                        expect(existsSync(join(dir, id.split("/")[0], src)), src).toBe(true);
+                    }
+                });
+            }
+        });
     });
 }
+
+test("el fixture (Ada) incluye un detalle de ejemplo", () => {
+    expect(existsSync(join(WIKIS["tests/fixtures/site"], "projects/note-engine/es.md"))).toBe(true);
+    expect(existsSync(join(WIKIS["tests/fixtures/site"], "projects/note-engine/en.md"))).toBe(true);
+});

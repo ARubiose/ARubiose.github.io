@@ -81,6 +81,12 @@ export const projectSchema = z
     })
     .refine(sameHighlights, sameHighlightsIssue);
 
+// Detalle de proyecto: una página por idioma (projects/<slug>/es.md, en.md) cuyo cuerpo sí se publica.
+export const projectDetailSchema = z.object({
+    ...meta,
+    type: z.literal("project-detail"),
+});
+
 export const skillSchema = z.object({
     ...meta,
     type: z.literal("skill"),
@@ -108,6 +114,7 @@ export const schemasByType = {
     profile: profileSchema,
     experience: experienceSchema,
     project: projectSchema,
+    "project-detail": projectDetailSchema,
     skill: skillSchema,
     education: educationSchema,
 };
@@ -115,5 +122,6 @@ export const schemasByType = {
 export type ProfileData = Omit<z.output<typeof profileSchema>, "photo"> & { photo: ImageMetadata };
 export type ExperienceData = z.output<typeof experienceSchema>;
 export type ProjectData = z.output<typeof projectSchema>;
+export type ProjectDetailData = z.output<typeof projectDetailSchema>;
 export type SkillData = z.output<typeof skillSchema>;
 export type EducationData = z.output<typeof educationSchema>;

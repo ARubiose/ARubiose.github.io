@@ -19,6 +19,7 @@ Catálogo de las páginas **públicas** (`wiki/public/`), mantenido por el LLM e
 ## Proyectos
 
 - [Motor de notas](public/projects/note-engine.md) — App multiplataforma que organiza notas con un agente LLM.
+  - [Detalle: cómo funciona](public/projects/note-engine/es.md) — Arquitectura del motor de notas ([English](public/projects/note-engine/en.md)).
 
 ## Habilidades
 
