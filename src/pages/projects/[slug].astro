@@ -1,0 +1,11 @@
+---
+import ProjectPage from "@layouts/ProjectPage.astro";
+import { loadProjectDetails } from "@lib/content";
+
+export async function getStaticPaths() {
+    return (await loadProjectDetails()).map((slug) => ({ params: { slug } }));
+}
+const { slug } = Astro.params;
+---
+
+<ProjectPage locale="es" slug={slug} />

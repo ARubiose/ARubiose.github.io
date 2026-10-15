@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { HomeData } from "@lib/home";
-import { alternateLinks, jsonLdScript, personJsonLd, requireSite, robotsTxt } from "@lib/seo";
+import { alternateLinks, jsonLdScript, personJsonLd, projectJsonLd, requireSite, robotsTxt } from "@lib/seo";
 
 const SITE = new URL("https://ada.example.dev");
 const urls = { es: "https://ada.example.dev/", en: "https://ada.example.dev/en/" };
@@ -126,5 +126,21 @@ describe("personJsonLd", () => {
             { "@type": "Organization", name: "A Co" },
             { "@type": "Organization", name: "B Co" },
         ]);
+    });
+});
+
+test("JSON-LD del detalle: SoftwareSourceCode con autor e idioma", () => {
+    expect(projectJsonLd({
+        name: "Cómo funciona", description: "Una frase.", repo: "https://github.com/ada/x",
+        url: "https://ada.example/projects/x/", locale: "es", author: { name: "Ada Lovelace", url: "https://ada.example/" },
+    })).toEqual({
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        name: "Cómo funciona",
+        description: "Una frase.",
+        codeRepository: "https://github.com/ada/x",
+        url: "https://ada.example/projects/x/",
+        inLanguage: "es-ES",
+        author: { "@type": "Person", name: "Ada Lovelace", url: "https://ada.example/" },
     });
 });

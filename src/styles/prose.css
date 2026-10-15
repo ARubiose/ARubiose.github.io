@@ -1,0 +1,55 @@
+/* Cuerpo publicado de las páginas de detalle: solo tokens de skin, nunca colores ni fuentes concretos. */
+.prose-detail {
+    max-width: 72ch;
+    color: var(--skin-body);
+    font-family: var(--skin-font-body, var(--skin-font-mono));
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+.prose-detail > * + * { margin-top: 1em; }
+.prose-detail h2 {
+    margin-top: 2.2em;
+    color: var(--skin-text);
+    font-family: var(--skin-font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+.prose-detail h3 {
+    margin-top: 1.8em;
+    color: var(--skin-text);
+    font-family: var(--skin-font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+.prose-detail a { color: var(--skin-accent); border-bottom: 1px solid currentColor; }
+.prose-detail strong { color: var(--skin-text); }
+.prose-detail ul { list-style: square; padding-left: 1.25em; }
+.prose-detail ol { list-style: decimal; padding-left: 1.25em; }
+.prose-detail li + li { margin-top: 0.35em; }
+.prose-detail code {
+    font-family: var(--skin-font-mono);
+    font-size: 0.9em;
+    padding: 0.1em 0.35em;
+    background: var(--skin-surface-2);
+    border-radius: var(--skin-radius);
+}
+.prose-detail pre {
+    overflow-x: auto;
+    padding: 1rem;
+    background: var(--skin-surface);
+    border: 1px solid var(--skin-line);
+    border-radius: var(--skin-radius);
+}
+.prose-detail pre code { padding: 0; background: none; }
+.prose-detail blockquote { padding-left: 1rem; border-left: 2px solid var(--skin-accent); color: var(--skin-muted); }
+.prose-detail table { display: block; overflow-x: auto; border-collapse: collapse; font-size: 0.92em; }
+.prose-detail th, .prose-detail td { padding: 0.4em 0.75em; border-bottom: 1px solid var(--skin-line); text-align: left; }
+.prose-detail th { color: var(--skin-text); }
+.prose-detail img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--skin-line);
+    border-radius: var(--skin-radius);
+}
