@@ -2,6 +2,7 @@ import type { Locale } from "@i18n/ui";
 import { localize, useTranslations, type Localized } from "@i18n/utils";
 import { formatPeriod } from "./dates";
 import { groupSkills, sortByStartDesc } from "./order";
+import { detailUrl } from "./project-details";
 import type { EducationData, ExperienceData, ProfileData, ProjectData, SkillCategory, SkillData } from "./schemas";
 import { formatXp, formatXpShort, monthsCovered, skillUsage, type Span } from "./skills";
 
@@ -13,13 +14,16 @@ export type HomeData = {
     projects: Entry<ProjectData>[];
     skills: Entry<SkillData>[];
     education: Entry<EducationData>[];
+    /** Proyectos con página de detalle y base del sitio para enlazarla (opcionales: la portada funciona sin ellos). */
+    detailSlugs?: string[];
+    base?: string;
 };
 export type TimelineView = {
     id: string; file: string; title: string; subtitle: string;
     start: string; end: string | null; period: string; current: boolean; duration: string;
     summary: string; highlights: string[]; note?: string;
 };
-export type ProjectView = Localized<ProjectData> & { id: string; file: string; statusLabel: string };
+export type ProjectView = Localized<ProjectData> & { id: string; file: string; statusLabel: string; detailUrl?: string };
 export type SkillView = {
     id: string; title: string; summary: string; icon: string; category: SkillCategory;
     months: number; xp: string; xpShort: string; since: number | null;
@@ -80,7 +84,8 @@ export function buildHomeView(data: HomeData, locale: Locale, now: string): Home
 
     const projects = byStart(data.projects).map(({ id, data: d }): ProjectView => {
         const l = localize(d, locale);
-        return { ...l, id, file: `${l.repo.split("/").filter(Boolean).pop()?.replace(/\.git$/, "")}/README.md`, statusLabel: t(`projects.status.${l.status}`) };
+        const detail = data.detailSlugs?.includes(id) ? { detailUrl: detailUrl(id, locale, data.base) } : {};
+        return { ...l, id, file: `${l.repo.split("/").filter(Boolean).pop()?.replace(/\.git$/, "")}/README.md`, statusLabel: t(`projects.status.${l.status}`), ...detail };
     });
 
     // Ids con prefijo por tipo: un puesto y un proyecto pueden compartir nombre de archivo.

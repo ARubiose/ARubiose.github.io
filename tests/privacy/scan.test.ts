@@ -15,7 +15,8 @@ function filesUnder(dir: string, ext: string): string[] {
 }
 
 describe("wiki pública sin datos privados", () => {
-    for (const file of [...filesUnder(join(ROOT, "wiki/public"), ".md"), join(ROOT, "wiki/index.md")]) {
+    // Los SVG son texto y se publican tal cual (diagramas de los detalles de proyecto).
+    for (const file of [...filesUnder(join(ROOT, "wiki/public"), ".md"), ...filesUnder(join(ROOT, "wiki/public"), ".svg"), join(ROOT, "wiki/index.md")]) {
         test(file.replace(ROOT, ""), () => {
             expect(findLeaks(readFileSync(file, "utf8"), extra)).toEqual([]);
         });

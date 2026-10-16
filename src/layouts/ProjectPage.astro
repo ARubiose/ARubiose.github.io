@@ -1,0 +1,66 @@
+---
+import { getEntry, render } from "astro:content";
+import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from "astro:i18n";
+import { PUBLIC_CF_ANALYTICS_TOKEN } from "astro:env/client";
+import { locales, type Locale } from "@i18n/ui";
+import { useTranslations } from "@i18n/utils";
+import { analyticsBeacon } from "@lib/analytics";
+import { loadHomeData } from "@lib/content";
+import { buildHomeView, handleFromName, shortNameFromName } from "@lib/home";
+import { detailUrl } from "@lib/project-details";
+import { alternateLinks, projectJsonLd, requireSite } from "@lib/seo";
+import { buildMonth } from "@lib/site";
+import Layout from "./Layout.astro";
+import Header from "@components/Header.astro";
+import Footer from "@components/Footer.astro";
+
+interface Props {
+    locale: Locale;
+    slug: string;
+}
+const { locale, slug } = Astro.props;
+const t = useTranslations(locale);
+
+const data = await loadHomeData();
+const view = buildHomeView(data, locale, buildMonth(process.env));
+const project = view.projects.find((p) => p.id === slug);
+const detail = await getEntry("projectDetails", `${slug}/${locale}`);
+if (!project || !detail) throw new Error(`Falta el proyecto o el detalle ${slug}/${locale}`);
+const { Content } = await render(detail);
+
+const site = requireSite(Astro.site);
+const base = import.meta.env.BASE_URL;
+const home = getRelativeLocaleUrl(locale, "");
+const urls = Object.fromEntries(locales.map((l) => [l, detailUrl(slug, l, base)])) as Record<Locale, string>;
+const absoluteUrls = Object.fromEntries(locales.map((l) => [l, new URL(urls[l], site).href])) as Record<Locale, string>;
+const skillTitles = new Map(data.skills.map((s) => [s.id, s.data.title]));
+const skills = (project.skills ?? []).map((id) => skillTitles.get(id)).filter((s): s is string => Boolean(s));
+const jsonLd = projectJsonLd({
+    name: detail.data.title, description: detail.data.summary, repo: project.repo, url: absoluteUrls[locale], locale,
+    author: { name: view.profile.name, url: getAbsoluteLocaleUrl(locale, "") },
+});
+const analytics = analyticsBeacon(PUBLIC_CF_ANALYTICS_TOKEN, import.meta.env.PROD);
+---
+
+<Layout locale={locale} title={`${detail.data.title} · ${view.profile.name}`} description={detail.data.summary} alternates={alternateLinks(absoluteUrls)} jsonLd={jsonLd} analytics={analytics}>
+    <Header locale={locale} sections={view.sections} urls={urls} handle={handleFromName(view.profile.name)} shortName={shortNameFromName(view.profile.name)} sectionHref={home} />
+    <main class="mx-auto max-w-3xl px-4 md:px-10">
+        <p class="mt-8 text-[13px]">
+            <a class="text-accent hover:text-text" href={`${home}#projects`} data-back><span aria-hidden="true">← </span>{t("projects.back")}</a>
+        </p>
+        <header class="mt-6">
+            <h1 class="readme-title font-display text-[28px] leading-tight font-bold md:text-[40px]">{detail.data.title}</h1>
+            <p class="mt-3"><span class="badge font-mono">{project.statusLabel}</span></p>
+            <p class="mt-3 max-w-[72ch] text-[14.5px] text-body">{project.summary}</p>
+            {skills.length > 0 && <ul class="mt-4 flex flex-wrap gap-2" aria-label={t("section.skills")}>{skills.map((s) => <li class="badge font-mono">{s}</li>)}</ul>}
+            <p class="mt-4 flex gap-4.5 text-accent">
+                <a class="border-b border-accent" href={project.repo} target="_blank" rel="noopener">{t("projects.repo")}</a>
+                {project.url && <a class="border-b border-accent" href={project.url} target="_blank" rel="noopener">{t("projects.visit")}</a>}
+            </p>
+        </header>
+        <article class="prose-detail mt-10">
+            <Content />
+        </article>
+    </main>
+    <Footer locale={locale} repo={view.siteRepo} analytics={analytics !== null} />
+</Layout>

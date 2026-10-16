@@ -52,6 +52,10 @@ no la toques.
    - La imagen que se ve al compartir el enlace: `public/og-image.png`, de 1200×627.
 5. Ejecuta `pnpm build`. Si a una página le falta un campo o tiene una fecha mal, los
    esquemas Zod (`src/lib/schemas.ts`) hacen fallar la build y dicen qué archivo y qué campo.
+6. Página de detalle de un proyecto (opcional): `/detail <slug>`. El agente propone un
+   índice, redacta `wiki/public/projects/<slug>/es.md` y `en.md` y te los enseña antes de
+   escribir. La tarjeta del proyecto mostrará «Ver más». La build falla si falta un idioma
+   o si el cuerpo lleva HTML, enlaces a la wiki o imágenes de fuera de su carpeta.
 
 ## 4. Tests
 

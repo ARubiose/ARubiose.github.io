@@ -36,8 +36,8 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 
 | Módulo | Ruta | Responsabilidad | En git |
 | --- | --- | --- | --- |
-| Páginas | `src/pages/` | Rutas: `/` (es) y `/en/` (en) | Sí |
-| Layouts | `src/layouts/` | `Layout.astro` (documento HTML, `lang`, metadatos) y `HomePage.astro` (carga colecciones y compone la portada) | Sí |
+| Páginas | `src/pages/` | Rutas: `/` (es) y `/en/` (en), y el detalle de cada proyecto que lo tenga: `projects/[slug].astro` y `en/projects/[slug].astro` | Sí |
+| Layouts | `src/layouts/` | `Layout.astro` (documento HTML, `lang`, metadatos) `HomePage.astro` (compone la portada) y `ProjectPage.astro` (compone el detalle de un proyecto); los dos cargan las colecciones con `src/lib/content.ts` | Sí |
 | Secciones | `src/sections/` | Bloques de la página: `intro`, `experience`, `projects`, `skills`, `education`, `contact` | Sí |
 | Componentes | `src/components/` | Piezas reutilizables: `Header` (menú móvil con popover), `LanguageSwitcher`, `Icon`, `Window`, `ProfilePhoto` (visor con `<dialog>`), `Timeline`/`TimelineItem`, `ProjectCard`, `SkillBuilder`, `Footer` | Sí |
 | Lógica | `src/lib/` | Funciones puras: esquemas Zod (`schemas.ts`), fechas, ordenación, iconos (`icons.ts`), XP y build (`skills.ts`, `build.ts`), skins (`skins.ts`) y vista de la portada (`home.ts`) | Sí |
@@ -51,7 +51,7 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 | Wiki pública | `wiki/public/` | Contenido publicable; fuente de datos del portfolio | Sí |
 | Wiki privada | `wiki/private/` | Notas personales, síntesis, log | No |
 | Fuentes | `raw/` | Material original (CV, LinkedIn…) | No |
-| Agente | `.claude/` | Regla de la wiki, skills `ingest`/`query`/`lint`, permisos | Sí |
+| Agente | `.claude/` | Regla de la wiki, skills `ingest`/`query`/`lint`/`detail`, permisos | Sí |
 | Docs | `docs/` | Este documento, las decisiones (`decisions/`) y la guía de uso (`guide.md`, `guide.es.md`) | Sí |
 
 ## 3. Portfolio (Astro)
@@ -109,7 +109,7 @@ src/scripts/: nav · lightbox · skill-builder (+ tab-edges) · skin-switcher ·
 - **Mejora progresiva.** Sin JavaScript o con `prefers-reduced-motion` todo el contenido se
   ve: el creador de personaje se muestra como lista por categorías y las animaciones solo
   usan `gsap.from()` dentro de `gsap.matchMedia()`. El script de cliente se mantiene por
-  debajo de 60 KB comprimidos (test de presupuesto).
+  debajo de 60 KB comprimidos en cada página (test de presupuesto).
 - **Alias de importación:** `@layouts`, `@sections`, `@components`, `@styles`, `@assets`,
   `@lib`, `@i18n`.
 
@@ -221,10 +221,10 @@ Solo necesita lo que está en el repo, porque el portfolio consume únicamente `
 | Contrato | Vitest + Zod | Fixtures válidos/inválidos y toda la wiki pública real | `tests/content/` |
 | Componentes | Vitest + Container API | Secciones y cabecera en ambos idiomas y con listas vacías | `tests/components/` |
 | Privacidad | Vitest | Teléfono, dirección, código postal y nacimiento en `wiki/public/` y `dist/`; credenciales y rutas personales en todos los archivos versionados, los mensajes de commit y las líneas añadidas del historial; en ambos, `wiki/private/forbidden-strings.txt` si existe | `tests/privacy/` |
-| E2E | Playwright + axe | `/` y `/en/` en escritorio (1280) y móvil (390): navegación, menú, visor, creador de personaje, sin JS, movimiento reducido, desbordamiento, CLS, accesibilidad con diálogos abiertos; canonical, hreflang, JSON-LD, sitemap y robots. Sobre el fixture `tests/fixtures/site/` (Ada), construido con `WIKI_DIR` en `.fixture-dist/` | `tests/e2e/` |
-| Regresión visual | Playwright `toHaveScreenshot` | Portada completa en ambos tamaños e idiomas y en las tres skins (12 capturas), con movimiento reducido | `tests/e2e/visual.spec.ts-snapshots/` |
-| Presupuesto | Vitest | JavaScript de la portada ≤ 60 KB comprimido | `tests/perf/` |
-| Smoke | Playwright | Contenido real (`wiki/public/`) con su `base`: `/` y `/en/` cargan sin errores, con `h1`, secciones con contenido y sin desbordamiento | `tests/smoke/` |
+| E2E | Playwright + axe | `/` y `/en/` en escritorio (1280) y móvil (390): navegación, menú, visor, creador de personaje, sin JS, movimiento reducido, desbordamiento, CLS, accesibilidad con diálogos abiertos; canonical, hreflang, JSON-LD, sitemap y robots. Detalle de proyecto: tarjeta → detalle, volver, cambio de idioma, SEO, cuerpo publicado y axe en las tres skins. Sobre el fixture `tests/fixtures/site/` (Ada), construido con `WIKI_DIR` en `.fixture-dist/` | `tests/e2e/` |
+| Regresión visual | Playwright `toHaveScreenshot` | Portada completa en ambos tamaños e idiomas y en las tres skins (12 capturas), y el detalle de Ada en español en ambos tamaños y las tres skins (6 capturas), con movimiento reducido | `tests/e2e/visual.spec.ts-snapshots/` |
+| Presupuesto | Vitest | JavaScript de cada página (portadas y detalles, también los módulos en línea) ≤ 60 KB comprimido | `tests/perf/` |
+| Smoke | Playwright | Contenido real (`wiki/public/`) con su `base`: `/` y `/en/` cargan sin errores, con `h1`, secciones con contenido y sin desbordamiento; lo mismo para cada detalle de proyecto que tenga la wiki | `tests/smoke/` |
 | Build con `base` | Vitest | Construido bajo `/demo/`, ninguna URL interna apunta a la raíz del dominio | `tests/build/` |
 
 Scripts: `pnpm test` (todo salvo E2E y build), `pnpm test:e2e` (Playwright sobre el fixture,
@@ -283,7 +283,7 @@ Opcional y desactivada por defecto, para que la plantilla no envíe nada sin con
 - **Tests:** las capturas visuales ocultan el aviso para valer con y sin token; un e2e
   comprueba que el aviso aparece si y solo si está el beacon; Playwright resuelve
   `static.cloudflareinsights.com` a nada para no contar las pruebas como visitas, y el
-  presupuesto de JS solo cuenta scripts servidos desde `dist/`.
+  presupuesto de JS solo cuenta scripts servidos desde `dist/` (o en línea).
 
 ### 3.10 Plantilla y sitios derivados
 
@@ -334,6 +334,14 @@ cumple) y los tests de contrato. Los campos por tipo están en la regla de la wi
 | `wiki/public/projects/` | `projects` | `projects` |
 | `wiki/public/skills/` | `skills` | `skills` (agrupadas por `category`) |
 | `wiki/public/education/` | `education` | `education` |
+| `wiki/public/projects/<slug>/{es,en}.md` | `projectDetails` | página `/projects/<slug>/` (y `/en/…`) |
+
+La única excepción al «solo frontmatter» son los **detalles de proyecto**: su cuerpo Markdown
+se publica. [`src/lib/project-details.ts`](../src/lib/project-details.ts) valida la paridad
+de idiomas, que exista la ficha y las normas del cuerpo (sin HTML crudo, enlaces solo web,
+imágenes de su carpeta, sin `# h1` ni secciones de wiki) con `satteri`, el mismo analizador
+que usa Astro; [`src/lib/content.ts`](../src/lib/content.ts) lo ejecuta en la build y falla
+con archivo y línea. Ver la [decisión 0007](decisions/0007-project-detail-pages.md).
 
 ## 5. Agente (Claude Code)
 
@@ -346,7 +354,7 @@ carga solo cuando hace falta o que la hace cumplir sin depender del modelo:
 | --- | --- | --- |
 | Fuentes inmutables | `raw/` + `deny` de `Edit`/`Write` en `.claude/settings.json` | Lo impide el sistema de permisos, no una instrucción |
 | Convenciones | `.claude/rules/wiki.md` con `paths: wiki/**, raw/**` | Se carga sola al tocar la wiki y no ocupa contexto al trabajar en `src/` |
-| Procedimientos | Skills `ingest`, `query`, `lint` | Cada uno se carga solo al ejecutarse |
+| Procedimientos | Skills `ingest`, `query`, `lint`, `detail` | Cada uno se carga solo al ejecutarse |
 | Lint | `context: fork` (subagente) | Lee toda la wiki sin llenar el contexto principal |
 | Índice | `wiki/index.md`, `wiki/private/index.md` + Grep | Punto de entrada barato; Grep sustituye al buscador que Karpathy propone para wikis grandes |
 | Log | `wiki/private/log.md` | Continuidad entre sesiones |

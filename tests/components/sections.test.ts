@@ -194,3 +194,12 @@ describe.each<Locale>(["es", "en"])("en %s", (locale) => {
         expect(html).toMatch(TITLE_TOKENS);
     });
 });
+
+test("Projects: «Ver más» solo en los proyectos con detalle", async () => {
+    const without = clean(await container.renderToString(Projects, { props: { items: [project], locale: "es" } }));
+    expect(without).not.toContain("Ver más");
+    const withDetail = clean(await container.renderToString(Projects, { props: { items: [{ ...project, detailUrl: "/projects/my-site/" }], locale: "es" } }));
+    expect(withDetail).toMatch(/<a[^>]*href="\/projects\/my-site\/"[^>]*>Ver más<\/a>/);
+    // Enlace interno: misma pestaña.
+    expect(withDetail).not.toMatch(/href="\/projects\/my-site\/"[^>]*target=/);
+});

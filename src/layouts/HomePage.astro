@@ -1,10 +1,9 @@
 ---
-import { getCollection, getEntry } from "astro:content";
 import { getImage } from "astro:assets";
 import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from "astro:i18n";
 import { locales, type Locale } from "@i18n/ui";
 import { buildHomeView, handleFromName, shortNameFromName } from "@lib/home";
-import { findBrokenSkillRefs } from "@lib/skills";
+import { loadHomeData } from "@lib/content";
 import { alternateLinks, personJsonLd, requireSite } from "@lib/seo";
 import { analyticsBeacon } from "@lib/analytics";
 import { buildMonth } from "@lib/site";
@@ -24,28 +23,8 @@ interface Props {
 }
 const { locale } = Astro.props;
 
-const profile = await getEntry("profile", "profile");
-if (!profile) throw new Error("Falta wiki/public/profile.md");
-
-const experienceEntries = await getCollection("experience");
-const projectEntries = await getCollection("projects");
-const skillEntries = await getCollection("skills");
-const educationEntries = await getCollection("education");
-
-const broken = findBrokenSkillRefs(
-    [...experienceEntries, ...projectEntries].map((e) => ({ id: e.id, skills: e.data.skills })),
-    skillEntries.map((e) => e.id),
-);
-if (broken.length) throw new Error(`Habilidades inexistentes en la wiki: ${broken.map((b) => `${b.entry} → ${b.skill}`).join(", ")}`);
-
+const data = await loadHomeData();
 const now = buildMonth(process.env);
-const data = {
-    profile: profile.data,
-    experience: experienceEntries.map(({ id, data }) => ({ id, data })),
-    projects: projectEntries.map(({ id, data }) => ({ id, data })),
-    skills: skillEntries.map(({ id, data }) => ({ id, data })),
-    education: educationEntries.map(({ id, data }) => ({ id, data })),
-};
 const view = buildHomeView(data, locale, now);
 
 const urls = Object.fromEntries(locales.map((l) => [l, getRelativeLocaleUrl(l, "")])) as Record<Locale, string>;
@@ -53,7 +32,7 @@ const urls = Object.fromEntries(locales.map((l) => [l, getRelativeLocaleUrl(l, "
 // SEO: URLs absolutas de cada idioma y foto optimizada (nunca el original de la wiki).
 const site = requireSite(Astro.site);
 const absoluteUrls = Object.fromEntries(locales.map((l) => [l, getAbsoluteLocaleUrl(l, "")])) as Record<Locale, string>;
-const photo = await getImage({ src: profile.data.photo, width: 400, format: "webp" });
+const photo = await getImage({ src: data.profile.photo, width: 400, format: "webp" });
 const jsonLd = personJsonLd(data, locale, { url: absoluteUrls[locale], image: new URL(photo.src, site).href });
 
 const analytics = analyticsBeacon(PUBLIC_CF_ANALYTICS_TOKEN, import.meta.env.PROD);

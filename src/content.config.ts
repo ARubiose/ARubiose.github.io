@@ -4,6 +4,7 @@ import {
     educationSchema,
     experienceSchema,
     profileSchema,
+    projectDetailSchema,
     projectSchema,
     skillSchema,
 } from "@lib/schemas";
@@ -17,6 +18,8 @@ export const collections = {
     profile: defineCollection({ loader: wiki("profile.md", ""), schema: ({ image }) => profileSchema.extend({ photo: image() }) }),
     experience: defineCollection({ loader: wiki("*.md", "experience"), schema: experienceSchema }),
     projects: defineCollection({ loader: wiki("*.md", "projects"), schema: projectSchema }),
+    // Detalles opcionales: una carpeta por proyecto con es.md y en.md (el loader de projects no entra en subcarpetas).
+    projectDetails: defineCollection({ loader: wiki("*/{es,en}.md", "projects"), schema: projectDetailSchema }),
     skills: defineCollection({ loader: wiki("*.md", "skills"), schema: skillSchema }),
     education: defineCollection({ loader: wiki("*.md", "education"), schema: educationSchema }),
 };
