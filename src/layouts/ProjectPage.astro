@@ -13,6 +13,7 @@ import { buildMonth } from "@lib/site";
 import Layout from "./Layout.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
+import Adorn from "@components/Adorn.astro";
 
 interface Props {
     locale: Locale;
@@ -62,5 +63,21 @@ const analytics = analyticsBeacon(PUBLIC_CF_ANALYTICS_TOKEN, import.meta.env.PRO
             <Content />
         </article>
     </main>
+    <dialog id="figure-dialog" class="photo-dialog figure-dialog m-auto w-fit max-w-[min(96vw,1440px)] bg-transparent p-0 text-text backdrop:bg-[rgb(5_7_6/.92)] backdrop:backdrop-blur-sm" aria-label={t("figure.dialog")} data-open-label={t("figure.open")}>
+        <figure class="flex max-h-[92dvh] flex-col">
+            <div class="window-bar border border-b-0 border-line bg-surface">
+                <span aria-hidden="true"><Adorn name="figureDialog" locale={locale} /></span>
+                <button data-figure-close class="border border-line px-2 py-0.5 text-[13px]">✕ <span class="sr-only">{t("photo.close")}</span><span aria-hidden="true">esc</span></button>
+            </div>
+            <div class="figure-scroll min-h-0 overflow-auto overscroll-contain border border-line bg-surface" tabindex="0" role="region" aria-label={t("figure.dialog")}>
+                <img class="block max-w-none" alt="" />
+            </div>
+        </figure>
+    </dialog>
     <Footer locale={locale} repo={view.siteRepo} analytics={analytics !== null} />
 </Layout>
+
+<script>
+    import { initFigureZoom } from "../scripts/figure-zoom";
+    initFigureZoom();
+</script>
