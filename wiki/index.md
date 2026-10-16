@@ -18,6 +18,7 @@ Catálogo de las páginas **públicas** (`wiki/public/`), mantenido por el LLM e
 ## Proyectos
 
 - [Portfolio con LLM Wiki](public/projects/portfolio-llm-wiki.md) — Portfolio personal en Astro cuyo contenido mantiene un agente LLM como una wiki de conocimiento, siguiendo el patrón LLM Wiki de Andrej Karpathy.
+  - [Detalle: cómo está hecho](public/projects/portfolio-llm-wiki/es.md) — Arquitectura, privacidad y plantilla del portfolio ([English](public/projects/portfolio-llm-wiki/en.md)).
 
 ## Habilidades
 

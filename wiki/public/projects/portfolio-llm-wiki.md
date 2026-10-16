@@ -21,7 +21,7 @@ en:
     - The wiki frontmatter is a contract validated with Zod on every build.
     - Static site in Spanish and English with unit, contract, component, privacy and E2E tests.
 sources: ["humano (2026-10-02)", "https://github.com/ARubiose/portfolio-astro (2026-10-02)", "humano (2026-10-04)"]
-updated: 2026-10-04
+updated: 2026-10-16
 ---
 
 # Portfolio con LLM Wiki
@@ -36,6 +36,7 @@ lo personal de lo publicable. Ver [agentes LLM](../skills/llm-agents.md).
 
 ## Relacionado
 
+- Detalle: [español](portfolio-llm-wiki/es.md) · [English](portfolio-llm-wiki/en.md)
 - [Agentes LLM](../skills/llm-agents.md)
 - [GitHub Actions](../skills/github-actions.md)
 - [Arquitectura de software](../skills/software-architecture.md)
