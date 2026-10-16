@@ -41,7 +41,7 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 | Secciones | `src/sections/` | Bloques de la página: `intro`, `experience`, `projects`, `skills`, `education`, `contact` | Sí |
 | Componentes | `src/components/` | Piezas reutilizables: `Header` (menú móvil con popover), `LanguageSwitcher`, `Icon`, `Window`, `ProfilePhoto` (visor con `<dialog>`), `Timeline`/`TimelineItem`, `ProjectCard`, `SkillBuilder`, `Footer` | Sí |
 | Lógica | `src/lib/` | Funciones puras: esquemas Zod (`schemas.ts`), fechas, ordenación, iconos (`icons.ts`), XP y build (`skills.ts`, `build.ts`), skins (`skins.ts`) y vista de la portada (`home.ts`) | Sí |
-| Scripts | `src/scripts/` | Mejora progresiva en el cliente: navegación activa, visor de la foto, creador de personaje, flechas de pestañas, animaciones GSAP | Sí |
+| Scripts | `src/scripts/` | Mejora progresiva en el cliente: navegación activa, visor de la foto y de las imágenes de los detalles, creador de personaje, flechas de pestañas, animaciones GSAP | Sí |
 | i18n | `src/i18n/` | Diccionario de interfaz (`ui.ts`) y `useTranslations`/`localize` | Sí |
 | Colecciones | `src/content.config.ts` | Colecciones de Astro sobre `wiki/public/` | Sí |
 | Tests | `tests/` | Unitarios, contrato, componentes, privacidad y E2E (§3.7) | Sí |
@@ -96,7 +96,7 @@ pages/en/index.astro  ─┴─▶ layouts/HomePage.astro ─▶ Layout.astro (l
                                                                ├─ sections/education   ─▶ Timeline ─▶ Window
                                                                ├─ sections/contact
                                                                └─ Footer
-src/scripts/: nav · lightbox · skill-builder (+ tab-edges) · skin-switcher · motion   (mejora progresiva)
+src/scripts/: nav · lightbox · figure-zoom · skill-builder (+ tab-edges) · skin-switcher · motion   (mejora progresiva)
 ```
 
 - **Una sola composición.** Las páginas de idioma solo montan `HomePage` con su `locale`.
