@@ -53,3 +53,9 @@
     border: 1px solid var(--skin-line);
     border-radius: var(--skin-radius);
 }
+/* Mejora progresiva (src/scripts/figure-zoom.ts): cada imagen va dentro de un botón que la amplía. */
+.prose-detail .figure-open {
+    display: block;
+    max-width: 100%;
+    cursor: zoom-in;
+}
