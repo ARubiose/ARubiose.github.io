@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { overflowOffenders } from "./support";
 
 // Genérico: vale para cualquier contenido. No compara textos ni capturas.
 for (const path of ["./", "./en/"]) {
@@ -16,19 +17,7 @@ for (const path of ["./", "./en/"]) {
         // Cada enlace de la navegación lleva a una sección que existe y tiene contenido.
         const anchors = await page.locator('a[href^="#"]').evaluateAll((els) => [...new Set(els.map((e) => e.getAttribute("href")!))].filter((h) => h.length > 1));
         for (const href of anchors) await expect(page.locator(href)).not.toBeEmpty();
-        // body usa overflow-x: clip, así que scrollWidth no ve el desbordamiento: se miden los elementos (como nav.spec.ts).
-        const offenders = await page.evaluate(() => {
-            const vw = document.documentElement.clientWidth;
-            const scrollsX = (el: Element) => ["auto", "scroll"].includes(getComputedStyle(el).overflowX);
-            return [...document.querySelectorAll("body *")]
-                .filter((el) => {
-                    const r = el.getBoundingClientRect();
-                    if (r.width === 0 || r.height === 0 || r.right <= vw + 1) return false;
-                    for (let a = el.parentElement; a; a = a.parentElement) if (scrollsX(a)) return false;
-                    return getComputedStyle(el).visibility !== "hidden";
-                })
-                .map((el) => `${el.tagName.toLowerCase()}.${[...el.classList].slice(0, 3).join(".")} → ${Math.round(el.getBoundingClientRect().right)}px`);
-        });
+        const offenders = await overflowOffenders(page);
         expect(offenders).toEqual([]);
         await page.waitForLoadState("networkidle");
         expect(errors).toEqual([]);

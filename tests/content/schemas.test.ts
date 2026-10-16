@@ -2,7 +2,7 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 import { z } from "astro/zod";
-import { schemasByType } from "@lib/schemas";
+import { projectDetailSchema, schemasByType } from "@lib/schemas";
 import { readFrontmatter } from "../support/frontmatter";
 
 const FIXTURES = join(import.meta.dirname, "../fixtures/wiki");
@@ -107,5 +107,23 @@ describe("JSON Schema del editor (como lo genera Astro)", () => {
         expect(JSON.stringify(property(schemasByType.project, "url"))).toContain('"null"');
         const links = property(schemasByType.profile, "links") as { properties: Record<string, unknown> };
         expect(JSON.stringify(links.properties.source)).toContain('"null"');
+    });
+});
+
+describe("project-detail", () => {
+    const ok = { title: "Cómo funciona", type: "project-detail", summary: "Una frase.", sources: ["humano (2026-10-14)"], updated: "2026-10-14" };
+
+    test("acepta el mínimo y pone tags vacías", () => {
+        expect(projectDetailSchema.parse(ok).tags).toEqual([]);
+    });
+
+    test.each(["title", "summary", "sources", "updated"])("exige %s", (field) => {
+        const rest: Record<string, unknown> = { ...ok };
+        delete rest[field];
+        expect(projectDetailSchema.safeParse(rest).success).toBe(false);
+    });
+
+    test("no acepta otro type", () => {
+        expect(projectDetailSchema.safeParse({ ...ok, type: "project" }).success).toBe(false);
     });
 });

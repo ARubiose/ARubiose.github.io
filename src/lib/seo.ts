@@ -55,3 +55,17 @@ export function personJsonLd(data: HomeData, locale: Locale, urls: { url: string
         ...(data.skills.length ? { knowsAbout: data.skills.map((s) => s.data.title) } : {}),
     };
 }
+
+/** JSON-LD de una página de detalle de proyecto. */
+export function projectJsonLd(p: { name: string; description: string; repo: string; url: string; locale: Locale; author: { name: string; url: string } }): Record<string, unknown> {
+    return {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        name: p.name,
+        description: p.description,
+        codeRepository: p.repo,
+        url: p.url,
+        inLanguage: localeTags[p.locale],
+        author: { "@type": "Person", name: p.author.name, url: p.author.url },
+    };
+}

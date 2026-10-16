@@ -13,12 +13,12 @@ test.describe("indexación", () => {
         expect(await res.text()).toBe(`User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap-index.xml\n`);
     });
 
-    test("el sitemap lista las portadas con las mismas URLs y alternativas que el <head>", async ({ page, request }) => {
+    test("el sitemap lista las portadas y los detalles con las mismas URLs y alternativas que el <head>", async ({ page, request }) => {
         const index = await request.get("/sitemap-index.xml");
         expect(index.status()).toBe(200);
         const [child] = locs(await index.text());
         const xml = await (await request.get(new URL(child).pathname)).text();
-        expect(locs(xml).sort()).toEqual([`${SITE}/`, `${SITE}/en/`]);
+        expect(locs(xml).sort()).toEqual([`${SITE}/`, `${SITE}/en/`, `${SITE}/en/projects/note-engine/`, `${SITE}/projects/note-engine/`]);
 
         for (const block of xml.split("<url>").slice(1)) {
             const [loc] = locs(block);

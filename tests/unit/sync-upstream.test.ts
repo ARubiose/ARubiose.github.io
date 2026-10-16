@@ -63,6 +63,27 @@ describe("sync-upstream", () => {
         expect(git(site, "ls-files", "wiki/public")).toBe("wiki/public/exp/mine.md\nwiki/public/profile.md");
     });
 
+    test("una página de Ada que el sitio borró y la plantilla cambia (conflicto borrado/modificado) no vuelve", () => {
+        const tpl = template();
+        commit(tpl, { "wiki/public/projects/demo.md": "ada project\n" }, "demo");
+        const site = mkdtempSync(join(tmpdir(), "site-"));
+        git(site, "clone", "-q", tpl, ".");
+        git(site, "remote", "add", "upstream", tpl);
+        git(site, "rm", "-q", "wiki/public/projects/demo.md");
+        commit(site, { "wiki/public/profile.md": "me\n", "wiki/index.md": "me\n" }, "mine");
+        commit(tpl, { "src/a.ts": "v2\n", "wiki/public/projects/demo.md": "ada project 2\n", "wiki/public/projects/demo/es.md": "detalle\n", "wiki/index.md": "ada 2\n" }, "v2");
+
+        const run = sync(site);
+        expect(run.status, run.stderr).toBe(0);
+        expect(read(site, "src/a.ts")).toBe("v2\n");
+        expect(read(site, "wiki/index.md")).toBe("me\n");
+        expect(existsSync(join(site, "wiki/public/projects/demo.md"))).toBe(false);
+        expect(existsSync(join(site, "wiki/public/projects/demo"))).toBe(false);
+        expect(unmerged(site)).toEqual([]);
+        git(site, "commit", "-qm", "merge");
+        expect(git(site, "ls-files", "wiki/public")).toBe("wiki/public/profile.md");
+    });
+
     test("repo creado con «Use this template» (sin historial común): mismo resultado, solo quedan conflictos de código", () => {
         const tpl = template();
         improve(tpl);
