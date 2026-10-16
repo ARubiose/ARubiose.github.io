@@ -48,7 +48,10 @@ Las convenciones de la wiki se cargan solas al trabajar en `wiki/` o `raw/`.
 ## Convenciones
 
 - Nombres de archivos y carpetas en inglés; contenido en español.
-- La hoja de ruta son los GitHub issues ([decisión 0005](docs/decisions/0005-roadmap-in-github-issues.md)).
+- La hoja de ruta son los GitHub issues ([decisión 0005](docs/decisions/0005-roadmap-in-github-issues.md)):
+  los de la plantilla para código, tests, docs y skills; los del sitio para su contenido y
+  despliegue. Cada issue lleva una etiqueta `type:feature`, `type:bug`, `type:test`,
+  `type:docs` o `type:chore` (más `wontfix`/`duplicate` si aplica).
   Al terminar trabajo, ciérralo con `Closes #n` en el commit o la PR; lo aplazado se abre como
   issue con archivo y línea. Los issues son públicos: nada privado en ellos.
 - Las mejoras se hacen en la plantilla, no en los sitios derivados: un cambio local en un

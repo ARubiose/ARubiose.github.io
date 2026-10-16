@@ -12,9 +12,14 @@ el archivo se volvía cada vez más largo de leer y de mantener, también para e
 La hoja de ruta pasa a los issues del repositorio y `docs/tasks.md` desaparece.
 
 - Lo pendiente (fases, mejoras aplazadas, fallos) es un issue, con archivo y línea cuando
-  aplica. Etiquetas: `enhancement`, `bug`, `dependencies`, `documentation`, `local` (acción
-  en la máquina, sin cambios versionados) y `wontfix` (decisiones de no hacer algo, cerradas
-  como *not planned* para que quede constancia).
+  aplica. Cada issue lleva **una** etiqueta de tipo: `type:feature`, `type:bug`, `type:test`
+  (cobertura o tests intermitentes), `type:docs` o `type:chore` (dependencias, herramientas,
+  configuración). Además: `wontfix` (decisiones de no hacer algo, cerradas como *not planned*
+  para que quede constancia) y `duplicate`. Un sitio derivado puede añadir las suyas (p. ej.
+  `local`: acción en la máquina, sin cambios versionados). *Actualizado el 2026-10-16: antes
+  se usaban `enhancement`, `bug`, `dependencies` y `documentation`.*
+- Lo que mejora la plantilla (código, tests, docs, skills) va en los issues de la plantilla;
+  lo que solo afecta a un sitio (su contenido o su despliegue), en los de ese sitio.
 - Lo terminado se cierra desde el commit o la PR con `Closes #n`; el historial queda en git.
 - No se usa un GitHub Project: con una sola persona, las etiquetas cubren lo necesario.
 
