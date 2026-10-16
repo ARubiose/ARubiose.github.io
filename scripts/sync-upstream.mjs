@@ -29,13 +29,12 @@ const related = ok("merge-base", "HEAD", ref);
 const merge = spawnSync("git", ["merge", "--no-commit", "--no-ff", ...(related ? [] : ["--allow-unrelated-histories"]), ref], { stdio: "inherit" });
 if (!ok("rev-parse", "-q", "--verify", "MERGE_HEAD")) process.exit(merge.status ?? 1); // ya al día, o el merge no empezó
 
+// Primero se vacía el índice y el árbol de cada ruta (también las entradas en conflicto, como un
+// borrado/modificado, que «git restore» no acepta) y después se recupera tal como está en HEAD.
 for (const path of CONTENT) {
-    if (ok("cat-file", "-e", `HEAD:${path}`)) {
-        git("restore", "--source=HEAD", "--staged", "--worktree", "--", path);
-    } else {
-        git("rm", "-rq", "--cached", "--ignore-unmatch", "--", path);
-        rmSync(path, { recursive: true, force: true });
-    }
+    git("rm", "-rqf", "--cached", "--ignore-unmatch", "--", path);
+    rmSync(path, { recursive: true, force: true });
+    if (ok("cat-file", "-e", `HEAD:${path}`)) git("restore", "--source=HEAD", "--staged", "--worktree", "--", path);
 }
 
 const conflicts = git("diff", "--name-only", "--diff-filter=U").split("\n").filter(Boolean);
