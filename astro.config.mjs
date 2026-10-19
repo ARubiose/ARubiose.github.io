@@ -49,6 +49,16 @@ export default defineConfig({
             fallbacks: ["monospace"],
         },
         {
+            // Texto del CV (src/styles/cv.css).
+            provider: fontProviders.fontsource(),
+            name: "IBM Plex Sans",
+            cssVariable: "--font-ibm-plex-sans",
+            weights: [400, 500, 600],
+            styles: ["normal"],
+            subsets: ["latin", "latin-ext"],
+            fallbacks: ["sans-serif"],
+        },
+        {
             provider: fontProviders.fontsource(),
             name: "Chakra Petch",
             cssVariable: "--font-chakra-petch",
