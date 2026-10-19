@@ -7,8 +7,9 @@ summary: Diseño de sistemas escalables y eficientes, con responsabilidades de a
 tags: []
 en:
   summary: Designing scalable, efficient systems with architect-level responsibilities.
-sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf]
-updated: 2026-10-02
+  title: Software architecture
+sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf, "humano (2026-10-19)"]
+updated: 2026-10-19
 ---
 
 # Arquitectura de software
@@ -23,3 +24,4 @@ Diseño de sistemas escalables y eficientes, con responsabilidades de arquitecto
 
 - raw/assets/Curriculum_Vitae___English_Variation.pdf
 - raw/assets/Linkedin_profile.pdf
+- humano (2026-10-19): título en inglés para el CV

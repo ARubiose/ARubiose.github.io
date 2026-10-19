@@ -7,8 +7,9 @@ summary: Monitorización y análisis de fuentes abiertas, y herramientas de segu
 tags: []
 en:
   summary: Open-source intelligence monitoring and analysis, and security tools in Python.
-sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf]
-updated: 2026-10-02
+  title: OSINT and cybersecurity
+sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf, "humano (2026-10-19)"]
+updated: 2026-10-19
 ---
 
 # OSINT y ciberseguridad
@@ -23,3 +24,4 @@ Monitorización y análisis de fuentes abiertas, y herramientas de seguridad en 
 
 - raw/assets/Curriculum_Vitae___English_Variation.pdf
 - raw/assets/Linkedin_profile.pdf
+- humano (2026-10-19): título en inglés para el CV

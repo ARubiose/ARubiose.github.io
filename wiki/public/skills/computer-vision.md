@@ -7,8 +7,9 @@ summary: Modelos de visión con deep learning, como segmentación semántica par
 tags: []
 en:
   summary: Deep-learning vision models, such as semantic segmentation for assistive technologies.
-sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, "humano (2026-10-02)"]
-updated: 2026-10-02
+  title: Deep learning and computer vision
+sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, "humano (2026-10-02)", "humano (2026-10-19)"]
+updated: 2026-10-19
 ---
 
 # Deep learning y visión por computador
@@ -24,3 +25,4 @@ Modelos de visión con deep learning, como segmentación semántica para tecnolo
 
 - raw/assets/Curriculum_Vitae___English_Variation.pdf
 - humano (2026-10-02)
+- humano (2026-10-19): título en inglés para el CV

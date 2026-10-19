@@ -7,8 +7,9 @@ summary: Diseño de flujos con agentes LLM, como la wiki mantenida por Claude Co
 tags: []
 en:
   summary: Designing LLM agent workflows, such as the Claude Code-maintained wiki behind this portfolio.
-sources: ["humano (2026-10-02)"]
-updated: 2026-10-02
+  title: LLM agents
+sources: ["humano (2026-10-02)", "humano (2026-10-19)"]
+updated: 2026-10-19
 ---
 
 # Agentes LLM
@@ -22,3 +23,4 @@ Diseño de flujos con agentes LLM, como la wiki mantenida por Claude Code de est
 ## Fuentes
 
 - humano (2026-10-02)
+- humano (2026-10-19): título en inglés para el CV
