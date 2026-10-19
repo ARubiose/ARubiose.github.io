@@ -37,11 +37,17 @@ const analytics = analyticsBeacon(PUBLIC_CF_ANALYTICS_TOKEN, import.meta.env.PRO
 
 <Layout locale={locale} title={`${t("cv.title")} · ${view.name}`} description={view.summary} alternates={alternateLinks(absoluteUrls)} analytics={analytics}>
     <Header locale={locale} sections={home.sections} urls={urls} handle={handleFromName(view.name)} shortName={shortNameFromName(view.name)} sectionHref={getRelativeLocaleUrl(locale, "")} pages={[{ href: urls[locale], label: t("nav.cv") }]} />
-    <main class="mx-auto max-w-[calc(210mm+2rem)] px-0 pb-12 md:px-4">
-        <p class="mx-4 my-6 flex justify-end md:mx-0" data-cv-chrome>
+    <main class="mx-auto max-w-[calc(210mm+2rem)] px-0 pb-16 md:px-4">
+        <p class="mx-4 mt-8 mb-10 flex justify-end md:mx-0" data-cv-chrome>
             <a class="btn btn-primary" href={pdfHref} download>{t("cv.download")}</a>
         </p>
+        <div class="cv-printer" data-cv-printer aria-hidden="true"></div>
         <Cv view={view} locale={locale} pdfName={pdfName} photo={data.profile.photo} strict={spec !== undefined} />
     </main>
     <Footer locale={locale} repo={home.siteRepo} analytics={analytics !== null} />
 </Layout>
+
+<script>
+    import { initCvMotion } from "../scripts/cv-motion";
+    initCvMotion();
+</script>

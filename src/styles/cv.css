@@ -13,8 +13,8 @@
     --cv-lime-wash: #eef7e2;
     --cv-lime-line: #c9dcae;
     --cv-gutter: 112px;
-    --cv-pad-x: 44px;
-    --cv-pad-top: 32px;
+    --cv-pad-x: 52px;
+    --cv-pad-top: 40px;
     --cv-display: var(--font-space-grotesk), sans-serif;
     --cv-text: var(--font-ibm-plex-sans), system-ui, sans-serif;
     --cv-mono: var(--font-ibm-plex-mono), monospace;
@@ -23,20 +23,21 @@
     width: 210mm;
     min-height: 297mm;
     margin-inline: auto;
-    padding: var(--cv-pad-top) var(--cv-pad-x) 30px;
+    padding: var(--cv-pad-top) var(--cv-pad-x) 36px;
     background: var(--cv-paper);
     color: var(--cv-ink-2);
     font-family: var(--cv-text);
     font-size: 9.4pt;
-    line-height: 1.33;
+    line-height: 1.42;
     text-align: left;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
 }
-.cv-sheet *, .cv-sheet *::before, .cv-sheet *::after { box-sizing: border-box; }
-.cv-sheet :is(h1, h2, h3, p, ul, li, dl, dt, dd) { margin: 0; padding: 0; }
-.cv-sheet ul { list-style: none; }
-.cv-sheet a { color: inherit; text-decoration: none; }
+/* Reset sin especificidad (:where): las reglas de una clase de abajo ganan siempre. */
+:where(.cv-sheet) *, :where(.cv-sheet) *::before, :where(.cv-sheet) *::after { box-sizing: border-box; }
+:where(.cv-sheet) :where(h1, h2, h3, p, ul, li, dl, dt, dd) { margin: 0; padding: 0; }
+:where(.cv-sheet) ul { list-style: none; }
+:where(.cv-sheet) a { color: inherit; text-decoration: none; }
 .cv-sheet ::selection { background: var(--cv-lime); color: var(--cv-ink); }
 
 /* Cabecera: banda a sangre con nombre, titular, contacto y foto */
@@ -46,14 +47,14 @@
     align-items: center;
     column-gap: 24px;
     margin: calc(-1 * var(--cv-pad-top)) calc(-1 * var(--cv-pad-x)) 0;
-    padding: 30px var(--cv-pad-x) 18px;
+    padding: 36px var(--cv-pad-x) 24px;
     background: var(--cv-lime-wash);
     border-bottom: 3px solid var(--cv-lime-ink);
 }
 .cv-name { font: 700 27pt/1 var(--cv-display); letter-spacing: -0.035em; color: var(--cv-ink); }
-.cv-role { margin-top: 6px; font: 600 12.5pt/1.25 var(--cv-display); letter-spacing: -0.01em; color: var(--cv-lime-ink); }
+.cv-role { margin-top: 8px; font: 600 12.5pt/1.25 var(--cv-display); letter-spacing: -0.01em; color: var(--cv-lime-ink); }
 .cv-tagline { color: var(--cv-ink-3); font-weight: 500; }
-.cv-contact { display: flex; flex-wrap: wrap; gap: 2px 16px; margin-top: 9px; font: 8pt/1.5 var(--cv-mono); color: var(--cv-ink-2); }
+.cv-contact { display: flex; flex-wrap: wrap; gap: 2px 18px; margin-top: 12px; font: 8pt/1.5 var(--cv-mono); color: var(--cv-ink-2); }
 .cv-contact a { border-bottom: 1px solid var(--cv-lime-line); }
 .cv-photo { width: 84px; height: 84px; border-radius: 6px; object-fit: cover; object-position: 50% 30%; }
 
@@ -61,12 +62,12 @@
 .cv-sec {
     display: grid;
     grid-template-columns: var(--cv-gutter) 1fr;
-    column-gap: 20px;
-    margin-top: 8px;
-    padding-top: 8px;
+    column-gap: 24px;
+    margin-top: 14px;
+    padding-top: 14px;
     border-top: 1px solid var(--cv-rule);
 }
-.cv-head + .cv-sec { margin-top: 6px; border-top: 0; }
+.cv-head + .cv-sec { margin-top: 14px; border-top: 0; }
 .cv-sec > h2 { padding-top: 1px; font: 700 10.5pt/1.2 var(--cv-display); letter-spacing: -0.005em; color: var(--cv-ink); }
 .cv-sec > h2::before {
     content: "";
@@ -80,24 +81,24 @@
 .cv-body { min-width: 0; }
 
 .cv-lede { font-size: 10pt; line-height: 1.45; color: var(--cv-ink); text-wrap: pretty; }
-.cv-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 11px; }
-.cv-pillar { padding-top: 4px; border-top: 1.5px solid var(--cv-lime); font-size: 8.6pt; line-height: 1.35; }
+.cv-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 14px; }
+.cv-pillar { padding-top: 6px; border-top: 1.5px solid var(--cv-lime); font-size: 8.6pt; line-height: 1.35; }
 .cv-pillar strong { display: block; font: 600 9.4pt/1.3 var(--cv-display); color: var(--cv-ink); }
 
 /*
  * Entradas. Nada con texto puede ir posicionado: Chromium escribe en el PDF lo posicionado después
  * del resto, y un ATS leería los títulos de sección lejos de su contenido. Marcas en línea y fondos.
  */
-.cv-entry + .cv-entry { margin-top: 9px; }
+.cv-entry + .cv-entry { margin-top: 14px; }
 .cv-entry-top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
 .cv-sheet h3 { font: 600 10.2pt/1.25 var(--cv-display); letter-spacing: -0.005em; color: var(--cv-ink); }
 .cv-sheet h3 .org { font-weight: 500; color: var(--cv-ink-3); }
 .cv-date { flex: none; font: 8pt/1.3 var(--cv-mono); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--cv-ink-3); }
 .cv-date.now { font-weight: 500; color: var(--cv-lime-ink); }
-.cv-summary { max-width: 70ch; margin-top: 3px; text-wrap: pretty; }
-.cv-points { margin-top: 4px; }
+.cv-summary { max-width: 70ch; margin-top: 4px; text-wrap: pretty; }
+.cv-points { margin-top: 6px; }
 .cv-points li { max-width: 70ch; padding-left: 13px; }
-.cv-points li + li { margin-top: 1.5px; }
+.cv-points li + li { margin-top: 3px; }
 .cv-points li::before {
     content: "";
     display: inline-block;
@@ -123,14 +124,14 @@
 }
 .cv-timeline .is-current h3::before { border-color: var(--cv-lime-ink); background: var(--cv-lime); }
 
-.cv-project { padding: 8px 12px 9px; border-radius: 3px; background: var(--cv-lime-wash); }
+.cv-project { padding: 10px 14px 12px; border-radius: 3px; background: var(--cv-lime-wash); }
 
-.cv-skills { display: grid; grid-template-columns: var(--cv-gutter) 1fr; gap: 2px 14px; }
+.cv-skills { display: grid; grid-template-columns: var(--cv-gutter) 1fr; gap: 5px 14px; }
 .cv-skills dt { font: 600 9pt/1.4 var(--cv-display); color: var(--cv-ink); }
 .cv-skills dt:first-of-type { color: var(--cv-lime-ink); }
 .cv-skills dd:first-of-type { font-weight: 500; color: var(--cv-ink); }
 
-.cv-edu .cv-entry + .cv-entry { margin-top: 5px; }
+.cv-edu .cv-entry + .cv-entry { margin-top: 8px; }
 .cv-edu .cv-summary { margin-top: 1px; color: var(--cv-ink-3); }
 .cv-langs { display: flex; flex-wrap: wrap; gap: 4px 28px; }
 .cv-langs strong { margin-right: 6px; font: 600 9.4pt/1.3 var(--cv-display); color: var(--cv-ink); }
@@ -152,13 +153,24 @@
     .cv-skills dd + dt { margin-top: 4px; }
 }
 
+/* Ranura de la «impresora» de la que sale la hoja al cargar (src/scripts/cv-motion.ts); sin JS no se ve */
+.cv-printer {
+    width: min(210mm + 24px, 100%);
+    height: 6px;
+    margin: 0 auto -3px;
+    border-radius: 3px;
+    background: var(--cv-printer, #9fd65a);
+    box-shadow: 0 0 14px rgb(159 214 90 / 0.55);
+    opacity: 0;
+}
+
 /* Impresión: solo la hoja, una página A4 sin márgenes */
 @page { size: A4; margin: 0; }
 @media print {
     html, body { margin: 0; background: #fff !important; }
     body::before, body::after { display: none !important; }
     body:has(.cv-sheet) > :not(main),
-    [data-cv-chrome] { display: none !important; }
+    [data-cv-chrome], .cv-printer { display: none !important; }
     body:has(.cv-sheet) main { margin: 0; padding: 0; max-width: none; }
     .cv-sheet { width: 210mm; min-height: 297mm; margin: 0; box-shadow: none; }
 }

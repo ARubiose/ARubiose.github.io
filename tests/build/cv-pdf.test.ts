@@ -95,3 +95,11 @@ test("al imprimir no sale ninguna petición fuera de la build (analítica, CDN�
         outside.close();
     }
 });
+
+test("se imprime con movimiento reducido: el PDF nunca captura la animación de entrada", async () => {
+    const root = mkdtempSync(join(tmpdir(), "cv-root-"));
+    // Solo visible con movimiento reducido, como el contenido de una hoja que se anima al entrar.
+    writeFileSync(join(root, "index.html"), `<!doctype html><title>x</title><style>@media (prefers-reduced-motion: no-preference) { p { display: none } }</style><p>Visible al imprimir</p>`);
+    await renderCvPdf({ root, base: "/", path: "", out: join(root, "out.pdf") });
+    expect((await readPdf(join(root, "out.pdf"))).text[0]).toContain("Visible al imprimir");
+});

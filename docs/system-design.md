@@ -321,6 +321,9 @@ botón que descarga su PDF; la portada lo enlaza desde la navegación, la intro 
   propios, una columna y orden DOM lineal. Nada con texto va posicionado, porque Chromium
   escribe en el PDF lo posicionado después del resto y un ATS leería los títulos lejos de su
   contenido. En pantalla estrecha fluye en una columna; al imprimir es A4 sin márgenes.
+- **Entrada:** `src/scripts/cv-motion.ts` (GSAP) saca la hoja línea a línea, como de una
+  impresora, y después sus secciones. Con movimiento reducido o sin JavaScript se ve completa
+  al instante, y el PDF se imprime siempre con movimiento reducido.
 - **PDF:** la integración `src/integrations/cv-pdf.ts`, en `astro:build:done`, sirve la build
   bajo su `base`, abre cada CV en Chromium (Playwright), espera a las fuentes y lo imprime en
   `cv/cv-<nombre>-<idioma>.pdf`. Si ocupa más de una página, la build falla cuando el perfil

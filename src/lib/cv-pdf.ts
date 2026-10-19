@@ -52,7 +52,8 @@ export async function renderCvPdf(opts: { root: string; base: string; path: stri
         } catch (e) {
             throw new Error(`Falta Chromium para generar el CV: pnpm exec playwright install chromium\n${(e as Error).message}`);
         }
-        const page = await browser.newPage();
+        // Movimiento reducido: la animación de entrada de la hoja no se ejecuta y el PDF la ve completa.
+        const page = await browser.newPage({ reducedMotion: "reduce" });
         const { port } = server.address() as AddressInfo;
         // Solo la build: nada de analítica (contaría visitas desde la build) ni dependencias de red externas.
         const origin = `http://127.0.0.1:${port}/`;
