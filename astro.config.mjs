@@ -3,9 +3,11 @@ import { defineConfig, envField, fontProviders } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import { defaultLocale, localeTags } from "./src/i18n/ui.ts";
-import { buildDirs, pagesTarget } from "./src/lib/site.ts";
+import { assertCvSpecTarget, buildDirs, pagesTarget } from "./src/lib/site.ts";
 
 // site y base salen del entorno (GITHUB_REPOSITORY en Actions): la plantilla funciona con cualquier nombre de repo.
+// Un CV adaptado (pnpm cv:tailor) nunca puede acabar en el dist/ que se publica.
+assertCvSpecTarget(process.env);
 const { site, base } = pagesTarget(process.env);
 const { outDir, cacheDir } = buildDirs(process.env);
 

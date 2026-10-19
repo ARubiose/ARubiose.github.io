@@ -2,6 +2,9 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { getCollection, getEntry } from "astro:content";
+import yaml from "js-yaml";
+import { cvRefErrors } from "./cv";
+import { cvSpecSchema, type CvSpec } from "./schemas";
 import type { HomeData } from "./home";
 import { bodyIssues, lineOffset, pairDetails, svgIssues } from "./project-details";
 import { findBrokenSkillRefs } from "./skills";
@@ -50,4 +53,22 @@ export async function loadHomeData(): Promise<HomeData> {
         detailSlugs: await loadProjectDetails(),
         base: import.meta.env.BASE_URL,
     };
+}
+
+/**
+ * Datos del CV: el bloque cv: del perfil o, si CV_SPEC apunta a un YAML (pnpm cv:tailor), ese spec.
+ * La build falla si el spec no valida o referencia páginas que no existen.
+ */
+export async function loadCvData(): Promise<{ data: HomeData; spec: CvSpec | undefined }> {
+    const data = await loadHomeData();
+    let spec = data.profile.cv;
+    const path = process.env.CV_SPEC;
+    if (path) {
+        const result = cvSpecSchema.safeParse(yaml.load(readFileSync(path, "utf8")));
+        if (!result.success) throw new Error(`${path}: CV inválido:\n${result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("\n")}`);
+        spec = result.data;
+    }
+    const errors = spec ? cvRefErrors(data, spec) : [];
+    if (errors.length) throw new Error(`${path ?? "profile.md"}:\n${errors.join("\n")}`);
+    return { data, spec };
 }
