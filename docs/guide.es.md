@@ -60,7 +60,7 @@ no la toques.
    `wiki/public/profile.md` con el titular, hasta 3 pilares, qué experiencias y en qué orden
    (con `highlights`, `summary: false` o `compact`), grupos de habilidades, idiomas y si lleva
    foto en cada idioma. Los campos están en *CV* de `.claude/rules/wiki.md`. La build genera
-   un PDF por idioma y falla si ocupa más de una página. Necesita Chromium:
+   un PDF por idioma; con bloque `cv:`, falla si ocupa más de una página (sin él, solo avisa). Necesita Chromium:
    `pnpm exec playwright install chromium` (o `CV_PDF=0 pnpm build` para saltarlo).
 8. CV adaptado a una oferta (solo en local): `/cv <oferta>`, con el texto pegado, la ruta de
    un PDF o DOCX o una URL. El agente escribe `wiki/private/applications/<fecha>-<empresa>/cv.yml`,

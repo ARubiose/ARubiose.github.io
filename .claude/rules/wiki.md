@@ -171,8 +171,8 @@ Sin él, el CV muestra todo por fecha.
   `label`, mismo orden), `languages` y `photo`. `pillars`, `skills` y `languages` tienen la
   misma longitud que sus equivalentes en español.
 - **Referencias:** los ids existen y los índices de `highlights` están en rango; si no, la
-  build falla. La build también falla si el CV ocupa más de una página: recorta con
-  `compact`, `highlights` o quitando entradas.
+  build falla. Con bloque `cv:`, la build también falla si el CV ocupa más de una página (sin él, solo avisa):
+  recorta con `compact`, `highlights` o quitando entradas.
 - **CV adaptado a una oferta:** la skill `cv` escribe un `cv.yml` con estos mismos campos en
   `wiki/private/applications/<fecha>-<empresa>/` y genera su PDF con `pnpm cv:tailor`. Nunca
   se publica.

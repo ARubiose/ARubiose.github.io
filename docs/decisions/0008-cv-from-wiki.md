@@ -16,8 +16,9 @@ orden de lectura lineal y con títulos de sección reconocibles.
   perfil dice qué se muestra, en qué orden y con qué énfasis (pilares, highlights, entradas
   compactas, grupos de habilidades, idiomas, foto por idioma). Sin él, el CV lo muestra todo.
 - **Una página y un PDF por idioma.** `/cv/` pinta la hoja en HTML; una integración de Astro
-  la imprime con Chromium (Playwright) al terminar la build. La build falla si el CV pasa de
-  una página.
+  la imprime con Chromium (Playwright) al terminar la build. Si el perfil tiene bloque `cv:`, la
+  build falla cuando el CV pasa de una página; sin él solo avisa, para no romper un sitio
+  derivado que trae la función al sincronizar.
 - **La hoja es papel, no una skin.** `src/styles/cv.css` tiene sus propios tokens `--cv-*`,
   en una columna y sin nada posicionado que contenga texto. Es una excepción a «los
   componentes usan solo clases semánticas de skin».

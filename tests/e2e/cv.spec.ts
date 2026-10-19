@@ -45,6 +45,14 @@ for (const p of PAGES) {
                 expect(res.headers()["content-type"]).toContain("application/pdf");
             });
 
+            // La cabecera del sitio tiene su propio desbordamiento entre md y ~1050 px (issue aparte): aquí, la hoja.
+            test("a 800 px (tablet) la hoja no se corta", async ({ page }) => {
+                await page.setViewportSize({ width: 800, height: 1000 });
+                await page.goto(p.path);
+                const { right, width } = await page.evaluate(() => ({ right: document.querySelector(".cv-sheet")!.getBoundingClientRect().right, width: document.documentElement.clientWidth }));
+                expect(right).toBeLessThanOrEqual(width);
+            });
+
             test("el selector de idioma lleva al CV equivalente", async ({ page, baseURL }) => {
                 await page.goto(p.path);
                 await page.locator(`.header-lang a[hreflang="${p.otherLang}"]`).click();

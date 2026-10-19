@@ -11,8 +11,10 @@ interface Props {
     locale: Locale;
     pdfName: string;
     photo?: ImageMetadata;
+    /** Hay bloque cv: (o CV adaptado): la build falla si no cabe en una página. Sin él, solo avisa. */
+    strict?: boolean;
 }
-const { view, locale, pdfName, photo } = Astro.props;
+const { view, locale, pdfName, photo, strict = false } = Astro.props;
 const t = useTranslations(locale);
 const contact = [
     { href: `mailto:${view.links.email}`, text: view.links.email },
@@ -25,7 +27,7 @@ const groups: { key: "experience" | "projects" | "education"; entries: CvEntry[]
 ];
 ---
 
-<article class="cv-sheet" lang={locale} data-cv-pdf={pdfName}>
+<article class="cv-sheet" lang={locale} data-cv-pdf={pdfName} data-cv-strict={strict ? "" : undefined}>
     <header class="cv-head">
         <div>
             <h1 class="cv-name">{view.name}</h1>

@@ -8,12 +8,13 @@ import { renderCvPdf } from "../lib/cv-pdf.ts";
 
 const cvPath = (locale: Locale) => `${locale === defaultLocale ? "" : `${locale}/`}cv/`;
 
-/** Nombre del PDF que la página del CV anuncia en su hoja (data-cv-pdf). */
-function pdfNameIn(root: string, locale: Locale): string {
+/** Lo que la hoja del CV anuncia: el nombre del PDF (data-cv-pdf) y si hay bloque cv: (data-cv-strict). */
+function sheetIn(root: string, locale: Locale): { name: string; strict: boolean } {
     const html = readFileSync(join(root, cvPath(locale), "index.html"), "utf8");
-    const name = html.match(/data-cv-pdf="([^"]+)"/)?.[1];
+    const sheet = html.match(/<article class="cv-sheet"[^>]*>/)?.[0] ?? "";
+    const name = sheet.match(/data-cv-pdf="([^"]+)"/)?.[1];
     if (!name) throw new Error(`La página ${cvPath(locale)} no anuncia data-cv-pdf`);
-    return name;
+    return { name, strict: /\sdata-cv-strict\b/.test(sheet) };
 }
 
 export default function cvPdf(): AstroIntegration {
@@ -39,9 +40,11 @@ export default function cvPdf(): AstroIntegration {
                 }
 
                 for (const locale of locales) {
-                    const name = pdfNameIn(root, locale);
+                    const { name, strict } = sheetIn(root, locale);
                     const { pages } = await renderCvPdf({ root, base, path: cvPath(locale), out: join(root, "cv", name) });
-                    if (pages > 1) throw new Error(`El CV (${locale}) ocupa ${pages} páginas; tiene que caber en una`);
+                    // Sin bloque cv: (p. ej. un sitio derivado recién sincronizado) solo se avisa: la build no se rompe.
+                    if (pages > 1 && strict) throw new Error(`El CV (${locale}) ocupa ${pages} páginas; tiene que caber en una`);
+                    if (pages > 1) logger.warn(`El CV (${locale}) ocupa ${pages} páginas: añade un bloque cv: al perfil para recortarlo`);
                     logger.info(`cv/${name}`);
                 }
             },

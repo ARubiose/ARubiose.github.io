@@ -135,8 +135,9 @@
 .cv-langs { display: flex; flex-wrap: wrap; gap: 4px 28px; }
 .cv-langs strong { margin-right: 6px; font: 600 9.4pt/1.3 var(--cv-display); color: var(--cv-ink); }
 
-/* Pantalla estrecha: deja de ser A4 y fluye en una columna (el PDF siempre es A4) */
-@media screen and (max-width: 48rem) {
+/* En pantalla nunca más ancha que su contenedor; por debajo de A4 + márgenes, fluye en una columna (el PDF siempre es A4) */
+@media screen { .cv-sheet { max-width: 100%; } }
+@media screen and (max-width: 52rem) {
     .cv-sheet { --cv-pad-x: 16px; --cv-pad-top: 20px; width: 100%; min-height: 0; font-size: 10.5pt; }
     .cv-head { grid-template-columns: 1fr; row-gap: 12px; padding-top: 20px; }
     .cv-photo { grid-row: 1; }

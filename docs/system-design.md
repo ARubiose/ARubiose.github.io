@@ -323,8 +323,9 @@ botón que descarga su PDF; la portada lo enlaza desde la navegación, la intro 
   contenido. En pantalla estrecha fluye en una columna; al imprimir es A4 sin márgenes.
 - **PDF:** la integración `src/integrations/cv-pdf.ts`, en `astro:build:done`, sirve la build
   bajo su `base`, abre cada CV en Chromium (Playwright), espera a las fuentes y lo imprime en
-  `cv/cv-<nombre>-<idioma>.pdf`. Si ocupa más de una página, la build falla. `CV_PDF=0` la
-  salta. El workflow ya instala Chromium antes de `pnpm build`.
+  `cv/cv-<nombre>-<idioma>.pdf`. Si ocupa más de una página, la build falla cuando el perfil
+  tiene bloque `cv:`; sin él (un sitio derivado recién sincronizado) solo avisa. Bloquea toda
+  petición fuera de la build (analítica incluida). `CV_PDF=0` la salta. El workflow ya instala Chromium antes de `pnpm build`.
 - **CV adaptado (local):** `pnpm cv:tailor <cv.yml> [--lang es|en]` construye en un
   directorio temporal con `CV_SPEC` (el YAML sustituye al bloque `cv:`) y la integración, en
   modo adaptado (`CV_PDF_OUT`, `CV_LANG`), deja el PDF junto al YAML. Sale con 2 si pasa de

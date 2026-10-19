@@ -58,7 +58,8 @@ alone.
    `wiki/public/profile.md` with the headline, up to 3 pillars, which roles and in what order
    (with `highlights`, `summary: false` or `compact`), skill groups, languages and whether it
    shows a photo in each language. The fields are under *CV* in `.claude/rules/wiki.md`. The
-   build prints one PDF per language and fails if it runs over one page. It needs Chromium:
+   build prints one PDF per language; with a `cv:` block it fails if it runs over one page
+   (without one, it only warns). It needs Chromium:
    `pnpm exec playwright install chromium` (or `CV_PDF=0 pnpm build` to skip it).
 8. CV tailored to a job offer (local only): `/cv <offer>`, with the pasted text, the path to a
    PDF or DOCX, or a URL. The agent writes `wiki/private/applications/<date>-<company>/cv.yml`,

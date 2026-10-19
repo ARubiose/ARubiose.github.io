@@ -54,6 +54,9 @@ export async function renderCvPdf(opts: { root: string; base: string; path: stri
         }
         const page = await browser.newPage();
         const { port } = server.address() as AddressInfo;
+        // Solo la build: nada de analítica (contaría visitas desde la build) ni dependencias de red externas.
+        const origin = `http://127.0.0.1:${port}/`;
+        await page.route("**/*", (route) => (route.request().url().startsWith(origin) ? route.continue() : route.abort()));
         const prefix = opts.base.endsWith("/") ? opts.base : `${opts.base}/`;
         const res = await page.goto(`http://127.0.0.1:${port}${prefix}${opts.path}`, { waitUntil: "networkidle" });
         if (!res?.ok()) throw new Error(`No se pudo abrir ${prefix}${opts.path} para el CV (${res?.status()})`);
