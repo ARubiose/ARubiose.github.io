@@ -3,7 +3,7 @@ import { getEntry, render } from "astro:content";
 import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from "astro:i18n";
 import { PUBLIC_CF_ANALYTICS_TOKEN } from "astro:env/client";
 import { locales, type Locale } from "@i18n/ui";
-import { useTranslations } from "@i18n/utils";
+import { localize, useTranslations } from "@i18n/utils";
 import { analyticsBeacon } from "@lib/analytics";
 import { loadHomeData } from "@lib/content";
 import { buildHomeView, handleFromName, shortNameFromName } from "@lib/home";
@@ -34,7 +34,7 @@ const base = import.meta.env.BASE_URL;
 const home = getRelativeLocaleUrl(locale, "");
 const urls = Object.fromEntries(locales.map((l) => [l, detailUrl(slug, l, base)])) as Record<Locale, string>;
 const absoluteUrls = Object.fromEntries(locales.map((l) => [l, new URL(urls[l], site).href])) as Record<Locale, string>;
-const skillTitles = new Map(data.skills.map((s) => [s.id, s.data.title]));
+const skillTitles = new Map(data.skills.map((s) => [s.id, localize(s.data, locale).title]));
 const skills = (project.skills ?? []).map((id) => skillTitles.get(id)).filter((s): s is string => Boolean(s));
 const jsonLd = projectJsonLd({
     name: detail.data.title, description: detail.data.summary, repo: project.repo, url: absoluteUrls[locale], locale,

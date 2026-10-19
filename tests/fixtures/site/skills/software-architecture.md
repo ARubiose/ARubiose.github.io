@@ -7,6 +7,7 @@ summary: Diseño de sistemas escalables.
 tags: []
 en:
   summary: Designing scalable systems.
+  title: Software architecture
 sources: ["humano (2026-10-13)"]
 updated: 2026-10-13
 ---

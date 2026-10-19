@@ -7,6 +7,7 @@ summary: Agentes que usan herramientas y memoria.
 tags: []
 en:
   summary: Agents that use tools and memory.
+  title: LLM agents
 sources: ["humano (2026-10-13)"]
 updated: 2026-10-13
 ---

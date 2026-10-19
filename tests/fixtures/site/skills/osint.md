@@ -7,6 +7,7 @@ summary: Investigación en fuentes abiertas.
 tags: []
 en:
   summary: Open-source intelligence.
+  title: OSINT and cybersecurity
 sources: ["humano (2026-10-13)"]
 updated: 2026-10-13
 ---
