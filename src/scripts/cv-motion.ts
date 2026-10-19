@@ -11,10 +11,10 @@ export function initCvMotion(): void {
         const parts = sheet.querySelectorAll<HTMLElement>(".cv-head, .cv-sec");
         const printer = document.querySelector<HTMLElement>("[data-cv-printer]");
         const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
-        tl.fromTo(printer, { opacity: 0, scaleX: 0.6 }, { opacity: 1, scaleX: 1, duration: 0.25 })
-            .fromTo(sheet, { clipPath: "inset(0 0 100% 0)", y: -18 }, { clipPath: "inset(0 0 0% 0)", y: 0, duration: 1.2, ease: "steps(30)", clearProps: "clipPath,transform" })
-            .from(parts, { opacity: 0, y: 10, duration: 0.45, stagger: 0.07, clearProps: "opacity,transform" }, "<0.15")
-            .to(printer, { opacity: 0, duration: 0.3, clearProps: "opacity,transform" }, "-=0.2");
+        tl.fromTo(printer, { opacity: 0, scaleX: 0.6 }, { opacity: 1, scaleX: 1, duration: 0.15 })
+            .fromTo(sheet, { clipPath: "inset(0 0 100% 0)", y: -18 }, { clipPath: "inset(0 0 0% 0)", y: 0, duration: 0.6, ease: "steps(20)", clearProps: "clipPath,transform" })
+            .from(parts, { opacity: 0, y: 8, duration: 0.3, stagger: 0.04, clearProps: "opacity,transform" }, "<0.1")
+            .to(printer, { opacity: 0, duration: 0.2, clearProps: "opacity,transform" }, "-=0.15");
         return () => gsap.set([sheet, ...parts], { clearProps: "all" });
     });
     // La hoja ya está recortada en su estado inicial: puede pintarse (ver states.css).
