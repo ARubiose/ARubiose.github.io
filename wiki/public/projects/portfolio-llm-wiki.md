@@ -4,24 +4,24 @@ type: project
 repo: https://github.com/ARubiose/ARubiose.github.io
 status: active
 start: 2025-01
-summary: Portfolio personal en Astro cuyo contenido mantiene un agente LLM como una wiki de conocimiento, siguiendo el patrón LLM Wiki de Andrej Karpathy.
+summary: Portfolio en Astro cuyo contenido mantiene un agente LLM como una wiki.
 highlights:
-  - Un agente (Claude Code) convierte el CV, LinkedIn y otras fuentes en una wiki enlazada con una página por puesto, proyecto, habilidad y formación.
+  - Un agente (Claude Code) convierte el CV, LinkedIn y otras fuentes en una wiki enlazada.
   - Wiki dividida en parte pública, que alimenta la web, y privada, fuera de git.
   - El frontmatter de la wiki es un contrato validado con Zod en cada build.
-  - Web estática en español e inglés con tests unitarios, de contrato, de componentes, de privacidad y E2E.
+  - Web estática bilingüe con tests unitarios, de contrato, de privacidad y E2E.
 skills: [llm-agents, web-fundamentals, github-actions]
 tags: [astro, tailwind, llm, claude-code, plantilla]
 en:
   title: Portfolio with an LLM Wiki
-  summary: Personal portfolio built with Astro whose content is maintained by an LLM agent as a knowledge wiki, following Andrej Karpathy's LLM Wiki pattern.
+  summary: Astro portfolio whose content an LLM agent maintains as a wiki.
   highlights:
-    - An agent (Claude Code) turns the CV, LinkedIn and other sources into a linked wiki with one page per role, project, skill and degree.
+    - An agent (Claude Code) turns the CV, LinkedIn and other sources into a linked wiki.
     - The wiki is split into a public part, which feeds the site, and a private part kept out of git.
     - The wiki frontmatter is a contract validated with Zod on every build.
-    - Static site in Spanish and English with unit, contract, component, privacy and E2E tests.
-sources: ["humano (2026-10-02)", "https://github.com/ARubiose/portfolio-astro (2026-10-02)", "humano (2026-10-04)"]
-updated: 2026-10-16
+    - Bilingual static site with unit, contract, privacy and E2E tests.
+sources: ["humano (2026-10-02)", "https://github.com/ARubiose/portfolio-astro (2026-10-02)", "humano (2026-10-04)", "humano (2026-10-19)"]
+updated: 2026-10-19
 ---
 
 # Portfolio con LLM Wiki

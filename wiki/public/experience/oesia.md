@@ -2,7 +2,7 @@
 title: Oesia
 type: experience
 company: Oesia Network
-role: Técnico de ciberseguridad (prácticas)
+role: Becario de ciberseguridad
 start: 2020-01
 end: 2020-07
 summary: Prácticas en el centro de operaciones de seguridad (SOC), con desarrollo de herramientas en Python.
@@ -12,13 +12,13 @@ highlights:
 skills: [python, osint]
 tags: [ciberseguridad, osint, python]
 en:
-  role: Cybersecurity technician (internship)
+  role: Cybersecurity intern
   summary: Internship at the Security Operations Center (SOC), building tools in Python.
   highlights:
     - Email automation tool in Python.
     - OSINT tool in Python with Beautiful Soup.
-sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf]
-updated: 2026-10-02
+sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, raw/assets/Linkedin_profile.pdf, "humano (2026-10-19)"]
+updated: 2026-10-19
 ---
 
 # Oesia
@@ -36,5 +36,6 @@ Beautiful Soup.
 
 ## Fuentes
 
-- raw/assets/Curriculum_Vitae___English_Variation.pdf: cargo y logros
-- raw/assets/Linkedin_profile.pdf: meses y descripción del trabajo en el SOC
+- raw/assets/Curriculum_Vitae___English_Variation.pdf: logros
+- raw/assets/Linkedin_profile.pdf: cargo, meses y descripción del trabajo en el SOC
+- humano (2026-10-19): ante discrepancias, manda LinkedIn

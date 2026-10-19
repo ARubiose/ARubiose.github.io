@@ -5,7 +5,7 @@ company: SKIN AI
 role: Ingeniero de Inteligencia Artificial
 start: 2026-06
 end: null
-summary: Desarrollo de una aplicación web y móvil que reconoce enfermedades capilares con inteligencia artificial, dentro de una plataforma de dermatología con IA validada clínicamente.
+summary: App web y móvil en Expo que reconoce enfermedades capilares con IA.
 highlights:
   - Aplicación web y móvil con Expo.
   - Backend en FastAPI que da servicio a los modelos de IA.
@@ -13,12 +13,12 @@ skills: [python, fastapi, expo, computer-vision]
 tags: [ia, fastapi, expo, salud]
 en:
   role: AI Engineer
-  summary: Building a web and mobile app that detects hair and scalp conditions using artificial intelligence, part of a clinically validated AI dermatology platform.
+  summary: Expo web and mobile app that detects hair and scalp conditions with AI.
   highlights:
     - Web and mobile app built with Expo.
     - FastAPI backend serving the AI models.
-sources: [raw/assets/Linkedin_profile.pdf, "humano (2026-10-02)", "https://skinai.tech/ (2026-10-04)"]
-updated: 2026-10-04
+sources: [raw/assets/Linkedin_profile.pdf, "humano (2026-10-02)", "https://skinai.tech/ (2026-10-04)", "humano (2026-10-19)"]
+updated: 2026-10-19
 ---
 
 # SKIN AI

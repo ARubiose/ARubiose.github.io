@@ -6,7 +6,7 @@ institution: Universidad Rey Juan Carlos
 degree: Cisco CCNA Routing and Switching
 start: 2017
 end: 2017
-grade: 9
+grade: 9/10
 summary: Curso universitario avanzado de redes con la certificación Cisco CCNA Routing and Switching.
 tags: [redes, certificacion]
 en:

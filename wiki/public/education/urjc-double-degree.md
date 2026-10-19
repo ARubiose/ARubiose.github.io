@@ -5,7 +5,7 @@ institution: Universidad Rey Juan Carlos
 degree: Doble grado en Ingeniería Informática y Administración y Dirección de Empresas
 start: 2015
 end: 2020
-grade: 8.55
+grade: 8.55/10
 summary: Doble grado con orientación a ciberseguridad y ciencia de datos.
 tags: [informatica, empresa]
 en:

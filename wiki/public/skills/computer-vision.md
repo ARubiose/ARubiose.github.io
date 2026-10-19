@@ -1,5 +1,5 @@
 ---
-title: Deep learning y visión por computador
+title: Visión por computador y deep learning
 type: skill
 category: ai
 icon: ph:scan
@@ -7,12 +7,12 @@ summary: Modelos de visión con deep learning, como segmentación semántica par
 tags: []
 en:
   summary: Deep-learning vision models, such as semantic segmentation for assistive technologies.
-  title: Deep learning and computer vision
+  title: Computer vision and deep learning
 sources: [raw/assets/Curriculum_Vitae___English_Variation.pdf, "humano (2026-10-02)", "humano (2026-10-19)"]
 updated: 2026-10-19
 ---
 
-# Deep learning y visión por computador
+# Visión por computador y deep learning
 
 Modelos de visión con deep learning, como segmentación semántica para tecnologías de apoyo.
 

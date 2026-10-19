@@ -10,20 +10,20 @@ Catálogo de las páginas **públicas** (`wiki/public/`), mantenido por el LLM e
 
 ## Experiencia
 
-- [Gofore](public/experience/gofore.md) — Investigación en métodos de visión por computador basados en deep learning para tecnologías de apoyo a personas ciegas o con baja visión.
+- [Gofore](public/experience/gofore.md) — Investigación en visión por computador con deep learning para tecnologías de apoyo a personas ciegas.
 - [Oesia](public/experience/oesia.md) — Prácticas en el centro de operaciones de seguridad (SOC), con desarrollo de herramientas en Python.
-- [SKIN AI](public/experience/skin-ai.md) — Desarrollo de una aplicación web y móvil que reconoce enfermedades capilares con inteligencia artificial, dentro de una plataforma de dermatología con IA validada clínicamente.
-- [Zalcu Technologies](public/experience/zalcu.md) — Diseño e implementación de sistemas backend escalables y eficientes, con responsabilidades propias de un arquitecto de software.
+- [SKIN AI](public/experience/skin-ai.md) — App web y móvil en Expo que reconoce enfermedades capilares con IA.
+- [Zalcu Technologies](public/experience/zalcu.md) — Diseño y desarrollo de aplicaciones de backoffice y backends con Python, con responsabilidades propias de un arquitecto de software.
 
 ## Proyectos
 
-- [Portfolio con LLM Wiki](public/projects/portfolio-llm-wiki.md) — Portfolio personal en Astro cuyo contenido mantiene un agente LLM como una wiki de conocimiento, siguiendo el patrón LLM Wiki de Andrej Karpathy.
+- [Portfolio con LLM Wiki](public/projects/portfolio-llm-wiki.md) — Portfolio en Astro cuyo contenido mantiene un agente LLM como una wiki.
   - [Detalle: cómo está hecho](public/projects/portfolio-llm-wiki/es.md) — Arquitectura, privacidad y plantilla del portfolio ([English](public/projects/portfolio-llm-wiki/en.md)).
 
 ## Habilidades
 
 - [Celery](public/skills/celery.md) — Colas de tareas para procesar archivos de forma asíncrona con FastAPI y Django.
-- [Deep learning y visión por computador](public/skills/computer-vision.md) — Modelos de visión con deep learning, como segmentación semántica para tecnologías de apoyo.
+- [Visión por computador y deep learning](public/skills/computer-vision.md) — Modelos de visión con deep learning, como segmentación semántica para tecnologías de apoyo.
 - [Django](public/skills/django.md) — Framework web en Python, usado junto a Celery y Redis para procesar archivos.
 - [Docker](public/skills/docker.md) — Contenedores para desarrollo, pruebas y despliegue.
 - [Expo](public/skills/expo.md) — Aplicaciones web y móviles multiplataforma.
@@ -35,7 +35,7 @@ Catálogo de las páginas **públicas** (`wiki/public/`), mantenido por el LLM e
 - [Python](public/skills/python.md) — Lenguaje principal en backend, investigación de machine learning y herramientas de ciberseguridad.
 - [React](public/skills/react.md) — Interfaces web dinámicas y fáciles de usar.
 - [Redis](public/skills/redis.md) — Broker de mensajes para las tareas asíncronas de Celery.
-- [Arquitectura de software](public/skills/software-architecture.md) — Diseño de sistemas escalables y eficientes, con responsabilidades de arquitecto.
+- [Arquitectura de software](public/skills/software-architecture.md) — Diseño de la arquitectura de aplicaciones y backends, con responsabilidades de arquitecto.
 - [HTML, CSS y JavaScript](public/skills/web-fundamentals.md) — Fundamentos del desarrollo web.
 
 ## Formación
