@@ -18,3 +18,12 @@ test("detalle /projects/note-engine/", async ({ page }) => {
     await page.addStyleTag({ content: "[data-analytics-note] { display: none !important; }" });
     await expect(page).toHaveScreenshot({ fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.01 });
 });
+
+for (const path of ["/cv/", "/en/cv/"]) {
+    test(`cv ${path}`, async ({ page }) => {
+        await page.goto(path);
+        await page.evaluate(() => document.fonts.ready);
+        await page.addStyleTag({ content: "[data-analytics-note] { display: none !important; }" });
+        await expect(page).toHaveScreenshot({ fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.01 });
+    });
+}

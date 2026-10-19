@@ -203,3 +203,23 @@ test("Projects: «Ver más» solo en los proyectos con detalle", async () => {
     // Enlace interno: misma pestaña.
     expect(withDetail).not.toMatch(/href="\/projects\/my-site\/"[^>]*target=/);
 });
+
+describe("enlaces al CV", () => {
+    const links = { email: "a@example.com", linkedin: "https://www.linkedin.com/in/a/", github: "https://github.com/a" };
+    const profile = {
+        type: "profile" as const, title: "Perfil", name: "Ada Lovelace", headline: "Engineer", location: "London",
+        summary: "Analytical engine.", links, photo, tags: [], sources: ["x"], updated: new Date(),
+    };
+
+    test("Intro: botón «Descargar CV» a la página del CV solo si recibe cvHref", async () => {
+        const html = clean(await container.renderToString(Intro, { props: { profile, locale: "es", cvHref: "/cv/" } }));
+        expect(html).toMatch(/<a[^>]*href="\/cv\/"[^>]*>Descargar CV<\/a>/);
+        expect(clean(await container.renderToString(Intro, { props: { profile, locale: "es" } }))).not.toContain('href="/cv/"');
+    });
+
+    test("Contact: fila con el CV solo si recibe cvHref", async () => {
+        const html = clean(await container.renderToString(Contact, { props: { links, locale: "en", cvHref: "/en/cv/" } }));
+        expect(html).toMatch(/<a[^>]*href="\/en\/cv\/"[^>]*>[\s\S]*Download CV[\s\S]*<\/a>/);
+        expect(clean(await container.renderToString(Contact, { props: { links, locale: "en" } }))).not.toContain('href="/en/cv/"');
+    });
+});

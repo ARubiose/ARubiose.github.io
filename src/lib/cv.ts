@@ -1,5 +1,5 @@
 // Vista del CV: una selección sobre la wiki (qué se muestra, en qué orden y con qué énfasis). Pura: sin astro:content.
-import type { Locale } from "@i18n/ui";
+import { defaultLocale, type Locale } from "@i18n/ui";
 import { localize, useTranslations } from "@i18n/utils";
 import { formatPeriod } from "./dates";
 import type { HomeData } from "./home";
@@ -109,4 +109,10 @@ export function buildCvView(data: HomeData, spec: CvSpec | undefined, locale: Lo
 export function cvPdfName(name: string, locale: Locale): string {
     const slug = name.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     return `cv-${slug}-${locale}.pdf`;
+}
+
+/** Página del CV por idioma, con la base del sitio. */
+export function cvUrl(locale: Locale, base = "/"): string {
+    const root = base.endsWith("/") ? base : `${base}/`;
+    return `${root}${locale === defaultLocale ? "" : `${locale}/`}cv/`;
 }

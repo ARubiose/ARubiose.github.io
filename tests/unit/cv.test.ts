@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { buildCvView, cvPdfName, cvRefErrors } from "@lib/cv";
+import { buildCvView, cvPdfName, cvRefErrors, cvUrl } from "@lib/cv";
 import type { HomeData } from "@lib/home";
 import { cvSpecSchema, type CvSpec } from "@lib/schemas";
 
@@ -126,4 +126,11 @@ describe("referencias rotas", () => {
 test("cvPdfName: slug ASCII del nombre y el idioma", () => {
     expect(cvPdfName("Ada Lovelace-Byron", "es")).toBe("cv-ada-lovelace-byron-es.pdf");
     expect(cvPdfName("José Ñúñez", "en")).toBe("cv-jose-nunez-en.pdf");
+});
+
+test("cvUrl: página del CV por idioma, con la base del sitio", () => {
+    expect(cvUrl("es", "/")).toBe("/cv/");
+    expect(cvUrl("en", "/")).toBe("/en/cv/");
+    expect(cvUrl("es", "/demo/")).toBe("/demo/cv/");
+    expect(cvUrl("en", "/demo")).toBe("/demo/en/cv/");
 });

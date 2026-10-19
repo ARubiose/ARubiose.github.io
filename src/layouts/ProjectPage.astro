@@ -7,6 +7,7 @@ import { localize, useTranslations } from "@i18n/utils";
 import { analyticsBeacon } from "@lib/analytics";
 import { loadHomeData } from "@lib/content";
 import { buildHomeView, handleFromName, shortNameFromName } from "@lib/home";
+import { cvUrl } from "@lib/cv";
 import { detailUrl } from "@lib/project-details";
 import { alternateLinks, projectJsonLd, requireSite } from "@lib/seo";
 import { buildMonth } from "@lib/site";
@@ -44,7 +45,7 @@ const analytics = analyticsBeacon(PUBLIC_CF_ANALYTICS_TOKEN, import.meta.env.PRO
 ---
 
 <Layout locale={locale} title={`${detail.data.title} · ${view.profile.name}`} description={detail.data.summary} alternates={alternateLinks(absoluteUrls)} jsonLd={jsonLd} analytics={analytics}>
-    <Header locale={locale} sections={view.sections} urls={urls} handle={handleFromName(view.profile.name)} shortName={shortNameFromName(view.profile.name)} sectionHref={home} />
+    <Header locale={locale} sections={view.sections} urls={urls} handle={handleFromName(view.profile.name)} shortName={shortNameFromName(view.profile.name)} sectionHref={home} pages={[{ href: cvUrl(locale, base), label: t("nav.cv") }]} />
     <main class="mx-auto max-w-3xl px-4 md:px-10">
         <p class="mt-8 text-[13px]">
             <a class="text-accent hover:text-text" href={`${home}#projects`} data-back><span aria-hidden="true">← </span>{t("projects.back")}</a>

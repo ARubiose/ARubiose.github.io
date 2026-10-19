@@ -15,8 +15,10 @@ interface Props {
     shortName?: string;
     /** Prefijo de los enlaces de sección: vacío en la portada, su URL fuera de ella. */
     sectionHref?: string;
+    /** Enlaces a otras páginas del sitio (el CV), tras las secciones. */
+    pages?: { href: string; label: string }[];
 }
-const { locale, sections, urls, handle = "", shortName = "", sectionHref = "" } = Astro.props;
+const { locale, sections, urls, handle = "", shortName = "", sectionHref = "", pages = [] } = Astro.props;
 const [first = "", second = ""] = shortName.split(" ");
 const t = useTranslations(locale);
 ---
@@ -27,6 +29,7 @@ const t = useTranslations(locale);
         <nav aria-label={t("nav.label")} class="site-nav mr-auto hidden md:block">
             <ul class="flex gap-5 text-[13px] text-muted">
                 {sections.map((s) => <li><a class="nav-link hover:text-text" href={`${sectionHref}#${s.id}`}>{s.label.toLowerCase()}</a></li>)}
+                {pages.map((p) => <li><a class="nav-link hover:text-text" href={p.href}>{p.label}</a></li>)}
             </ul>
         </nav>
         <div class="header-lang ml-auto hidden items-center gap-4 md:flex"><SkinSwitcher locale={locale} /><LanguageSwitcher locale={locale} urls={urls} /></div>
@@ -42,6 +45,13 @@ const t = useTranslations(locale);
                     <li>
                         <a class="nav-link flex items-center border-b border-dashed border-(color:--menu-link-border) px-1 py-3.5 font-display text-(length:--menu-link-size) leading-(--menu-link-leading) font-bold" href={`${sectionHref}#${s.id}`}>
                             {s.label.toLowerCase()}<span class="ml-auto font-mono text-sm font-normal text-muted" aria-hidden="true">↵</span>
+                        </a>
+                    </li>
+                ))}
+                {pages.map((p) => (
+                    <li>
+                        <a class="nav-link flex items-center border-b border-dashed border-(color:--menu-link-border) px-1 py-3.5 font-display text-(length:--menu-link-size) leading-(--menu-link-leading) font-bold" href={p.href}>
+                            {p.label}<span class="ml-auto font-mono text-sm font-normal text-muted" aria-hidden="true">↵</span>
                         </a>
                     </li>
                 ))}

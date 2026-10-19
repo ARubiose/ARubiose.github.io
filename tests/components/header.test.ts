@@ -62,3 +62,11 @@ test("con sectionHref, las secciones apuntan a la portada (página de detalle)",
     expect(html.match(/href="\/en\/#projects"/g)).toHaveLength(2);
     expect(html).not.toMatch(/href="#projects"/);
 });
+
+test("enlaza las páginas recibidas (CV) en la barra y en el menú móvil", async () => {
+    const container = await AstroContainer.create();
+    const withPages = clean(await container.renderToString(Header, { props: { locale: "es", urls, sections: [], pages: [{ href: "/cv/", label: "cv" }] } }));
+    expect(withPages.match(/href="\/cv\/"/g)).toHaveLength(2);
+    const without = clean(await container.renderToString(Header, { props: { locale: "es", urls, sections: [] } }));
+    expect(without).not.toContain('href="/cv/"');
+});

@@ -8,8 +8,10 @@ import type { HomeView } from "@lib/home";
 interface Props {
     profile: HomeView["profile"];
     locale: Locale;
+    /** Página del CV del idioma; sin ella no hay botón. */
+    cvHref?: string;
 }
-const { profile, locale } = Astro.props;
+const { profile, locale, cvHref } = Astro.props;
 const t = useTranslations(locale);
 ---
 
@@ -26,6 +28,7 @@ const t = useTranslations(locale);
         <div class="hero-cta mt-6 grid grid-cols-2 gap-3 md:flex">
             <a class="btn btn-primary" href="#contact">{t("hero.contact")}</a>
             <a class="btn btn-secondary" href={profile.links.github} target="_blank" rel="noopener">{t("hero.github")}</a>
+            {cvHref && <a class="btn btn-secondary col-span-2 md:col-span-1" href={cvHref}>{t("cv.cta")}</a>}
         </div>
     </div>
 </section>

@@ -80,7 +80,7 @@
 .cv-body { min-width: 0; }
 
 .cv-lede { font-size: 10pt; line-height: 1.45; color: var(--cv-ink); text-wrap: pretty; }
-.cv-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 8px; }
+.cv-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 11px; }
 .cv-pillar { padding-top: 4px; border-top: 1.5px solid var(--cv-lime); font-size: 8.6pt; line-height: 1.35; }
 .cv-pillar strong { display: block; font: 600 9.4pt/1.3 var(--cv-display); color: var(--cv-ink); }
 

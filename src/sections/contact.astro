@@ -7,13 +7,16 @@ import { displayUrl, type HomeView } from "@lib/home";
 interface Props {
     links: HomeView["profile"]["links"];
     locale: Locale;
+    /** Página del CV del idioma; sin ella no hay fila. */
+    cvHref?: string;
 }
-const { links, locale } = Astro.props;
+const { links, locale, cvHref } = Astro.props;
 const t = useTranslations(locale);
 const rows = [
     { cmd: "mailCmd" as const, href: `mailto:${links.email}`, text: links.email, label: t("contact.email"), external: false },
     { cmd: "openCmd" as const, href: links.linkedin, text: displayUrl(links.linkedin), label: t("contact.linkedin"), external: true },
     { cmd: "openCmd" as const, href: links.github, text: displayUrl(links.github), label: t("contact.github"), external: true },
+    ...(cvHref ? [{ cmd: "openCmd" as const, href: cvHref, text: t("cv.cta"), label: t("cv.title"), external: false }] : []),
 ];
 ---
 
