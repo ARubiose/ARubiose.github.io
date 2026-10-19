@@ -1,31 +1,14 @@
-import { execFileSync } from "node:child_process";
 import { cpSync, existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { beforeAll, describe, expect, test } from "vitest";
+import { build, ROOT } from "../support/build";
 import { readPdf } from "../support/pdf";
-
-const ROOT = join(import.meta.dirname, "../..");
-const VITE_KEYS = new Set(["BASE_URL", "MODE", "DEV", "PROD", "SSR"]);
-const cleanEnv = Object.fromEntries(Object.entries(process.env).filter(([k]) => !VITE_KEYS.has(k)));
-const FIXTURE = { WIKI_DIR: "tests/fixtures/site", SITE_URL: "https://ada.example", BASE_PATH: "/", BUILD_DATE: "2026-10" };
-
-/** Construye en un directorio temporal; devuelve el directorio, o el stderr si la build falla. */
-export function build(env: Record<string, string>): { out: string; ok: boolean; stderr: string } {
-    const out = mkdtempSync(join(tmpdir(), "cv-"));
-    try {
-        execFileSync("pnpm", ["exec", "astro", "build"], { cwd: ROOT, stdio: "pipe", env: { ...cleanEnv, ...FIXTURE, OUT_DIR: out, ...env } });
-        return { out, ok: true, stderr: "" };
-    } catch (e) {
-        const err = e as { stderr?: Buffer; stdout?: Buffer };
-        return { out, ok: false, stderr: `${err.stderr?.toString() ?? ""}${err.stdout?.toString() ?? ""}` };
-    }
-}
 
 describe("PDF del CV en la build del fixture", () => {
     let out = "";
     beforeAll(() => {
-        const result = build({});
+        const result = build();
         expect(result.stderr).toBe("");
         out = result.out;
     });
@@ -72,5 +55,5 @@ test("un CV público de más de una página rompe la build", () => {
     writeFileSync(file, source);
     const result = build({ WIKI_DIR: wiki });
     expect(result.ok).toBe(false);
-    expect(result.stderr).toContain("tiene que caber en una");
+    expect(`${result.stderr}${result.stdout}`).toContain("tiene que caber en una");
 });
