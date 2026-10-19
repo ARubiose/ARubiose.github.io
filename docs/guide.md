@@ -54,6 +54,16 @@ alone.
    `wiki/public/projects/<slug>/es.md` and `en.md` and shows them to you before writing. The
    project card will show "Read more". The build fails if a language is missing or the body
    has HTML, links into the wiki or images from outside its folder.
+7. CV (`/cv/` and its PDF): it comes from the wiki only. To focus it, add a `cv:` block to
+   `wiki/public/profile.md` with the headline, up to 3 pillars, which roles and in what order
+   (with `highlights`, `summary: false` or `compact`), skill groups, languages and whether it
+   shows a photo in each language. The fields are under *CV* in `.claude/rules/wiki.md`. The
+   build prints one PDF per language and fails if it runs over one page. It needs Chromium:
+   `pnpm exec playwright install chromium` (or `CV_PDF=0 pnpm build` to skip it).
+8. CV tailored to a job offer (local only): `/cv <offer>`, with the pasted text, the path to a
+   PDF or DOCX, or a URL. The agent writes `wiki/private/applications/<date>-<company>/cv.yml`,
+   builds its PDF with `pnpm cv:tailor` and replies with a match score, what you cover and what
+   you are missing. It is never published.
 
 ## 4. Tests
 

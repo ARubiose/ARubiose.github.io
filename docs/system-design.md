@@ -36,22 +36,23 @@ nunca escribe en la wiki y el agente nunca escribe en `raw/`.
 
 | Módulo | Ruta | Responsabilidad | En git |
 | --- | --- | --- | --- |
-| Páginas | `src/pages/` | Rutas: `/` (es) y `/en/` (en), y el detalle de cada proyecto que lo tenga: `projects/[slug].astro` y `en/projects/[slug].astro` | Sí |
-| Layouts | `src/layouts/` | `Layout.astro` (documento HTML, `lang`, metadatos) `HomePage.astro` (compone la portada) y `ProjectPage.astro` (compone el detalle de un proyecto); los dos cargan las colecciones con `src/lib/content.ts` | Sí |
+| Páginas | `src/pages/` | Rutas: `/` (es) y `/en/` (en), el detalle de cada proyecto que lo tenga (`projects/[slug].astro` y `en/projects/[slug].astro`) y el CV (`cv.astro` y `en/cv.astro`) | Sí |
+| Layouts | `src/layouts/` | `Layout.astro` (documento HTML, `lang`, metadatos) `HomePage.astro` (compone la portada) `ProjectPage.astro` (compone el detalle de un proyecto) y `CvPage.astro` (la hoja del CV y su botón de descarga); cargan las colecciones con `src/lib/content.ts` | Sí |
 | Secciones | `src/sections/` | Bloques de la página: `intro`, `experience`, `projects`, `skills`, `education`, `contact` | Sí |
-| Componentes | `src/components/` | Piezas reutilizables: `Header` (menú móvil con popover), `LanguageSwitcher`, `Icon`, `Window`, `ProfilePhoto` (visor con `<dialog>`), `Timeline`/`TimelineItem`, `ProjectCard`, `SkillBuilder`, `Footer` | Sí |
-| Lógica | `src/lib/` | Funciones puras: esquemas Zod (`schemas.ts`), fechas, ordenación, iconos (`icons.ts`), XP y build (`skills.ts`, `build.ts`), skins (`skins.ts`) y vista de la portada (`home.ts`) | Sí |
+| Componentes | `src/components/` | Piezas reutilizables: `Header` (menú móvil con popover), `LanguageSwitcher`, `Icon`, `Window`, `ProfilePhoto` (visor con `<dialog>`), `Timeline`/`TimelineItem`, `ProjectCard`, `SkillBuilder`, `Cv` (hoja imprimible del CV), `Footer` | Sí |
+| Lógica | `src/lib/` | Funciones puras: esquemas Zod (`schemas.ts`), fechas, ordenación, iconos (`icons.ts`), XP y build (`skills.ts`, `build.ts`), skins (`skins.ts`), vista de la portada (`home.ts`), vista del CV (`cv.ts`) e impresión a PDF (`cv-pdf.ts`) | Sí |
 | Scripts | `src/scripts/` | Mejora progresiva en el cliente: navegación activa, visor de la foto y de las imágenes de los detalles, creador de personaje, flechas de pestañas, animaciones GSAP | Sí |
 | i18n | `src/i18n/` | Diccionario de interfaz (`ui.ts`) y `useTranslations`/`localize` | Sí |
 | Colecciones | `src/content.config.ts` | Colecciones de Astro sobre `wiki/public/` | Sí |
 | Tests | `tests/` | Unitarios, contrato, componentes, privacidad y E2E (§3.7) | Sí |
-| Estilos | `src/styles/` | `global.css` (Tailwind, tokens semánticos y variante `timeline-single`), `base.css` (reset y tokens de distribución en `@layer base`), `states.css` (reglas de estado sin capa) y `skins/` (una hoja por skin, en `@layer components`) | Sí |
+| Estilos | `src/styles/` | `global.css` (Tailwind, tokens semánticos y variante `timeline-single`), `base.css` (reset y tokens de distribución en `@layer base`), `states.css` (reglas de estado sin capa), `skins/` (una hoja por skin, en `@layer components`) y `cv.css` (la hoja del CV, con tokens `--cv-*` propios) | Sí |
 | Assets | `src/assets/`, `public/` | Imágenes de la interfaz que Astro optimiza / archivos que se sirven tal cual | Sí |
+| Integraciones | `src/integrations/` | `cv-pdf`: imprime el CV a PDF al terminar la build (§3.11) | Sí |
 | Configuración | `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`, `playwright.config.ts` | i18n, plugin de Tailwind, alias de importación, tests | Sí |
 | Wiki pública | `wiki/public/` | Contenido publicable; fuente de datos del portfolio | Sí |
 | Wiki privada | `wiki/private/` | Notas personales, síntesis, log | No |
 | Fuentes | `raw/` | Material original (CV, LinkedIn…) | No |
-| Agente | `.claude/` | Regla de la wiki, skills `ingest`/`query`/`lint`/`detail`, permisos | Sí |
+| Agente | `.claude/` | Regla de la wiki, skills `ingest`/`query`/`lint`/`detail`/`cv`, permisos | Sí |
 | Docs | `docs/` | Este documento, las decisiones (`decisions/`) y la guía de uso (`guide.md`, `guide.es.md`) | Sí |
 
 ## 3. Portfolio (Astro)
@@ -220,16 +221,16 @@ Solo necesita lo que está en el repo, porque el portfolio consume únicamente `
 | Unitario | Vitest | `localize`, `formatPeriod`, `useTranslations`, ordenación, vista | `tests/unit/` |
 | Contrato | Vitest + Zod | Fixtures válidos/inválidos y toda la wiki pública real | `tests/content/` |
 | Componentes | Vitest + Container API | Secciones y cabecera en ambos idiomas y con listas vacías | `tests/components/` |
-| Privacidad | Vitest | Teléfono, dirección, código postal y nacimiento en `wiki/public/` y `dist/`; credenciales y rutas personales en todos los archivos versionados, los mensajes de commit y las líneas añadidas del historial; en ambos, `wiki/private/forbidden-strings.txt` si existe | `tests/privacy/` |
-| E2E | Playwright + axe | `/` y `/en/` en escritorio (1280) y móvil (390): navegación, menú, visor, creador de personaje, sin JS, movimiento reducido, desbordamiento, CLS, accesibilidad con diálogos abiertos; canonical, hreflang, JSON-LD, sitemap y robots. Detalle de proyecto: tarjeta → detalle, volver, cambio de idioma, SEO, cuerpo publicado y axe en las tres skins. Sobre el fixture `tests/fixtures/site/` (Ada), construido con `WIKI_DIR` en `.fixture-dist/` | `tests/e2e/` |
-| Regresión visual | Playwright `toHaveScreenshot` | Portada completa en ambos tamaños e idiomas y en las tres skins (12 capturas), y el detalle de Ada en español en ambos tamaños y las tres skins (6 capturas), con movimiento reducido | `tests/e2e/visual.spec.ts-snapshots/` |
+| Privacidad | Vitest | Teléfono, dirección, código postal y nacimiento en `wiki/public/`, `dist/` y el texto de los PDF del CV; credenciales y rutas personales en todos los archivos versionados, los mensajes de commit y las líneas añadidas del historial; en ambos, `wiki/private/forbidden-strings.txt` si existe | `tests/privacy/` |
+| E2E | Playwright + axe | `/` y `/en/` en escritorio (1280) y móvil (390): navegación, menú, visor, creador de personaje, sin JS, movimiento reducido, desbordamiento, CLS, accesibilidad con diálogos abiertos; canonical, hreflang, JSON-LD, sitemap y robots. Detalle de proyecto: tarjeta → detalle, volver, cambio de idioma, SEO, cuerpo publicado y axe en las tres skins. CV: enlaces desde la portada, hoja, foto por idioma, descarga del PDF, cambio de idioma, SEO, axe y desbordamiento en las tres skins. Sobre el fixture `tests/fixtures/site/` (Ada), construido con `WIKI_DIR` en `.fixture-dist/` | `tests/e2e/` |
+| Regresión visual | Playwright `toHaveScreenshot` | Portada completa en ambos tamaños e idiomas y en las tres skins (12 capturas), el detalle de Ada en español en ambos tamaños y las tres skins (6 capturas) y el CV en ambos idiomas, tamaños y skins (12 capturas), con movimiento reducido | `tests/e2e/visual.spec.ts-snapshots/` |
 | Presupuesto | Vitest | JavaScript de cada página (portadas y detalles, también los módulos en línea) ≤ 60 KB comprimido | `tests/perf/` |
-| Smoke | Playwright | Contenido real (`wiki/public/`) con su `base`: `/` y `/en/` cargan sin errores, con `h1`, secciones con contenido y sin desbordamiento; lo mismo para cada detalle de proyecto que tenga la wiki | `tests/smoke/` |
-| Build con `base` | Vitest | Construido bajo `/demo/`, ninguna URL interna apunta a la raíz del dominio | `tests/build/` |
+| Smoke | Playwright | Contenido real (`wiki/public/`) con su `base`: `/` y `/en/` cargan sin errores, con `h1`, secciones con contenido y sin desbordamiento; lo mismo para cada detalle de proyecto que tenga la wiki y para el CV, cuyo PDF se descarga | `tests/smoke/` |
+| Build | Vitest | Construido bajo `/demo/`, ninguna URL interna apunta a la raíz del dominio y el PDF del CV se genera; el PDF del fixture ocupa una página, incrusta sus fuentes y su texto sigue el orden de lectura; `CV_PDF=0`; un CV de más de una página rompe la build; `pnpm cv:tailor` (PDF junto al YAML, códigos 0/1/2, nunca en `dist/`). En serie: las builds comparten `.astro/` | `tests/build/` |
 
 Scripts: `pnpm test` (todo salvo E2E y build), `pnpm test:e2e` (Playwright sobre el fixture,
 smoke sobre el build real, el test de build con `base` y después la privacidad y el
-presupuesto sobre `dist/`), `pnpm test:build` (solo el de `base`), `pnpm test:visual:update` (regenera
+presupuesto sobre `dist/`), `pnpm test:build` (solo los de build), `pnpm test:visual:update` (regenera
 las capturas de referencia tras un cambio de diseño intencionado) y `pnpm check`
 (`astro check`). Notas de entorno:
 
@@ -305,6 +306,31 @@ una demo en Pages. Cada sitio derivado tiene su propio repo y trae las mejoras c
 - **Tests:** los e2e y las capturas usan `tests/fixtures/site/` (`WIKI_DIR`), así que
   cambiar el contenido no exige tocarlos (§3.7).
 
+### 3.11 CV en PDF
+
+Una página `/cv/` (y `/en/cv/`) muestra el CV como una hoja A4 sobre la skin activa, con un
+botón que descarga su PDF; la portada lo enlaza desde la navegación, la intro y el contacto
+([decisión 0008](decisions/0008-cv-from-wiki.md)).
+
+- **Contenido:** el CV es una selección sobre la wiki. `buildCvView` (`src/lib/cv.ts`, pura)
+  aplica el bloque opcional `cv:` del perfil (orden, highlights, entradas compactas,
+  pilares, grupos de habilidades, idiomas, foto por idioma); sin él, muestra todo por fecha.
+  `loadCvData` (`src/lib/content.ts`) valida las referencias y la build falla si alguna no
+  existe.
+- **Hoja:** `Cv.astro` con `src/styles/cv.css`, que es papel y no una skin: tokens `--cv-*`
+  propios, una columna y orden DOM lineal. Nada con texto va posicionado, porque Chromium
+  escribe en el PDF lo posicionado después del resto y un ATS leería los títulos lejos de su
+  contenido. En pantalla estrecha fluye en una columna; al imprimir es A4 sin márgenes.
+- **PDF:** la integración `src/integrations/cv-pdf.ts`, en `astro:build:done`, sirve la build
+  bajo su `base`, abre cada CV en Chromium (Playwright), espera a las fuentes y lo imprime en
+  `cv/cv-<nombre>-<idioma>.pdf`. Si ocupa más de una página, la build falla. `CV_PDF=0` la
+  salta. El workflow ya instala Chromium antes de `pnpm build`.
+- **CV adaptado (local):** `pnpm cv:tailor <cv.yml> [--lang es|en]` construye en un
+  directorio temporal con `CV_SPEC` (el YAML sustituye al bloque `cv:`) y la integración, en
+  modo adaptado (`CV_PDF_OUT`, `CV_LANG`), deja el PDF junto al YAML. Sale con 2 si pasa de
+  una página. `assertCvSpecTarget` impide construir `dist/` con `CV_SPEC`. Lo usa la skill
+  `cv` (§5.2).
+
 ## 4. Capa de contenido
 
 ### 4.1 La wiki
@@ -329,7 +355,7 @@ cumple) y los tests de contrato. Los campos por tipo están en la regla de la wi
 
 | Origen | Colección | Sección |
 | --- | --- | --- |
-| `wiki/public/profile.md` | `profile` | `intro`, `contact` |
+| `wiki/public/profile.md` | `profile` | `intro`, `contact`; su bloque `cv:`, la página `/cv/` |
 | `wiki/public/experience/` | `experience` | `experience` |
 | `wiki/public/projects/` | `projects` | `projects` |
 | `wiki/public/skills/` | `skills` | `skills` (agrupadas por `category`) |
@@ -354,7 +380,7 @@ carga solo cuando hace falta o que la hace cumplir sin depender del modelo:
 | --- | --- | --- |
 | Fuentes inmutables | `raw/` + `deny` de `Edit`/`Write` en `.claude/settings.json` | Lo impide el sistema de permisos, no una instrucción |
 | Convenciones | `.claude/rules/wiki.md` con `paths: wiki/**, raw/**` | Se carga sola al tocar la wiki y no ocupa contexto al trabajar en `src/` |
-| Procedimientos | Skills `ingest`, `query`, `lint`, `detail` | Cada uno se carga solo al ejecutarse |
+| Procedimientos | Skills `ingest`, `query`, `lint`, `detail`, `cv` | Cada uno se carga solo al ejecutarse |
 | Lint | `context: fork` (subagente) | Lee toda la wiki sin llenar el contexto principal |
 | Índice | `wiki/index.md`, `wiki/private/index.md` + Grep | Punto de entrada barato; Grep sustituye al buscador que Karpathy propone para wikis grandes |
 | Log | `wiki/private/log.md` | Continuidad entre sesiones |
@@ -366,6 +392,9 @@ carga solo cuando hace falta o que la hace cumplir sin depender del modelo:
   espera confirmación y después escribe páginas, enlaces, índices y log.
 - **Query:** índices → páginas relevantes → respuesta citada. Opcionalmente, la respuesta se
   guarda como síntesis privada.
+- **CV:** lee una oferta (texto, PDF, DOCX o URL) como datos, escribe un `cv.yml` adaptado en
+  `wiki/private/applications/`, genera su PDF con `pnpm cv:tailor` y responde con una nota de
+  compatibilidad justificada, que no se guarda.
 - **Lint:** en un subagente, busca fugas de privacidad, enlaces rotos, páginas huérfanas,
   contradicciones y huecos; corrige lo trivial y devuelve un informe.
 
@@ -430,6 +459,7 @@ issues de cada repositorio (la plantilla y cada sitio derivado tienen los suyos)
 | GSAP + CSS para animaciones | Solo CSS, Motion | Efectos de terminal (ScrambleText) y ScrollTrigger sin framework de UI |
 | Integridad de `skills` con `findBrokenSkillRefs` | `reference()` de Astro | Los esquemas se prueban sin `astro:content`; el build falla igual |
 | XP calculada a partir de los puestos | Niveles escritos a mano | Sin datos inventados |
+| CV como selección sobre la wiki, PDF con Chromium en la build | Overleaf/LaTeX; un formulario público con backend | Una sola fuente y sin servidor. [0008](decisions/0008-cv-from-wiki.md) |
 | Plantilla y sitios derivados con `upstream`; e2e sobre un fixture fijo | Un solo repo con el contenido del autor | Reutilizable sin tocar código ni tests. [0006](decisions/0006-template-and-upstream.md) |
 
 ## 9. Referencias
