@@ -27,8 +27,8 @@ const view = (over: Partial<CvView> = {}): CvView => ({
     ...over,
 });
 
-const render = async (v: CvView, withPhoto = true) =>
-    clean(await container.renderToString(Cv, { props: { view: v, locale: "es", pdfName: "cv-ada-lovelace-es.pdf", ...(withPhoto ? { photo } : {}) } }));
+const render = async (v: CvView, withPhoto = true, extra: Record<string, unknown> = {}) =>
+    clean(await container.renderToString(Cv, { props: { view: v, locale: "es", pdfName: "cv-ada-lovelace-es.pdf", ...(withPhoto ? { photo } : {}), ...extra } }));
 const headings = (html: string) => [...html.matchAll(/<h2[^>]*>([^<]*)<\/h2>/g)].map((m) => m[1].trim());
 
 describe("Cv", () => {
@@ -79,5 +79,11 @@ describe("Cv", () => {
         const html = await render(view());
         const exp = html.slice(html.indexOf(">Experiencia<"), html.indexOf(">Proyectos<"));
         expect(exp.match(/is-current/g)).toHaveLength(1);
+    });
+
+    test("el contacto enlaza la web del portfolio si se conoce", async () => {
+        const html = await render(view(), true, { siteUrl: "https://ada.example/demo/" });
+        expect(html).toMatch(/<a href="https:\/\/ada.example\/demo\/">ada.example\/demo<\/a>/);
+        expect(await render(view())).not.toContain("ada.example/demo");
     });
 });

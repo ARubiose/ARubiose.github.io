@@ -1,6 +1,6 @@
 ---
 import "@styles/cv.css";
-import { getRelativeLocaleUrl } from "astro:i18n";
+import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from "astro:i18n";
 import { PUBLIC_CF_ANALYTICS_TOKEN } from "astro:env/client";
 import { locales, type Locale } from "@i18n/ui";
 import { useTranslations } from "@i18n/utils";
@@ -42,7 +42,7 @@ const analytics = analyticsBeacon(PUBLIC_CF_ANALYTICS_TOKEN, import.meta.env.PRO
             <a class="btn btn-primary" href={pdfHref} download>{t("cv.download")}</a>
         </p>
         <div class="cv-printer" data-cv-printer aria-hidden="true"></div>
-        <Cv view={view} locale={locale} pdfName={pdfName} photo={data.profile.photo} strict={spec !== undefined} />
+        <Cv view={view} locale={locale} pdfName={pdfName} photo={data.profile.photo} strict={spec !== undefined} siteUrl={getAbsoluteLocaleUrl(locale, "")} />
     </main>
     <Footer locale={locale} repo={home.siteRepo} analytics={analytics !== null} />
 </Layout>

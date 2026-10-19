@@ -13,13 +13,16 @@ interface Props {
     photo?: ImageMetadata;
     /** Hay bloque cv: (o CV adaptado): la build falla si no cabe en una página. Sin él, solo avisa. */
     strict?: boolean;
+    /** Web del portfolio (site + base): el CV en papel enlaza de vuelta a ella. */
+    siteUrl?: string;
 }
-const { view, locale, pdfName, photo, strict = false } = Astro.props;
+const { view, locale, pdfName, photo, strict = false, siteUrl } = Astro.props;
 const t = useTranslations(locale);
 const contact = [
     { href: `mailto:${view.links.email}`, text: view.links.email },
     { href: view.links.linkedin, text: displayUrl(view.links.linkedin) },
     { href: view.links.github, text: displayUrl(view.links.github) },
+    ...(siteUrl ? [{ href: siteUrl, text: displayUrl(siteUrl) }] : []),
 ];
 const groups: { key: "experience" | "projects" | "education"; entries: CvEntry[] }[] = [
     { key: "experience", entries: view.experience },
