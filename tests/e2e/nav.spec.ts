@@ -99,7 +99,7 @@ test("al cambiar de skin, la navegación marca la sección que queda en la franj
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     const expected = () => page.evaluate(() => {
-        const secs = [...document.querySelectorAll(".site-nav a.nav-link")].map((a) => document.getElementById(a.getAttribute("href")!.slice(1))!);
+        const secs = [...document.querySelectorAll(".site-nav a.nav-link[href^='#']")].map((a) => document.getElementById(a.getAttribute("href")!.slice(1))!);
         if (document.querySelector("footer")!.getBoundingClientRect().bottom <= innerHeight + 1) return `#${secs.at(-1)!.id}`;
         return `#${secs.findLast((s) => s.getBoundingClientRect().top <= innerHeight * 0.5 + 1)?.id}`;
     });

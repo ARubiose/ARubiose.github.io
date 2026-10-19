@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { buildDirs, buildMonth, pagesTarget } from "@lib/site";
+import { assertCvSpecTarget, buildDirs, buildMonth, pagesTarget } from "@lib/site";
 
 describe("pagesTarget", () => {
     test("repo de usuario <owner>.github.io: raíz", () => {
@@ -60,5 +60,15 @@ describe("buildMonth", () => {
 
     test("un BUILD_DATE mal escrito falla en vez de calcular con basura", () => {
         expect(() => buildMonth({ BUILD_DATE: "oct 2026" })).toThrow(/BUILD_DATE/);
+    });
+});
+
+describe("assertCvSpecTarget", () => {
+    const message = "CV_SPEC solo se usa con un OUT_DIR temporal; nunca con dist/";
+    test.each([[{ CV_SPEC: "x" }], [{ CV_SPEC: "x", OUT_DIR: "dist" }], [{ CV_SPEC: "x", OUT_DIR: "./dist/" }], [{ CV_SPEC: "x", OUT_DIR: `${process.cwd()}/dist` }]])("lanza con %j", (env) => {
+        expect(() => assertCvSpecTarget(env)).toThrow(message);
+    });
+    test.each([[{ CV_SPEC: "x", OUT_DIR: "/tmp/y" }], [{}], [{ OUT_DIR: "dist" }]])("no lanza con %j", (env) => {
+        expect(() => assertCvSpecTarget(env)).not.toThrow();
     });
 });

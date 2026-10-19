@@ -14,7 +14,7 @@ GitHub Pages.
 | `docs/` | Conocimiento de desarrollo: [system-design.md](docs/system-design.md), [decisions/](docs/decisions/) y la guía de uso ([guide.md](docs/guide.md)). La hoja de ruta está en los GitHub issues | Sí |
 | `wiki/public/` | Contenido publicable que alimenta la web | Sí |
 | `wiki/private/`, `raw/` | Fuentes y datos personales | **No** (`.gitignore`) |
-| `.claude/` | Regla de la wiki (`rules/wiki.md`), skills `ingest`/`query`/`lint`/`detail`, permisos | Sí |
+| `.claude/` | Regla de la wiki (`rules/wiki.md`), skills `ingest`/`query`/`lint`/`detail`/`cv`, permisos | Sí |
 
 Las convenciones de la wiki se cargan solas al trabajar en `wiki/` o `raw/`.
 
@@ -37,10 +37,13 @@ Las convenciones de la wiki se cargan solas al trabajar en `wiki/` o `raw/`.
   deducen del repo (`src/lib/site.ts`).
 - Los e2e y las capturas usan el fixture fijo `tests/fixtures/site/` (Ada); el contenido real
   lo validan los esquemas, la privacidad, el presupuesto y el smoke (`tests/smoke/`).
-- Comandos: `pnpm dev`, `pnpm build`, `pnpm preview`, `pnpm check`, `pnpm test`, `pnpm test:e2e`.
+- Comandos: `pnpm dev`, `pnpm build`, `pnpm preview`, `pnpm check`, `pnpm test`, `pnpm test:e2e`,
+  `pnpm cv:tailor <cv.yml>` (CV adaptado, local; lo usa la skill `cv`).
 - Estilos por skins: tokens semánticos en `src/styles/global.css` y una hoja por skin en
   `src/styles/skins/`; los componentes usan clases semánticas, nunca colores ni fuentes
   concretos.
+- El CV (`/cv/` y su PDF, generado en la build) es la excepción: `src/styles/cv.css` es papel,
+  no una skin, con tokens `--cv-*` propios ([decisión 0008](docs/decisions/0008-cv-from-wiki.md)).
 - JavaScript de cliente solo como mejora progresiva en `src/scripts/`; la lógica testeable
   va en `src/lib/`.
 - Desarrollo con TDD; ver la estrategia de tests en `docs/system-design.md` §3.7.

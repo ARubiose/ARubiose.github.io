@@ -8,6 +8,8 @@ README y la estructura de carpetas.
 - `notes/` — información personal que no debe publicarse (datos de contacto, salario,
   motivos de cambio, contexto de empresas…)
 - `synthesis/` — respuestas guardadas de `/query` (p. ej. resúmenes adaptados a una oferta)
+- `applications/` — CV adaptados a ofertas por la skill `cv` (`<fecha>-<empresa>/cv.yml` y
+  su PDF)
 
 ⚠️ Al no estar en git, haz copia de seguridad de esta carpeta y de `raw/` por tu cuenta
 (carpeta sincronizada en la nube, disco externo…).

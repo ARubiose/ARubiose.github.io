@@ -110,3 +110,10 @@ test("proyectos: detailUrl solo si el proyecto tiene detalle, con base e idioma"
     expect(buildHomeView(withDetail, "es", NOW).projects[0].detailUrl).toBe("/repo/projects/site/");
     expect(buildHomeView(withDetail, "en", NOW).projects[0].detailUrl).toBe("/repo/en/projects/site/");
 });
+
+test("habilidades: en inglés usan en.title si existe", () => {
+    const skills = [{ id: "agents", data: { ...meta, type: "skill" as const, title: "Agentes LLM", category: "ai" as const, icon: "ph:robot", summary: "s", en: { summary: "s", title: "LLM agents" } } }];
+    const titles = (locale: "es" | "en") => buildHomeView({ ...data, skills }, locale, NOW).skillGroups.flatMap((g) => g.items).map((s) => s.title);
+    expect(titles("es")).toEqual(["Agentes LLM"]);
+    expect(titles("en")).toEqual(["LLM agents"]);
+});

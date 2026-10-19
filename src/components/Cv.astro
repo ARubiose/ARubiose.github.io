@@ -1,0 +1,110 @@
+---
+// Hoja del CV: papel, no skin. Orden DOM lineal (seguro para ATS); el aspecto lo da src/styles/cv.css.
+import { Image } from "astro:assets";
+import type { Locale } from "@i18n/ui";
+import { useTranslations } from "@i18n/utils";
+import type { CvEntry, CvView } from "@lib/cv";
+import { displayUrl } from "@lib/home";
+
+interface Props {
+    view: CvView;
+    locale: Locale;
+    pdfName: string;
+    photo?: ImageMetadata;
+    /** Hay bloque cv: (o CV adaptado): la build falla si no cabe en una página. Sin él, solo avisa. */
+    strict?: boolean;
+    /** Web del portfolio (site + base): el CV en papel enlaza de vuelta a ella. */
+    siteUrl?: string;
+}
+const { view, locale, pdfName, photo, strict = false, siteUrl } = Astro.props;
+const t = useTranslations(locale);
+const contact = [
+    { href: `mailto:${view.links.email}`, text: view.links.email },
+    { href: view.links.linkedin, text: displayUrl(view.links.linkedin) },
+    { href: view.links.github, text: displayUrl(view.links.github) },
+    ...(siteUrl ? [{ href: siteUrl, text: displayUrl(siteUrl) }] : []),
+];
+const groups: { key: "experience" | "projects" | "education"; entries: CvEntry[] }[] = [
+    { key: "experience", entries: view.experience },
+    { key: "projects", entries: view.projects },
+];
+---
+
+<article class="cv-sheet" lang={locale} data-cv-pdf={pdfName} data-cv-strict={strict ? "" : undefined}>
+    <header class="cv-head">
+        <div>
+            <h1 class="cv-name">{view.name}</h1>
+            <p class="cv-role">{view.headline}{view.tagline && <span class="cv-tagline"> · {view.tagline}</span>}</p>
+            <ul class="cv-contact">
+                <li>{view.location}</li>
+                {contact.map((c) => <li><a href={c.href}>{c.text}</a></li>)}
+            </ul>
+        </div>
+        {view.photo && photo && <Image src={photo} alt={`${t("cv.photo")} ${view.name}`} widths={[168]} sizes="84px" class="cv-photo" loading="eager" />}
+    </header>
+
+    <section class="cv-sec">
+        <h2>{t("cv.section.profile")}</h2>
+        <div class="cv-body">
+            <p class="cv-lede">{view.summary}</p>
+            {view.pillars.length > 0 && (
+                <ul class="cv-pillars">
+                    {view.pillars.map((p) => <li class="cv-pillar"><strong>{p.title}</strong> {p.text}</li>)}
+                </ul>
+            )}
+        </div>
+    </section>
+
+    {groups.map(({ key, entries }) => entries.length > 0 && (
+        <section class="cv-sec">
+            <h2>{t(`cv.section.${key}`)}</h2>
+            <div class:list={["cv-body", { "cv-timeline": key === "experience" }]}>
+                {entries.map((e) => (
+                    <div class:list={["cv-entry", { "is-current": key === "experience" && e.current, "cv-project": key === "projects" }]}>
+                        <div class="cv-entry-top">
+                            <h3>{e.title}{e.org && <span class="org"> · {e.org}</span>}</h3>
+                            <p class:list={["cv-date", { now: e.current }]}>{e.period}</p>
+                        </div>
+                        {e.summary && <p class="cv-summary">{e.summary}</p>}
+                        {e.highlights.length > 0 && <ul class="cv-points">{e.highlights.map((h) => <li>{h}</li>)}</ul>}
+                    </div>
+                ))}
+            </div>
+        </section>
+    ))}
+
+    {view.skills.length > 0 && (
+        <section class="cv-sec">
+            <h2>{t("cv.section.skills")}</h2>
+            <dl class="cv-body cv-skills">
+                {view.skills.map((g) => <><dt>{g.label}</dt><dd>{g.items.join(", ")}</dd></>)}
+            </dl>
+        </section>
+    )}
+
+    {view.education.length > 0 && (
+        <section class="cv-sec">
+            <h2>{t("cv.section.education")}</h2>
+            <div class="cv-body cv-edu">
+                {view.education.map((e) => (
+                    <div class="cv-entry">
+                        <div class="cv-entry-top">
+                            <h3>{e.title}<span class="org"> · {e.org}</span></h3>
+                            <p class="cv-date">{e.period}</p>
+                        </div>
+                        {e.summary && <p class="cv-summary">{e.summary}</p>}
+                    </div>
+                ))}
+            </div>
+        </section>
+    )}
+
+    {view.languages.length > 0 && (
+        <section class="cv-sec">
+            <h2>{t("cv.section.languages")}</h2>
+            <ul class="cv-body cv-langs">
+                {view.languages.map((l) => <li><strong>{l.name}</strong> {l.level}</li>)}
+            </ul>
+        </section>
+    )}
+</article>

@@ -13,6 +13,7 @@
     "test:build": "vitest run --config vitest.build.config.ts",
     "check": "astro check",
     "sync:upstream": "node scripts/sync-upstream.mjs",
+    "cv:tailor": "node scripts/cv-tailor.mjs",
     "test:visual:update": "playwright test tests/e2e/visual.spec.ts --update-snapshots"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.5",
     "gsap": "^3.15.0",
+    "js-yaml": "^4.3.2",
     "satteri": "0.10.5",
     "sharp": "^0.35.5",
     "simple-icons": "^16.34.0",
@@ -33,7 +35,9 @@
     "@astrojs/check": "^0.9.10",
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
+    "@types/js-yaml": "^4.0.9",
     "gray-matter": "^4.0.3",
+    "pdfjs-dist": "^6.4.299",
     "typescript": "^6.0.3",
     "vitest": "^5.0.3"
   }

@@ -1,0 +1,9 @@
+# CV adaptado de prueba sobre el fixture (Ada).
+headline: Ingeniera de visión por computador
+pillars:
+  - title: Visión
+    text: Segmentación de imágenes con deep learning.
+experience:
+  - id: difference-labs
+  - id: analytical-engines
+    compact: true

@@ -15,6 +15,55 @@ tags: [demo]
 en:
   headline: Backend software engineer
   summary: Software engineer who designs Python backends and applies computer vision. Fictitious demo profile for the template.
+cv:
+  headline: Ingeniera de IA y backend
+  tagline: visión por computador y agentes LLM
+  pillars:
+    - title: IA aplicada
+      text: Modelos de visión por computador llevados a producción.
+    - title: Agentes LLM
+      text: Flujos con agentes que mantienen conocimiento estructurado.
+    - title: Backend
+      text: Servicios Python asíncronos con tests y CI/CD.
+  experience:
+    - id: analytical-engines
+      highlights: [0]
+      summary: false
+    - id: difference-labs
+    - id: jacquard-security
+      compact: true
+  skills:
+    - label: IA
+      items: [llm-agents, computer-vision]
+    - label: Backend
+      items: [python, fastapi, django, celery, redis]
+    - label: Entrega
+      items: [docker, pytest, github-actions]
+  languages:
+    - name: Inglés
+      level: nativo
+    - name: Francés
+      level: B2
+  en:
+    headline: AI and backend engineer
+    tagline: computer vision and LLM agents
+    pillars:
+      - title: Applied AI
+        text: Computer vision models taken to production.
+      - title: LLM agents
+        text: Agent workflows that maintain structured knowledge.
+      - title: Backend
+        text: Async Python services with tests and CI/CD.
+    skills:
+      - label: AI
+      - label: Backend
+      - label: Delivery
+    languages:
+      - name: English
+        level: native
+      - name: French
+        level: B2
+    photo: false
 sources: ["humano (2026-10-13)"]
 updated: 2026-10-13
 ---

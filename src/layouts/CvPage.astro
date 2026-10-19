@@ -1,0 +1,53 @@
+---
+import "@styles/cv.css";
+import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from "astro:i18n";
+import { PUBLIC_CF_ANALYTICS_TOKEN } from "astro:env/client";
+import { locales, type Locale } from "@i18n/ui";
+import { useTranslations } from "@i18n/utils";
+import { analyticsBeacon } from "@lib/analytics";
+import { loadCvData } from "@lib/content";
+import { buildCvView, cvPdfName, cvUrl } from "@lib/cv";
+import { buildHomeView, handleFromName, shortNameFromName } from "@lib/home";
+import { alternateLinks, requireSite } from "@lib/seo";
+import { buildMonth } from "@lib/site";
+import Layout from "./Layout.astro";
+import Header from "@components/Header.astro";
+import Footer from "@components/Footer.astro";
+import Cv from "@components/Cv.astro";
+
+interface Props {
+    locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const { data, spec } = await loadCvData();
+const view = buildCvView(data, spec, locale);
+const home = buildHomeView(data, locale, buildMonth(process.env));
+const base = import.meta.env.BASE_URL;
+const pdfName = cvPdfName(view.name, locale);
+// Los PDF de los dos idiomas se publican juntos en <base>cv/ (los genera la integración cv-pdf).
+const pdfHref = `${cvUrl("es", base)}${pdfName}`;
+
+const site = requireSite(Astro.site);
+const urls = Object.fromEntries(locales.map((l) => [l, cvUrl(l, base)])) as Record<Locale, string>;
+const absoluteUrls = Object.fromEntries(locales.map((l) => [l, new URL(urls[l], site).href])) as Record<Locale, string>;
+const analytics = analyticsBeacon(PUBLIC_CF_ANALYTICS_TOKEN, import.meta.env.PROD);
+---
+
+<Layout locale={locale} title={`${t("cv.title")} · ${view.name}`} description={view.summary} alternates={alternateLinks(absoluteUrls)} analytics={analytics}>
+    <Header locale={locale} sections={home.sections} urls={urls} handle={handleFromName(view.name)} shortName={shortNameFromName(view.name)} sectionHref={getRelativeLocaleUrl(locale, "")} pages={[{ href: urls[locale], label: t("nav.cv") }]} />
+    <main class="mx-auto max-w-[calc(210mm+2rem)] px-0 pb-16 md:px-4">
+        <p class="mx-4 mt-8 mb-10 flex justify-end md:mx-0" data-cv-chrome>
+            <a class="btn btn-primary" href={pdfHref} download>{t("cv.download")}</a>
+        </p>
+        <div class="cv-printer" data-cv-printer aria-hidden="true"></div>
+        <Cv view={view} locale={locale} pdfName={pdfName} photo={data.profile.photo} strict={spec !== undefined} siteUrl={getAbsoluteLocaleUrl(locale, "")} />
+    </main>
+    <Footer locale={locale} repo={home.siteRepo} analytics={analytics !== null} />
+</Layout>
+
+<script>
+    import { initCvMotion } from "../scripts/cv-motion";
+    initCvMotion();
+</script>

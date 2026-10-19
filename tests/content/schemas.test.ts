@@ -2,7 +2,7 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 import { z } from "astro/zod";
-import { projectDetailSchema, schemasByType } from "@lib/schemas";
+import { cvSpecSchema, projectDetailSchema, schemasByType, skillSchema } from "@lib/schemas";
 import { readFrontmatter } from "../support/frontmatter";
 
 const FIXTURES = join(import.meta.dirname, "../fixtures/wiki");
@@ -125,5 +125,53 @@ describe("project-detail", () => {
 
     test("no acepta otro type", () => {
         expect(projectDetailSchema.safeParse({ ...ok, type: "project" }).success).toBe(false);
+    });
+});
+
+describe("cv", () => {
+    const pillar = { title: "IA", text: "Texto" };
+    const issuesAt = (input: unknown) => (cvSpecSchema.safeParse(input).error?.issues ?? []).map((i) => i.path.join("."));
+
+    test("acepta un spec vacío con sus valores por defecto", () => {
+        const spec = cvSpecSchema.parse({});
+        expect(spec.photo).toBe(true);
+        expect(spec.pillars).toEqual([]);
+        expect(spec.languages).toEqual([]);
+    });
+
+    test("rechaza más de 3 pilares", () => {
+        expect(issuesAt({ pillars: [pillar, pillar, pillar, pillar] })).toContain("pillars");
+    });
+
+    test("en.pillars debe tener la misma longitud que pillars", () => {
+        expect(issuesAt({ pillars: [pillar, pillar], en: { pillars: [pillar] } })).toContain("en.pillars");
+    });
+
+    test("en.skills debe tener la misma longitud que skills", () => {
+        expect(issuesAt({ skills: [{ label: "IA", items: ["python"] }], en: { skills: [] } })).toContain("en.skills");
+    });
+
+    test("en.languages debe tener la misma longitud que languages", () => {
+        expect(issuesAt({ languages: [{ name: "Español", level: "nativo" }], en: { languages: [] } })).toContain("en.languages");
+    });
+
+    test("sin bloque en no exige traducciones", () => {
+        expect(issuesAt({ pillars: [pillar], languages: [{ name: "Español", level: "nativo" }] })).toEqual([]);
+    });
+
+    test.each([[-1], [1.5]])("rechaza el índice de highlight %s", (index) => {
+        expect(issuesAt({ experience: [{ id: "x", highlights: [index] }] })).toContain("experience.0.highlights.0");
+    });
+
+    test("el perfil acepta el bloque cv", () => {
+        const profile = readFrontmatter(join(FIXTURES, "valid", "profile.md"));
+        const result = schemasByType.profile.safeParse({ ...profile, cv: { pillars: [pillar] } });
+        expect(result.error?.issues ?? []).toEqual([]);
+    });
+
+    test("las habilidades aceptan en.title opcional", () => {
+        const base = { title: "Agentes LLM", type: "skill", category: "ai", icon: "ph:robot", summary: "s", sources: ["x"], updated: "2026-10-19" };
+        expect(skillSchema.safeParse({ ...base, en: { summary: "s" } }).success).toBe(true);
+        expect(skillSchema.parse({ ...base, en: { summary: "s", title: "LLM agents" } }).en.title).toBe("LLM agents");
     });
 });

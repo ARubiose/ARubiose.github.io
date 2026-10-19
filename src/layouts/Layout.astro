@@ -46,6 +46,7 @@ const ogImage = new URL(`${base}og-image.png`, site).href;
         <meta name="twitter:card" content="summary_large_image" />
         <Font cssVariable="--font-space-grotesk" preload />
         <Font cssVariable="--font-ibm-plex-mono" preload />
+        <Font cssVariable="--font-ibm-plex-sans" />
         {/* Fuentes de Táctico y Juego, sin precarga: solo se descargan si la skin activa las usa. */}
         <Font cssVariable="--font-chakra-petch" />
         <Font cssVariable="--font-barlow" />
@@ -54,6 +55,8 @@ const ogImage = new URL(`${base}og-image.png`, site).href;
         <Font cssVariable="--font-geist" />
         <Font cssVariable="--font-geist-mono" />
         <script is:inline set:html={skinBootScript()} />
+        {/* Sin parpadeo: lo que la intro anima no se pinta hasta que su script arranca (states.css). */}
+        <script is:inline>if (matchMedia("(prefers-reduced-motion: no-preference)").matches) document.documentElement.setAttribute("data-motion-pending", "");</script>
         {analytics && <script is:inline defer src={analytics.src} data-cf-beacon={analytics.config} />}
     </head>
     <body class="bg-bg text-text font-body">

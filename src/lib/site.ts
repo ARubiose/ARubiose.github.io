@@ -1,3 +1,5 @@
+import { resolve } from "node:path";
+
 type Env = Record<string, string | undefined>;
 
 const DEFAULT_WIKI = "wiki/public";
@@ -24,6 +26,11 @@ export function buildDirs(env: Env): { wikiDir: string; outDir: string; cacheDir
     const wiki = trimSlashes(env.WIKI_DIR?.trim() || DEFAULT_WIKI);
     const cacheDir = wiki === DEFAULT_WIKI ? "./node_modules/.astro" : `./node_modules/.astro-${wiki.replace(/[^a-z0-9]+/gi, "-")}`;
     return { wikiDir: rel(wiki), outDir: rel(env.OUT_DIR?.trim() || "dist"), cacheDir };
+}
+
+/** CV_SPEC (CV adaptado, local) nunca puede construir el dist/ que se publica. */
+export function assertCvSpecTarget(env: Env): void {
+    if (env.CV_SPEC && resolve(buildDirs(env).outDir) === resolve("dist")) throw new Error("CV_SPEC solo se usa con un OUT_DIR temporal; nunca con dist/");
 }
 
 /** Mes del build (AAAA-MM) con el que se calculan la XP y el año. BUILD_DATE lo fija (fixture de los e2e). */

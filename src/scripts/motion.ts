@@ -123,5 +123,7 @@ export function initMotion(): void {
         ScrollTrigger.refresh();
         requestAnimationFrame(() => document.fonts.ready.then(() => ScrollTrigger.refresh()));
     });
+    // Las intros ya han fijado su estado inicial: lo animado puede pintarse (ver states.css).
+    document.documentElement.removeAttribute("data-motion-pending");
     document.documentElement.setAttribute("data-motion-ready", "");
 }

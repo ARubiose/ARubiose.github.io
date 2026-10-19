@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
+import { readPdf } from "../support/pdf";
 import { findLeaks, findSecrets, loadForbiddenStrings, visibleText } from "../support/privacy";
 
 const ROOT = join(import.meta.dirname, "../..");
@@ -33,6 +34,17 @@ describe("dist sin datos privados", () => {
     for (const file of html) {
         test(file.replace(ROOT, ""), () => {
             expect(findLeaks(visibleText(readFileSync(file, "utf8")), extra)).toEqual([]);
+        });
+    }
+});
+
+// El CV en PDF también se publica: se escanea su texto.
+const pdfs = filesUnder(join(ROOT, "dist"), ".pdf");
+describe("PDF publicados sin datos privados", () => {
+    for (const file of pdfs) {
+        test(file.replace(ROOT, ""), async () => {
+            const { text } = await readPdf(file);
+            expect(findLeaks(text.join("\n"), extra)).toEqual([]);
         });
     }
 });

@@ -1,0 +1,6 @@
+# Cuatro pilares: el esquema solo admite tres.
+pillars:
+  - { title: P0, text: t }
+  - { title: P1, text: t }
+  - { title: P2, text: t }
+  - { title: P3, text: t }

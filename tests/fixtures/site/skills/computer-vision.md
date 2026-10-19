@@ -7,6 +7,7 @@ summary: Modelos de visión con deep learning.
 tags: []
 en:
   summary: Deep learning vision models.
+  title: Deep learning and computer vision
 sources: ["humano (2026-10-13)"]
 updated: 2026-10-13
 ---

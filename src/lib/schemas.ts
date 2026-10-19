@@ -41,6 +41,41 @@ const sameHighlightsIssue = {
     path: ["en", "highlights"],
 };
 
+// CV: una selección sobre la wiki (qué se muestra, en qué orden y con qué énfasis), no un texto nuevo.
+const cvPillar = z.object({ title: text, text });
+const cvLanguage = z.object({ name: text, level: text });
+const sameLength = (a: unknown[] | undefined, b: unknown[] | undefined) => a === undefined || b === undefined || a.length === b.length;
+
+export const cvSpecSchema = z
+    .object({
+        headline: text.optional(),
+        tagline: text.optional(),
+        summary: text.optional(),
+        pillars: z.array(cvPillar).max(3).default([]),
+        experience: z
+            .array(z.object({ id: text, highlights: z.array(z.int().nonnegative()).optional(), summary: z.boolean().optional(), compact: z.boolean().optional() }))
+            .optional(),
+        projects: z.array(text).optional(),
+        skills: z.array(z.object({ label: text, items: z.array(text).min(1) })).optional(),
+        education: z.array(text).optional(),
+        languages: z.array(cvLanguage).default([]),
+        photo: z.boolean().default(true),
+        en: z
+            .object({
+                headline: text.optional(),
+                tagline: text.optional(),
+                summary: text.optional(),
+                pillars: z.array(cvPillar).max(3).optional(),
+                skills: z.array(z.object({ label: text })).optional(),
+                languages: z.array(cvLanguage).optional(),
+                photo: z.boolean().optional(),
+            })
+            .optional(),
+    })
+    .refine((d) => sameLength(d.pillars, d.en?.pillars), { message: "en.pillars debe tener la misma longitud que pillars", path: ["en", "pillars"] })
+    .refine((d) => sameLength(d.skills, d.en?.skills), { message: "en.skills debe tener la misma longitud que skills", path: ["en", "skills"] })
+    .refine((d) => sameLength(d.languages, d.en?.languages), { message: "en.languages debe tener la misma longitud que languages", path: ["en", "languages"] });
+
 export const profileSchema = z.object({
     ...meta,
     type: z.literal("profile"),
@@ -50,6 +85,7 @@ export const profileSchema = z.object({
     photo: localImage,
     links: z.object({ email: z.email(), linkedin: webUrl, github: webUrl, source: optionalWebUrl }),
     en: z.object({ headline: text, summary: text }),
+    cv: cvSpecSchema.optional(),
 });
 
 export const experienceSchema = z
@@ -92,7 +128,8 @@ export const skillSchema = z.object({
     type: z.literal("skill"),
     category: z.enum(skillCategories),
     icon,
-    en: z.object({ summary: text }),
+    // title solo hace falta si el nombre no es propio («Agentes LLM» → «LLM agents»).
+    en: z.object({ summary: text, title: text.optional() }),
 });
 
 export const educationSchema = z
@@ -119,6 +156,7 @@ export const schemasByType = {
     education: educationSchema,
 };
 
+export type CvSpec = z.output<typeof cvSpecSchema>;
 export type ProfileData = Omit<z.output<typeof profileSchema>, "photo"> & { photo: ImageMetadata };
 export type ExperienceData = z.output<typeof experienceSchema>;
 export type ProjectData = z.output<typeof projectSchema>;

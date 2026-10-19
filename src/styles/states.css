@@ -72,3 +72,16 @@
     overflow: hidden;
     overflow-wrap: anywhere;
 }
+
+/* Animación pendiente (script en línea del <head>, en Layout): lo que las intros animan no se pinta
+   hasta que su script arranca y quita la marca. Sin eso se veía un instante, se escondía y entraba
+   animado. visibility no mueve nada (sin CLS); si el script no llega, aparece a los 3 s. */
+html[data-motion-pending] :is(.hero-text, .photo-window, .cv-sheet) {
+    visibility: hidden;
+    animation: motion-pending-fallback 0s 3s forwards;
+}
+@keyframes motion-pending-fallback {
+    to {
+        visibility: visible;
+    }
+}
