@@ -17,5 +17,7 @@ export function initCvMotion(): void {
             .to(printer, { opacity: 0, duration: 0.3, clearProps: "opacity,transform" }, "-=0.2");
         return () => gsap.set([sheet, ...parts], { clearProps: "all" });
     });
+    // La hoja ya está recortada en su estado inicial: puede pintarse (ver states.css).
+    document.documentElement.removeAttribute("data-motion-pending");
     document.documentElement.setAttribute("data-cv-motion-ready", "");
 }

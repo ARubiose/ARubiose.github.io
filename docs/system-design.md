@@ -107,6 +107,10 @@ src/scripts/: nav · lightbox · figure-zoom · skill-builder (+ tab-edges) · s
 - **Secciones vacías.** Una sección sin elementos no se renderiza y la navegación no la
   enlaza (`HomeView.sections`).
 - **Componentes** reutilizables que reciben props y no saben de dónde vienen los datos.
+- **Sin parpadeo.** Un script en línea del `<head>` marca `data-motion-pending` (solo con
+  JavaScript y sin movimiento reducido) y `states.css` esconde con `visibility` lo que las intros
+  animan (`.hero-text`, `.photo-window`, `.cv-sheet`) hasta que su script arranca y quita la
+  marca; si no llega, aparece a los 3 s.
 - **Mejora progresiva.** Sin JavaScript o con `prefers-reduced-motion` todo el contenido se
   ve: el creador de personaje se muestra como lista por categorías y las animaciones solo
   usan `gsap.from()` dentro de `gsap.matchMedia()`. El script de cliente se mantiene por
