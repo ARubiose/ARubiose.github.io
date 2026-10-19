@@ -23,8 +23,13 @@ Busca, en este orden de gravedad:
    alternativo, `# h1` o secciones `## Relacionado`/`## Fuentes`. Lo comprueba
    `pnpm vitest run tests/content`, así que ejecútalo. Avisa si un detalle tiene un `updated`
    anterior al de su ficha.
-6. **Contradicciones** entre páginas y datos desactualizados.
-7. **Huecos:** entidades mencionadas sin página propia y archivos de `raw/` que no aparecen
+6. **CV:** el bloque `cv:` del perfil referencia ids que existen, con índices de
+   `highlights` en rango y las mismas longitudes en español e inglés (lo comprueba
+   `pnpm build`). Aviso, no error: habilidades con título descriptivo en español (no un
+   nombre propio) y sin `en.title`, porque el CV en inglés lo mostraría en español. Si
+   `pnpm build` falla porque el CV pasa de una página, repórtalo.
+7. **Contradicciones** entre páginas y datos desactualizados.
+8. **Huecos:** entidades mencionadas sin página propia y archivos de `raw/` que no aparecen
    en ningún `sources`.
 
 Corrige solo lo trivial: entradas de índice que faltan, enlaces rotos con una corrección

@@ -7,7 +7,7 @@ paths:
 # Convenciones de la LLM Wiki
 
 Se cargan automáticamente al trabajar con `wiki/` o `raw/`. Las operaciones están en las
-skills `ingest`, `query`, `lint` y `detail`.
+skills `ingest`, `query`, `lint`, `detail` y `cv`.
 
 ## Capas
 
@@ -84,11 +84,11 @@ pública solo lleva la parte publicable. Lo privado sí puede enlazar a lo públ
 
   | `type` | Campos propios | Traducibles en `en:` |
   | --- | --- | --- |
-  | `profile` | `name`, `headline`, `location`, `photo` (ruta relativa: `./profile.jpg`), `links: {email, linkedin, github, source?}` (`source`: repo de este sitio, enlazado en el pie) | `headline`, `summary` |
+  | `profile` | `name`, `headline`, `location`, `photo` (ruta relativa: `./profile.jpg`), `links: {email, linkedin, github, source?}` (`source`: repo de este sitio, enlazado en el pie), `cv?` (ver *CV*) | `headline`, `summary` |
   | `experience` | `company`, `role`, `start`, `end`, `highlights`, `skills?` (ids de `skills/` usadas) | `role`, `summary`, `highlights` |
   | `project` | `repo`, `url?`, `status` (`active`·`paused`·`done`), `start`, `highlights`, `skills?` | `title`, `summary`, `highlights` |
   | `project-detail` | (solo los comunes; `tags` opcional) | — (un archivo por idioma) |
-  | `skill` | `category` (`backend`·`ai`·`frontend`·`devops`·`security`), `icon` (`si:<slug>` de Simple Icons o `ph:<nombre>` de Phosphor) | `summary` |
+  | `skill` | `category` (`backend`·`ai`·`frontend`·`devops`·`security`), `icon` (`si:<slug>` de Simple Icons o `ph:<nombre>` de Phosphor) | `summary`, `title?` (solo si el nombre no es propio: «Agentes LLM» → «LLM agents») |
   | `education` | `kind?` (`degree` por defecto · `certificate`), `institution`, `degree`, `start`, `end`, `grade?` | `degree`, `summary` |
 
 - **Fechas:** `start`/`end` como `AAAA-MM` o `AAAA`; `end: null` es «actualidad».
@@ -153,6 +153,29 @@ Página opcional que explica un proyecto en profundidad. Es la única página p�
 - **Privacidad:** la regla de privacidad se aplica igual. Las imágenes se versionan en un
   repo público y el humano las revisa siempre.
 - Se redactan con la skill `detail`.
+
+## CV
+
+El portfolio publica un CV (`/cv/`, `/en/cv/` y su PDF de una página). No es texto nuevo:
+es una **selección** sobre la wiki pública, descrita en el bloque opcional `cv:` del perfil.
+Sin él, el CV muestra todo por fecha.
+
+- **Campos** (todos opcionales; `cvSpecSchema` en `src/lib/schemas.ts` es la referencia):
+  `headline`, `tagline` (tras el titular) y `summary`, que sustituyen a los del perfil;
+  `pillars` (hasta 3 `{title, text}` bajo el resumen); `experience` (lista ordenada de
+  `{id, highlights?: [índices], summary?: false, compact?: true}`: solo las listadas, en ese
+  orden; `compact` deja cargo, empresa y fechas); `projects` y `education` (ids en orden);
+  `skills` (grupos `{label, items: [ids]}`; por defecto, por `category`); `languages`
+  (`{name, level}`); `photo` (por defecto `true`).
+- **Inglés:** bloque `en:` con `headline`, `tagline`, `summary`, `pillars`, `skills` (solo
+  `label`, mismo orden), `languages` y `photo`. `pillars`, `skills` y `languages` tienen la
+  misma longitud que sus equivalentes en español.
+- **Referencias:** los ids existen y los índices de `highlights` están en rango; si no, la
+  build falla. La build también falla si el CV ocupa más de una página: recorta con
+  `compact`, `highlights` o quitando entradas.
+- **CV adaptado a una oferta:** la skill `cv` escribe un `cv.yml` con estos mismos campos en
+  `wiki/private/applications/<fecha>-<empresa>/` y genera su PDF con `pnpm cv:tailor`. Nunca
+  se publica.
 
 ## Índices
 
