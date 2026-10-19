@@ -2,6 +2,7 @@
 import { defineConfig, envField, fontProviders } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
+import cvPdf from "./src/integrations/cv-pdf.ts";
 import { defaultLocale, localeTags } from "./src/i18n/ui.ts";
 import { assertCvSpecTarget, buildDirs, pagesTarget } from "./src/lib/site.ts";
 
@@ -22,7 +23,8 @@ export default defineConfig({
         defaultLocale: "es",
     },
     // Mismos códigos que el <head> (localeTags): sitemap y hreflang no pueden contradecirse.
-    integrations: [sitemap({ i18n: { defaultLocale, locales: localeTags } })],
+    // cv-pdf imprime /cv/ y /en/cv/ a PDF al terminar (CV_PDF=0 lo salta).
+    integrations: [sitemap({ i18n: { defaultLocale, locales: localeTags } }), cvPdf()],
     env: {
         schema: {
             // Token de Cloudflare Web Analytics. Es público (va en el HTML); sin él no hay analítica.

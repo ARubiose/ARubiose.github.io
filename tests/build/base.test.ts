@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, test } from "vitest";
@@ -24,4 +24,8 @@ test("construido con base, ninguna URL interna apunta a la raíz del dominio", (
     );
     expect(offenders).toEqual([]);
     expect(readFileSync(join(out, "robots.txt"), "utf8")).toContain("https://ada.github.io/demo/sitemap-index.xml");
+    // El CV: el botón de descarga cuelga de la base y el PDF se genera sirviendo la build bajo /demo/.
+    expect(readFileSync(join(out, "cv", "index.html"), "utf8")).toMatch(/href="\/demo\/cv\/cv-ada-lovelace-es\.pdf" download/);
+    expect(existsSync(join(out, "cv", "cv-ada-lovelace-es.pdf"))).toBe(true);
+    expect(existsSync(join(out, "cv", "cv-ada-lovelace-en.pdf"))).toBe(true);
 });

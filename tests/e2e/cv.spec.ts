@@ -39,6 +39,12 @@ for (const p of PAGES) {
                 await expect(download).toHaveAttribute("download", "");
             });
 
+            test("el PDF se descarga", async ({ request }) => {
+                const res = await request.get(p.pdf);
+                expect(res.status()).toBe(200);
+                expect(res.headers()["content-type"]).toContain("application/pdf");
+            });
+
             test("el selector de idioma lleva al CV equivalente", async ({ page, baseURL }) => {
                 await page.goto(p.path);
                 await page.locator(`.header-lang a[hreflang="${p.otherLang}"]`).click();
